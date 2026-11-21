@@ -280,6 +280,12 @@ def investigate_incident(result: Result, model: str = "gemini-2.5-flash") -> dic
                 parsed = json.loads(clean_text)
                 if isinstance(parsed, dict) and "summary" in parsed:
                     return parsed
+    except urllib.error.HTTPError as exc:
+        if exc.code == 403:
+            print("\n[Log Detective AI] Notice: Google Cloud returned 403 (Project requires billing upgrade at https://aistudio.google.com/billing).", file=sys.stderr)
+            print("[Log Detective AI] Running built-in offline deterministic SRE engine.\n", file=sys.stderr)
+        else:
+            print(f"\n[Log Detective AI] HTTP Error ({exc.code}). Using offline deterministic SRE engine.\n", file=sys.stderr)
     except Exception:
         pass
 
