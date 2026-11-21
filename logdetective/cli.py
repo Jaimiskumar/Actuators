@@ -48,6 +48,13 @@ def analyze(
         "--ai",
         help="Generate AI root cause summary (requires GEMINI_API_KEY)",
     ),
+    threshold_mb: Optional[float] = typer.Option(
+        None,
+        "--max-memory-mb",
+        "--threshold",
+        "-m",
+        help="Custom memory threshold budget in MB (e.g. --threshold 100)",
+    ),
     debug: bool = typer.Option(
         False,
         "--debug",
@@ -57,7 +64,7 @@ def analyze(
     """Analyze a log file, cluster errors, and reconstruct crash timeline."""
     try:
         engine = Engine()
-        result = engine.analyze(file)
+        result = engine.analyze(file, memory_threshold_mb=threshold_mb)
 
         if ai:
             from logdetective.ai import generate_ai_summary

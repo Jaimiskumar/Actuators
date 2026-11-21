@@ -84,6 +84,8 @@ class Meta:
     peak_mem_mb: float
     time_range: list[Optional[str]] = field(default_factory=lambda: [None, None])
     level_counts: dict[str, int] = field(default_factory=dict)
+    memory_threshold_mb: Optional[float] = None
+    budget_exceeded: Optional[bool] = None
 
 
 @dataclass(slots=True)

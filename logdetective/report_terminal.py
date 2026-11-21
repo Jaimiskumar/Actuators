@@ -27,6 +27,14 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
     throughput = int(meta.lines / meta.duration_s) if meta.duration_s > 0 else 0
     stats_text.append(f"🚀 Speed: ", style="bold cyan")
     stats_text.append(f"{throughput:,} lines/sec  |  Peak Memory: {meta.peak_mem_mb:.1f} MB\n")
+
+    if meta.memory_threshold_mb is not None:
+        if meta.budget_exceeded:
+            stats_text.append(f"⚠️  Memory Budget: ", style="bold red")
+            stats_text.append(f"{meta.peak_mem_mb:.1f} MB / {meta.memory_threshold_mb:.1f} MB budget (EXCEEDED)\n", style="red")
+        else:
+            stats_text.append(f"🛡️  Memory Budget: ", style="bold green")
+            stats_text.append(f"{meta.peak_mem_mb:.1f} MB / {meta.memory_threshold_mb:.1f} MB budget (MAINTAINED)\n", style="green")
     
     if meta.time_range and meta.time_range[0] and meta.time_range[1]:
         stats_text.append(f"⏱️  Time Range: ", style="bold cyan")

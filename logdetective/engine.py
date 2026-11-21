@@ -39,6 +39,7 @@ class Engine:
         source: Union[str, Path],
         progress_callback: Optional[Callable[[int, int], None]] = None,
         callback_interval: int = 10000,
+        memory_threshold_mb: Optional[float] = None,
     ) -> Result:
         """Run single-pass ingestion, clustering, and crash timeline capture."""
         start_time = time.perf_counter()
@@ -110,6 +111,12 @@ class Engine:
         )
         crashes = timeline_tracker.get_snapshots()
 
+        budget_exceeded = (
+            peak_mem_mb > memory_threshold_mb
+            if memory_threshold_mb is not None
+            else None
+        )
+
         meta = Meta(
             file=file_name,
             size_bytes=file_size,
@@ -123,6 +130,8 @@ class Engine:
                 max_ts.isoformat() + "Z" if max_ts else None,
             ],
             level_counts=level_counts,
+            memory_threshold_mb=memory_threshold_mb,
+            budget_exceeded=budget_exceeded,
         )
 
         timeline = Timeline(
