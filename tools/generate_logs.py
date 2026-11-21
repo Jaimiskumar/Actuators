@@ -104,7 +104,30 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
     exhaust_idx = int(target_lines * 0.85) if target_lines else 8500
     crash_idx = int(target_lines * 0.95) if target_lines else 9500
 
-    with open(output_file, "w", encoding="utf-8") as out:
+    with open(output_file, "w", encoding="utf-8", buffering=1024*1024) as out:
+        # Pre-generate noise templates for high-speed generation of large multi-hundred-MB logs
+        noise_pool = []
+        for i in range(200):
+            uid = 1000 + i
+            rid = f"req-{8000 + i}"
+            noise_pool.append((
+                1, # JSON
+                '{"ts": "%TS%", "level": "INFO", "service": "' + random.choice(["auth-service", "gateway", "inventory-service"]) + '", "request_id": "' + rid + '", "message": "Processed HTTP GET /api/v1/items/' + str(uid) + ' in ' + str(random.randint(5, 45)) + 'ms with status 200"}\n'
+            ))
+            noise_pool.append((
+                2, # Text
+                '%STD_TS% [INFO] [gateway] [' + rid + '] User ' + str(uid) + ' authenticated successfully\n'
+            ))
+            noise_pool.append((
+                3, # Syslog
+                '%SYS_TS% web-01 kernel[102]: INFO packet accepted from 192.168.1.' + str(random.randint(2, 250)) + '\n'
+            ))
+
+        noise_idx = 0
+        pool_len = len(noise_pool)
+        chunk_lines = []
+        chunk_bytes = 0
+
         while True:
             line_no += 1
             current_time += timedelta(milliseconds=random.randint(5, 50))
@@ -182,44 +205,47 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                 continue
 
             # Intermittent repeated warnings / errors after failure onset
-            if timeout_planted and random.random() < 0.05:
-                ip = f"10.0.{random.randint(1, 9)}.{random.randint(10, 99)}"
-                ms = random.randint(3000, 10000)
-                entry = f"{std_ts} [ERROR] [order-service] [req-{random.randint(1000, 9999)}] Connection to database {ip}:5432 timed out after {ms}ms\n"
-                out.write(entry)
+            if timeout_planted and (line_no % 20 == 0):
+                ip = f"10.0.4.{(line_no % 80) + 10}"
+                ms = 3000 + (line_no % 7000)
+                entry = f"{std_ts} [ERROR] [order-service] [req-{(line_no % 9000) + 1000}] Connection to database {ip}:5432 timed out after {ms}ms\n"
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
+                if chunk_bytes >= 512 * 1024:
+                    out.write("".join(chunk_lines))
+                    chunk_lines.clear()
+                    chunk_bytes = 0
                 continue
 
-            # Standard 95% INFO / DEBUG noise in mixed formats
-            fmt_choice = random.randint(1, 3)
-            user_id = random.randint(100, 99999)
-            req_id = f"req-{random.randint(1000, 9999)}"
+            # Fast noise pool rotation
+            t_type, t_tmpl = noise_pool[noise_idx % pool_len]
+            noise_idx += 1
 
-            if fmt_choice == 1:
-                # JSON log
-                data = {
-                    "ts": iso_ts,
-                    "level": "INFO",
-                    "service": random.choice(["auth-service", "gateway", "inventory-service"]),
-                    "request_id": req_id,
-                    "message": f"Processed HTTP GET /api/v1/items/{user_id} in {random.randint(5, 45)}ms with status 200"
-                }
-                entry = json.dumps(data) + "\n"
-            elif fmt_choice == 2:
-                # Standard YYYY-MM-DD HH:MM:SS,ms format
-                entry = f"{std_ts} [INFO] [gateway] [{req_id}] User {user_id} authenticated successfully\n"
+            if t_type == 1:
+                entry = t_tmpl.replace("%TS%", iso_ts)
+            elif t_type == 2:
+                entry = t_tmpl.replace("%STD_TS%", std_ts)
             else:
-                # Syslog format
-                entry = f"{syslog_ts} web-01 kernel[102]: INFO packet accepted from 192.168.1.{random.randint(2, 250)}\n"
+                entry = t_tmpl.replace("%SYS_TS%", syslog_ts)
 
-            out.write(entry)
+            chunk_lines.append(entry)
+            chunk_bytes += len(entry)
             bytes_written += len(entry)
+
+            if chunk_bytes >= 512 * 1024:
+                out.write("".join(chunk_lines))
+                chunk_lines.clear()
+                chunk_bytes = 0
 
             # Stopping condition
             if target_bytes > 0 and bytes_written >= target_bytes:
                 break
             if target_bytes == 0 and line_no >= target_lines:
                 break
+
+        if chunk_lines:
+            out.write("".join(chunk_lines))
 
     ground_truth["total_lines"] = line_no
     ground_truth["total_bytes"] = bytes_written
