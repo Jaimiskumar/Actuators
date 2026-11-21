@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "file": "sample_crash.log",
+    "size_bytes": 104857600,
+    "lines": 524300,
+    "events": 512000,
+    "malformed_lines": 12,
+    "duration_s": 1.42,
+    "peak_mem_mb": 48.6,
+    "time_range": [
+      "2026-11-21T10:00:00.000000Z",
+      "2026-11-21T10:15:32.410000Z"
+    ],
+    "level_counts": {
+      "DEBUG": 120000,
+      "INFO": 382000,
+      "WARN": 8400,
+      "ERROR": 1580,
+      "FATAL": 8
+    }
+  },
+  "clusters": [
+    {
+      "id": "c1",
+      "template": "Connection to database <IP> timed out after <NUM>ms",
+      "count": 942,
+      "level": "ERROR",
+      "first_seen": {
+        "ts": "2026-11-21T10:04:12.102000Z",
+        "line_no": 42100
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:15:10.005000Z",
+        "line_no": 518200
+      },
+      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+      "stack_top": [
+        "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl",
+        "org.postgresql.Driver.connect",
+        "com.zaxxer.hikari.pool.PoolBase.newConnection"
+      ],
+      "services": ["order-service", "billing-service"],
+      "buckets": [0, 0, 5, 45, 120, 250, 310, 212]
+    },
+    {
+      "id": "c2",
+      "template": "Connection pool usage above threshold: <NUM>%",
+      "count": 480,
+      "level": "WARN",
+      "first_seen": {
+        "ts": "2026-11-21T10:02:45.310000Z",
+        "line_no": 12500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:14:50.880000Z",
+        "line_no": 501300
+      },
+      "sample": "Connection pool usage above threshold: 88%",
+      "stack_top": [],
+      "services": ["order-service"],
+      "buckets": [0, 8, 32, 90, 110, 120, 80, 40]
+    },
+    {
+      "id": "c3",
+      "template": "Retrying operation after error: <STR>",
+      "count": 158,
+      "level": "WARN",
+      "first_seen": {
+        "ts": "2026-11-21T10:04:30.000000Z",
+        "line_no": 44800
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:15:00.120000Z",
+        "line_no": 510000
+      },
+      "sample": "Retrying operation after error: 'Connection refused'",
+      "stack_top": [],
+      "services": ["order-service"],
+      "buckets": [0, 0, 2, 18, 45, 50, 30, 13]
+    },
+    {
+      "id": "c4",
+      "template": "Pool exhausted: cannot allocate connection to <PATH>",
+      "count": 12,
+      "level": "FATAL",
+      "first_seen": {
+        "ts": "2026-11-21T10:15:20.000000Z",
+        "line_no": 523100
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:15:30.200000Z",
+        "line_no": 524100
+      },
+      "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
+      "stack_top": [
+        "com.zaxxer.hikari.pool.HikariPool.getConnection",
+        "com.example.orders.CheckoutService.processPayment"
+      ],
+      "services": ["order-service"],
+      "buckets": [0, 0, 0, 0, 0, 0, 2, 10]
+    }
+  ],
+  "timeline": {
+    "bucket_edges": [
+      "2026-11-21T10:00:00Z",
+      "2026-11-21T10:02:00Z",
+      "2026-11-21T10:04:00Z",
+      "2026-11-21T10:06:00Z",
+      "2026-11-21T10:08:00Z",
+      "2026-11-21T10:10:00Z",
+      "2026-11-21T10:12:00Z",
+      "2026-11-21T10:14:00Z",
+      "2026-11-21T10:16:00Z"
+    ],
+    "errors_per_bucket": [0, 8, 39, 153, 275, 420, 392, 265]
+  },
+  "crashes": [
+    {
+      "trigger": {
+        "ts": "2026-11-21T10:15:32.410000Z",
+        "line_no": 524298,
+        "message": "fatal error: OutOfMemoryError in worker thread pool"
+      },
+      "sequence": [
+        {
+          "ts": "2026-11-21T10:02:45.310000Z",
+          "level": "WARN",
+          "message": "Connection pool usage above threshold: 88%",
+          "cluster_id": "c2",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:12.102000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "cluster_id": "c1",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:30.000000Z",
+          "level": "WARN",
+          "message": "Retrying operation after error: 'Connection refused'",
+          "cluster_id": "c3",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:15.000000Z",
+          "level": "WARN",
+          "message": "... repeated x45 times",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:20.000000Z",
+          "level": "FATAL",
+          "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
+          "cluster_id": "c4",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:32.410000Z",
+          "level": "FATAL",
+          "message": "fatal error: OutOfMemoryError in worker thread pool",
+          "cluster_id": null,
+          "is_first_occurrence": true,
+          "is_trigger": true
+        }
+      ]
+    }
+  ],
+  "ai_summary": "Root cause: Initial warning for database connection pool saturation escalated into a series of connection timeouts against 10.0.4.12:5432. Repeated retry attempts rapidly depleted remaining worker threads and heap memory, culminating in pool exhaustion and a final OutOfMemoryError crash."
+}
