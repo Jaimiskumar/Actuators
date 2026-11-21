@@ -25,19 +25,7 @@ from logdetective.contract import (
 )
 from logdetective.reader import stream_lines
 from logdetective.stacktrace import join_events
-
-# Crash trigger keywords per Section 6.6
-CRASH_TRIGGER_KEYWORDS = (
-    "panic",
-    "segfault",
-    "sigsegv",
-    "outofmemoryerror",
-    "core dumped",
-    "fatal error",
-    "unhandled exception",
-    "killed",
-    "exit code",
-)
+from logdetective.timeline import TimelineTracker
 
 
 class Engine:
@@ -72,8 +60,7 @@ class Engine:
         max_ts: Optional[datetime] = None
 
         cluster_store = ClusterStore()
-        recent_events: deque[tuple[Event, Optional[str], bool]] = deque(maxlen=self.buffer_size)
-        crashes: list[CrashSnapshot] = []
+        timeline_tracker = TimelineTracker(max_buffer_size=self.buffer_size, max_snapshots=10)
 
         file_size = 0
         file_name = str(source)
@@ -107,38 +94,8 @@ class Engine:
             if lvl in ("WARN", "ERROR", "FATAL"):
                 cluster_id, is_first_occurrence = cluster_store.add(event)
 
-            # Check for crash triggers
-            is_trigger = False
-            lower_msg = event.message.lower()
-            if lvl == "FATAL" or any(k in lower_msg for k in CRASH_TRIGGER_KEYWORDS):
-                is_trigger = True
-
-            recent_events.append((event, cluster_id, is_first_occurrence))
-
-            if is_trigger and len(crashes) < 10:
-                # Capture crash snapshot
-                trigger_ts = event.ts.isoformat() + "Z" if event.ts else None
-                trigger_obj = CrashTrigger(
-                    ts=trigger_ts,
-                    line_no=event.line_no,
-                    message=event.message,
-                )
-
-                sequence: list[CrashEvent] = []
-                for hist_ev, cid, first_occ in list(recent_events)[-15:]:
-                    h_ts = hist_ev.ts.isoformat() + "Z" if hist_ev.ts else None
-                    sequence.append(
-                        CrashEvent(
-                            ts=h_ts,
-                            level=hist_ev.level,
-                            message=hist_ev.message,
-                            cluster_id=cid,
-                            is_first_occurrence=first_occ,
-                            is_trigger=(hist_ev.line_no == event.line_no),
-                        )
-                    )
-
-                crashes.append(CrashSnapshot(trigger=trigger_obj, sequence=sequence))
+            # Record event in rolling timeline buffer
+            timeline_tracker.record(event, cluster_id, is_first_occurrence)
 
             if progress_callback and event_count % callback_interval == 0:
                 progress_callback(line_count, event_count)
@@ -151,6 +108,7 @@ class Engine:
         clusters, bucket_edges, errors_per_bucket = cluster_store.build_clusters(
             min_ts, max_ts, num_buckets=100
         )
+        crashes = timeline_tracker.get_snapshots()
 
         meta = Meta(
             file=file_name,
