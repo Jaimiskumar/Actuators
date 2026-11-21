@@ -1056,6 +1056,9 @@ __CHART_JS__
       const crashes = resultData.crashes || [];
       const aiSummary = resultData.ai_summary;
 
+      var timelineChart = null;
+      var clusterChart = null;
+
       // Formatting helpers
       function formatBytes(bytes) {
         if (!bytes || isNaN(bytes)) return "0 B";
@@ -1117,7 +1120,7 @@ __CHART_JS__
         try {
           localStorage.setItem('ld_theme', theme);
         } catch (e) {}
-        if (typeof updateChartsTheme === 'function' && timelineChart && clusterChart) {
+        if (typeof updateChartsTheme === 'function') {
           try { updateChartsTheme(); } catch (e) {}
         }
       }
@@ -1206,9 +1209,6 @@ __CHART_JS__
       }
 
       // 3. Error Timeline Chart
-      let timelineChart = null;
-      let clusterChart = null;
-
       function initTimelineChart() {
         const canvas = document.getElementById('timelineChartCanvas');
         if (!canvas || !window.Chart) return;
@@ -1411,21 +1411,22 @@ __CHART_JS__
       }
 
       function updateChartsTheme() {
+        if (!timelineChart && !clusterChart) return;
         const isDark = currentTheme === 'dark';
         const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
         const tickColor = isDark ? '#94a3b8' : '#64748b';
 
         [timelineChart, clusterChart].forEach(chart => {
-          if (!chart) return;
-          if (chart.options.scales.x) {
+          if (!chart || !chart.options || !chart.options.scales) return;
+          if (chart.options.scales.x && chart.options.scales.x.grid) {
             chart.options.scales.x.grid.color = gridColor;
-            chart.options.scales.x.ticks.color = tickColor;
+            if (chart.options.scales.x.ticks) chart.options.scales.x.ticks.color = tickColor;
           }
-          if (chart.options.scales.y) {
+          if (chart.options.scales.y && chart.options.scales.y.grid) {
             chart.options.scales.y.grid.color = gridColor;
-            chart.options.scales.y.ticks.color = tickColor;
+            if (chart.options.scales.y.ticks) chart.options.scales.y.ticks.color = tickColor;
           }
-          chart.update();
+          try { chart.update(); } catch (e) {}
         });
       }
 
