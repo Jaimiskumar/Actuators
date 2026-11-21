@@ -147,7 +147,8 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                     "request_id": "req-9801",
                     "message": "Connection pool usage above threshold: 88%"
                 }) + "\n"
-                out.write(entry)
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
                 continue
 
@@ -156,13 +157,15 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                 ground_truth["planted_events"]["c1_db_timeout"]["expected_first_seen_ts"] = iso_ts
                 ground_truth["planted_events"]["c1_db_timeout"]["expected_first_seen_line"] = line_no
                 entry = f"{std_ts} [ERROR] [order-service] [req-9801] Connection to database 10.0.4.12:5432 timed out after 5000ms\n"
-                out.write(entry)
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
                 # Plant python stack trace continuation
                 for frame in python_stack:
                     line_no += 1
                     s_entry = frame + "\n"
-                    out.write(s_entry)
+                    chunk_lines.append(s_entry)
+                    chunk_bytes += len(s_entry)
                     bytes_written += len(s_entry)
                 continue
 
@@ -171,7 +174,8 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                 ground_truth["planted_events"]["c3_retry_storm"]["expected_first_seen_ts"] = iso_ts
                 ground_truth["planted_events"]["c3_retry_storm"]["expected_first_seen_line"] = line_no
                 entry = f"{syslog_ts} myhost order-service[9801]: WARN Retrying operation after error: 'Connection refused'\n"
-                out.write(entry)
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
                 continue
 
@@ -186,12 +190,14 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                     "request_id": "req-9801",
                     "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
                 }) + "\n"
-                out.write(entry)
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
                 for frame in java_stack:
                     line_no += 1
                     s_entry = frame + "\n"
-                    out.write(s_entry)
+                    chunk_lines.append(s_entry)
+                    chunk_bytes += len(s_entry)
                     bytes_written += len(s_entry)
                 continue
 
@@ -200,7 +206,8 @@ def generate_logs(output_file: Path, target_lines: int = 50000, target_size_mb: 
                 ground_truth["planted_events"]["crash_trigger"]["expected_line"] = line_no
                 ground_truth["planted_events"]["crash_trigger"]["expected_ts"] = iso_ts
                 entry = f"{iso_ts} [FATAL] [order-service] [req-9801] fatal error: OutOfMemoryError in worker thread pool\n"
-                out.write(entry)
+                chunk_lines.append(entry)
+                chunk_bytes += len(entry)
                 bytes_written += len(entry)
                 continue
 
