@@ -4,29 +4,10 @@ import re
 from typing import Generator, Iterable, Optional
 
 from logdetective.contract import Event
-from logdetective.parser import parse_line
+from logdetective.parser import RE_STACK_TRACE_LINE, is_stack_trace_line, parse_line
 
 # Cap stored stack frames per event to keep memory flat O(1)
 MAX_STACK_FRAMES = 50
-
-# Regex patterns identifying stack trace lines across Python, Java, JS, Go
-RE_STACK_TRACE_LINE = re.compile(
-    r"^(?:"
-    r"\s+at\s+.*"                                  # Java/JavaScript: '  at com.foo.Bar(Bar.java:42)'
-    r"|Traceback \(most recent call last\):"        # Python traceback header
-    r"|\s*File\s+\".*\",\s+line\s+\d+.*"           # Python frame: '  File "app.py", line 12'
-    r"|\s*(?:Caused by:|Suppressed:).*"             # Java root cause
-    r"|\s*\.\.\.\s*\d+\s+more"                      # Java omitted frames: '... 32 more'
-    r"|\s*[a-zA-Z0-9_.]*(?:Exception|Error|Failure|Panic):\s*.*"  # Exception message line
-    r"|\s*panic:\s*.*"                             # Go panic
-    r"|\s*goroutine\s+\d+\s+\[.*\]:"               # Go goroutine dump
-    r")"
-)
-
-
-def is_stack_trace_line(line: str) -> bool:
-    """Check if a line matches known stack trace or traceback patterns."""
-    return bool(RE_STACK_TRACE_LINE.match(line))
 
 
 def join_events(

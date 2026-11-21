@@ -18,6 +18,54 @@ python3 tools/generate_logs.py --lines 20000
 logdetective tests/sample_logs/sample.log
 ```
 
+## Benchmarking & Performance Validation
+
+Log Detective is designed to maintain strictly flat memory (< 300 MB) and high throughput (>= 100k lines/sec).
+
+```bash
+# Benchmark against any log file vs naive grep baseline:
+python tools/benchmark.py tests/sample_logs/sample.log
+
+# Benchmark against real-world Loghub datasets (auto-download & run):
+python tools/benchmark.py --download-sample hdfs
+python tools/benchmark.py --download-sample apache
+
+# Generate custom-scale synthetic logs and benchmark:
+python tools/benchmark.py --generate-lines 50000 --output-report BENCHMARK_REPORT.md
+
+# Machine-readable JSON output for CI / grading:
+python tools/benchmark.py --json tests/sample_logs/sample.log
+```
+
+## Real-World Open-Source Datasets (Loghub)
+
+Download real-world distributed systems, supercomputing, and web server logs:
+
+```bash
+# List available datasets
+python tools/download_logs.py --list
+
+# Download specific dataset (e.g. HDFS, Apache, BGL, Spark, Linux)
+python tools/download_logs.py --dataset hdfs
+python tools/download_logs.py --dataset apache
+```
+
+## Packaging & Docker
+
+Verify one-command installation and container readiness:
+
+```bash
+# Verify clean one-command install in an isolated environment:
+python tools/verify_install.py
+
+# Run packaging test suite:
+pytest tests/test_packaging.py
+
+# Build and run Docker container:
+docker build -t logdetective .
+docker run --rm logdetective tests/sample_logs/sample.log
+```
+
 ## Architecture & Contract
 
 Log Detective runs in a single streaming pass:
