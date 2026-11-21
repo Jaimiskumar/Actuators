@@ -1518,8 +1518,8 @@
     "lines": 10001,
     "events": 9989,
     "malformed_lines": 0,
-    "duration_s": 0.059,
-    "peak_mem_mb": 52.88,
+    "duration_s": 0.063,
+    "peak_mem_mb": 53.33,
     "time_range": [
       "2026-11-21T10:00:00Z",
       "2026-11-21T10:04:32.164000Z"
@@ -2796,6 +2796,7 @@
 
       // Check if running on localhost or via server
       const isServerMode = window.location.protocol.startsWith('http');
+      const API_BASE = isServerMode ? '' : 'http://127.0.0.1:8000';
       const dashboardPanel = document.getElementById('dashboardPanel');
       if (isServerMode || !resultData.meta) {
         dashboardPanel.style.display = 'block';
@@ -3615,7 +3616,7 @@
         }
         setAnalyzing(true, `Reading "${path}" in-place...`);
         try {
-          const res = await fetch('/api/analyze-path', {
+          const res = await fetch(`${API_BASE}/api/analyze-path`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: path })
@@ -3631,7 +3632,10 @@
           document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
         } catch (err) {
           setAnalyzing(false);
-          showError(err.message);
+          const errorMsg = !isServerMode
+            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to enable interactive file analysis.`
+            : err.message;
+          showError(errorMsg);
         }
       }
 
@@ -3641,7 +3645,7 @@
         const formData = new FormData();
         formData.append('file', file);
         try {
-          const res = await fetch('/api/upload', {
+          const res = await fetch(`${API_BASE}/api/upload`, {
             method: 'POST',
             body: formData
           });
@@ -3656,14 +3660,17 @@
           document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
         } catch (err) {
           setAnalyzing(false);
-          showError(err.message);
+          const errorMsg = !isServerMode
+            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to enable file uploads.`
+            : err.message;
+          showError(errorMsg);
         }
       }
 
       async function loadQuickDemo() {
         setAnalyzing(true, "Loading mock result demo contract...");
         try {
-          const res = await fetch('/api/mock');
+          const res = await fetch(`${API_BASE}/api/mock`);
           if (!res.ok) {
             throw new Error(`Failed to load demo: HTTP ${res.status}`);
           }
@@ -3674,7 +3681,10 @@
           document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
         } catch (err) {
           setAnalyzing(false);
-          showError(err.message);
+          const errorMsg = !isServerMode
+            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to enable demo loading.`
+            : err.message;
+          showError(errorMsg);
         }
       }
 
@@ -3720,14 +3730,17 @@
         }
       });
 
+      // Render embedded result immediately if present
+      if (resultData && resultData.meta) {
+        renderDashboard();
+      }
+
       // Check query param e.g. ?file=...
       const urlParams = new URLSearchParams(window.location.search);
       const queryFile = urlParams.get('file') || urlParams.get('path');
       if (queryFile && isServerMode) {
         localPathInput.value = queryFile;
         analyzePath(queryFile);
-      } else if (resultData.meta) {
-        renderDashboard();
       }
 
     })();
