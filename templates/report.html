@@ -1032,6 +1032,56 @@
       align-items: center;
       gap: 0.6rem;
     }
+    .timeline-intro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pill-time-delta {
+      font-family: var(--font-mono);
+      font-size: 0.775rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(244, 63, 94, 0.12);
+      color: var(--color-fatal);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .pill-time-delta.pill-trigger-moment {
+      background: var(--color-fatal);
+      color: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 0 10px var(--color-fatal-glow);
+    }
+    .cascade-collapsed-card {
+      margin: 1rem 0;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px dashed var(--border-strong);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+    }
+    .cascade-collapsed-card:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+      border-color: var(--color-primary);
+    }
     .timeline-tree {
       position: relative;
       padding-left: 2.5rem;
@@ -1428,10 +1478,20 @@
 
       <div class="timeline-container">
         <div class="timeline-intro" id="crashIntroBanner">
-          <h3 id="crashTriggerTitle">
-            <span>💥 Reconstructed Crash Sequence</span>
-          </h3>
-          <div class="time-range" id="crashTriggerSubtext">--</div>
+          <div class="timeline-intro-header">
+            <div>
+              <h3 id="crashTriggerTitle">
+                <span>💥 Reconstructed Crash Sequence</span>
+              </h3>
+              <div class="time-range" id="crashTriggerSubtext">--</div>
+            </div>
+            <div class="timeline-controls" id="timelineControls">
+              <button id="btnToggleCascade" class="btn btn-outline" title="Expand or collapse pre-crash sequence cascade">
+                <span id="cascadeToggleIcon">▾</span>
+                <span id="cascadeToggleText">Collapse Pre-Crash Cascade</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="timeline-tree" id="timelineTreeContainer">
@@ -2107,12 +2167,17 @@ __CHART_JS__
       const timelineTree = document.getElementById('timelineTreeContainer');
       const crashIntro = document.getElementById('crashTriggerTitle');
       const crashSubtext = document.getElementById('crashTriggerSubtext');
+      const btnToggleCascade = document.getElementById('btnToggleCascade');
+      let isCascadeCollapsed = false;
 
       function renderCrashSequence(crashes) {
         timelineTree.innerHTML = '';
+        const toggleBtn = document.getElementById('btnToggleCascade');
+
         if (!crashes || crashes.length === 0) {
           crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
           crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
+          if (toggleBtn) toggleBtn.style.display = 'none';
           return;
         }
 
@@ -2122,9 +2187,52 @@ __CHART_JS__
         crashSubtext.textContent = `Triggered at ${formatIso(trigger.ts)} (Line ${formatNumber(trigger.line_no)})`;
 
         const sequence = crash.sequence || [];
-        const baseTime = sequence.length > 0 && sequence[0].ts ? new Date(sequence[0].ts).getTime() : 0;
+        if (sequence.length <= 2 && toggleBtn) {
+          toggleBtn.style.display = 'none';
+        } else if (toggleBtn) {
+          toggleBtn.style.display = 'inline-flex';
+          const icon = document.getElementById('cascadeToggleIcon');
+          const text = document.getElementById('cascadeToggleText');
+          if (isCascadeCollapsed) {
+            icon.textContent = '▸';
+            text.textContent = `Expand Pre-Crash Cascade (${sequence.length} events)`;
+          } else {
+            icon.textContent = '▾';
+            text.textContent = 'Collapse Pre-Crash Cascade';
+          }
+        }
 
-        sequence.forEach((evt) => {
+        const triggerTime = trigger.ts ? new Date(trigger.ts).getTime() : (sequence.length > 0 ? new Date(sequence[sequence.length - 1].ts).getTime() : 0);
+
+        const shouldCollapse = isCascadeCollapsed && sequence.length > 2;
+        let intermediateCollapsedRendered = false;
+        const intermediateCount = sequence.length - 2;
+
+        sequence.forEach((evt, idx) => {
+          const isFirstItem = idx === 0;
+          const isLastItem = idx === sequence.length - 1 || evt.is_trigger;
+
+          if (shouldCollapse && !isFirstItem && !isLastItem) {
+            if (!intermediateCollapsedRendered) {
+              const collapseCard = document.createElement('div');
+              collapseCard.className = 'cascade-collapsed-card';
+              collapseCard.innerHTML = `
+                <span style="font-size: 1.1rem;">⚡</span>
+                <div>
+                  <strong>${intermediateCount} pre-crash warning/error events collapsed</strong>
+                  <div style="font-size: 0.775rem; color: var(--text-subtle); margin-top: 0.15rem;">Click here to expand the full event cascade leading to termination</div>
+                </div>
+              `;
+              collapseCard.addEventListener('click', () => {
+                isCascadeCollapsed = false;
+                renderCrashSequence(crashes);
+              });
+              timelineTree.appendChild(collapseCard);
+              intermediateCollapsedRendered = true;
+            }
+            return;
+          }
+
           const item = document.createElement('div');
           let itemClass = 'timeline-item';
           let nodeIcon = '⚡';
@@ -2140,13 +2248,20 @@ __CHART_JS__
 
           item.className = itemClass;
 
-          let deltaStr = '+00:00';
-          if (evt.ts && baseTime > 0) {
-            const curTime = new Date(evt.ts).getTime();
-            const diffSeconds = Math.max(0, Math.floor((curTime - baseTime) / 1000));
-            const mins = String(Math.floor(diffSeconds / 60)).padStart(2, '0');
-            const secs = String(diffSeconds % 60).padStart(2, '0');
-            deltaStr = `+${mins}:${secs}`;
+          // Time delta relative to the crash trigger
+          const curTime = evt.ts ? new Date(evt.ts).getTime() : 0;
+          let deltaBadgeHtml = '';
+
+          if (evt.is_trigger || (triggerTime > 0 && curTime >= triggerTime)) {
+            deltaBadgeHtml = `<span class="pill pill-time-delta pill-trigger-moment">00:00 (Crash Trigger)</span>`;
+          } else if (triggerTime > 0 && curTime > 0) {
+            const diffSeconds = Math.max(0, Math.round((triggerTime - curTime) / 1000));
+            const mins = Math.floor(diffSeconds / 60);
+            const secs = diffSeconds % 60;
+            const formattedDelta = `-${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}s before crash`;
+            deltaBadgeHtml = `<span class="pill pill-time-delta" title="${diffSeconds}s before crash trigger">⏱ ${formattedDelta}</span>`;
+          } else {
+            deltaBadgeHtml = `<span class="pill pill-time-delta">-- before crash</span>`;
           }
 
           let levelPill = 'pill-neutral';
@@ -2172,10 +2287,10 @@ __CHART_JS__
             <div class="timeline-content-card">
               <div class="timeline-item-meta">
                 <div class="timeline-time-info">
-                  <span class="timeline-delta">${deltaStr}</span>
+                  ${deltaBadgeHtml}
                   <span>${formatIso(evt.ts)}</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                   ${badges}
                   ${clusterLink}
                 </div>
@@ -2187,6 +2302,14 @@ __CHART_JS__
           `;
 
           timelineTree.appendChild(item);
+        });
+      }
+
+      if (btnToggleCascade) {
+        btnToggleCascade.addEventListener('click', () => {
+          isCascadeCollapsed = !isCascadeCollapsed;
+          const crashes = resultData.crashes || [];
+          renderCrashSequence(crashes);
         });
       }
 

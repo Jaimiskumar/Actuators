@@ -1032,6 +1032,56 @@
       align-items: center;
       gap: 0.6rem;
     }
+    .timeline-intro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pill-time-delta {
+      font-family: var(--font-mono);
+      font-size: 0.775rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(244, 63, 94, 0.12);
+      color: var(--color-fatal);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .pill-time-delta.pill-trigger-moment {
+      background: var(--color-fatal);
+      color: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 0 10px var(--color-fatal-glow);
+    }
+    .cascade-collapsed-card {
+      margin: 1rem 0;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px dashed var(--border-strong);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+    }
+    .cascade-collapsed-card:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+      border-color: var(--color-primary);
+    }
     .timeline-tree {
       position: relative;
       padding-left: 2.5rem;
@@ -1428,10 +1478,20 @@
 
       <div class="timeline-container">
         <div class="timeline-intro" id="crashIntroBanner">
-          <h3 id="crashTriggerTitle">
-            <span>💥 Reconstructed Crash Sequence</span>
-          </h3>
-          <div class="time-range" id="crashTriggerSubtext">--</div>
+          <div class="timeline-intro-header">
+            <div>
+              <h3 id="crashTriggerTitle">
+                <span>💥 Reconstructed Crash Sequence</span>
+              </h3>
+              <div class="time-range" id="crashTriggerSubtext">--</div>
+            </div>
+            <div class="timeline-controls" id="timelineControls">
+              <button id="btnToggleCascade" class="btn btn-outline" title="Expand or collapse pre-crash sequence cascade">
+                <span id="cascadeToggleIcon">▾</span>
+                <span id="cascadeToggleText">Collapse Pre-Crash Cascade</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="timeline-tree" id="timelineTreeContainer">
@@ -1453,160 +1513,72 @@
   <script id="logdetective-raw-data" type="application/json">
 {
   "meta": {
-    "file": "sample.log",
-    "size_bytes": 1174162,
-    "lines": 10000,
-    "events": 9988,
-    "malformed_lines": 0,
-    "duration_s": 0.05,
-    "peak_mem_mb": 52.67,
+    "file": "sample_crash.log",
+    "size_bytes": 104857600,
+    "lines": 524300,
+    "events": 512000,
+    "malformed_lines": 12,
+    "duration_s": 1.42,
+    "peak_mem_mb": 48.6,
     "time_range": [
-      "2026-11-21T10:00:00Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:00:00.000000Z",
+      "2026-11-21T10:15:32.410000Z"
     ],
     "level_counts": {
-      "DEBUG": 0,
-      "INFO": 9644,
-      "WARN": 2,
-      "ERROR": 339,
-      "FATAL": 2,
-      "UNKNOWN": 1
+      "DEBUG": 120000,
+      "INFO": 382000,
+      "WARN": 8400,
+      "ERROR": 1580,
+      "FATAL": 8
     }
   },
   "clusters": [
     {
-      "id": "c3",
+      "id": "c1",
       "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 338,
+      "count": 942,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.309000Z",
-        "line_no": 3518
+        "ts": "2026-11-21T10:04:12.102000Z",
+        "line_no": 42100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:35.444000Z",
-        "line_no": 9978
+        "ts": "2026-11-21T10:15:10.005000Z",
+        "line_no": 518200
       },
-      "sample": "Connection to database 10.0.2.86:5432 timed out after 9542ms",
-      "stack_top": [],
+      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+      "stack_top": [
+        "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl",
+        "org.postgresql.Driver.connect",
+        "com.zaxxer.hikari.pool.PoolBase.newConnection"
+      ],
       "services": [
-        "order-service"
+        "order-service",
+        "billing-service"
       ],
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        4,
-        7,
-        1,
-        1,
-        6,
-        7,
-        4,
-        2,
         5,
-        4,
-        8,
-        5,
-        2,
-        5,
-        8,
-        3,
-        5,
-        4,
-        4,
-        4,
-        5,
-        7,
-        6,
-        3,
-        4,
-        5,
-        5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        6,
-        2,
-        6,
-        4,
-        4,
-        12,
-        7,
-        8,
-        3,
-        2,
-        10,
-        6,
-        4,
-        4,
-        6,
-        4,
-        6,
-        3,
-        6,
-        7,
-        9,
-        5,
-        5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        7,
-        3,
-        4,
-        6
+        45,
+        120,
+        250,
+        310,
+        212
       ]
     },
     {
-      "id": "c1",
+      "id": "c2",
       "template": "Connection pool usage above threshold: <NUM>%",
-      "count": 1,
+      "count": 480,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:02:45.310000Z",
+        "line_no": 12500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:14:50.880000Z",
+        "line_no": 501300
       },
       "sample": "Connection pool usage above threshold: 88%",
       "stack_top": [],
@@ -1615,244 +1587,27 @@
       ],
       "buckets": [
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        8,
+        32,
+        90,
+        110,
+        120,
+        80,
+        40
       ]
     },
     {
-      "id": "c2",
-      "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 1,
-      "level": "ERROR",
-      "first_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
-        "line_no": 3500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
-        "line_no": 3500
-      },
-      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
-      "stack_top": [
-        "Traceback (most recent call last):",
-        "File \"/app/services/checkout.py\", line 142, in process_payment",
-        "conn = db_pool.get_connection(timeout=5.0)"
-      ],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c4",
+      "id": "c3",
       "template": "Retrying operation after error: <STR>",
-      "count": 1,
+      "count": 158,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:02:33Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:04:30.000000Z",
+        "line_no": 44800
       },
       "last_seen": {
-        "ts": "2026-11-21T10:02:33Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:15:00.120000Z",
+        "line_no": 510000
       },
       "sample": "Retrying operation after error: 'Connection refused'",
       "stack_top": [],
@@ -1862,121 +1617,32 @@
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        2,
+        18,
+        45,
+        50,
+        30,
+        13
       ]
     },
     {
-      "id": "c5",
+      "id": "c4",
       "template": "Pool exhausted: cannot allocate connection to <PATH>",
-      "count": 1,
+      "count": 12,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:20.000000Z",
+        "line_no": 523100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:30.200000Z",
+        "line_no": 524100
       },
       "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-      "stack_top": [],
+      "stack_top": [
+        "com.zaxxer.hikari.pool.HikariPool.getConnection",
+        "com.example.orders.CheckoutService.processPayment"
+      ],
       "services": [
         "order-service"
       ],
@@ -1987,692 +1653,94 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c6",
-      "template": "error: OutOfMemoryError in worker thread pool",
-      "count": 1,
-      "level": "FATAL",
-      "first_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500
-      },
-      "sample": "error: OutOfMemoryError in worker thread pool",
-      "stack_top": [],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0
+        2,
+        10
       ]
     }
   ],
   "timeline": {
     "bucket_edges": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:00:02.760000Z",
-      "2026-11-21T10:00:05.520000Z",
-      "2026-11-21T10:00:08.280000Z",
-      "2026-11-21T10:00:11.040000Z",
-      "2026-11-21T10:00:13.800000Z",
-      "2026-11-21T10:00:16.560000Z",
-      "2026-11-21T10:00:19.320000Z",
-      "2026-11-21T10:00:22.080000Z",
-      "2026-11-21T10:00:24.840000Z",
-      "2026-11-21T10:00:27.600000Z",
-      "2026-11-21T10:00:30.360000Z",
-      "2026-11-21T10:00:33.120000Z",
-      "2026-11-21T10:00:35.880000Z",
-      "2026-11-21T10:00:38.640000Z",
-      "2026-11-21T10:00:41.400000Z",
-      "2026-11-21T10:00:44.160000Z",
-      "2026-11-21T10:00:46.920000Z",
-      "2026-11-21T10:00:49.680000Z",
-      "2026-11-21T10:00:52.440000Z",
-      "2026-11-21T10:00:55.200000Z",
-      "2026-11-21T10:00:57.960000Z",
-      "2026-11-21T10:01:00.720000Z",
-      "2026-11-21T10:01:03.480000Z",
-      "2026-11-21T10:01:06.240000Z",
-      "2026-11-21T10:01:09Z",
-      "2026-11-21T10:01:11.760000Z",
-      "2026-11-21T10:01:14.520000Z",
-      "2026-11-21T10:01:17.280000Z",
-      "2026-11-21T10:01:20.040000Z",
-      "2026-11-21T10:01:22.800000Z",
-      "2026-11-21T10:01:25.560000Z",
-      "2026-11-21T10:01:28.320000Z",
-      "2026-11-21T10:01:31.080000Z",
-      "2026-11-21T10:01:33.840000Z",
-      "2026-11-21T10:01:36.600000Z",
-      "2026-11-21T10:01:39.360000Z",
-      "2026-11-21T10:01:42.120000Z",
-      "2026-11-21T10:01:44.880000Z",
-      "2026-11-21T10:01:47.640000Z",
-      "2026-11-21T10:01:50.400000Z",
-      "2026-11-21T10:01:53.160000Z",
-      "2026-11-21T10:01:55.920000Z",
-      "2026-11-21T10:01:58.680000Z",
-      "2026-11-21T10:02:01.440000Z",
-      "2026-11-21T10:02:04.200000Z",
-      "2026-11-21T10:02:06.960000Z",
-      "2026-11-21T10:02:09.720000Z",
-      "2026-11-21T10:02:12.480000Z",
-      "2026-11-21T10:02:15.240000Z",
-      "2026-11-21T10:02:18Z",
-      "2026-11-21T10:02:20.760000Z",
-      "2026-11-21T10:02:23.520000Z",
-      "2026-11-21T10:02:26.280000Z",
-      "2026-11-21T10:02:29.040000Z",
-      "2026-11-21T10:02:31.800000Z",
-      "2026-11-21T10:02:34.560000Z",
-      "2026-11-21T10:02:37.320000Z",
-      "2026-11-21T10:02:40.080000Z",
-      "2026-11-21T10:02:42.840000Z",
-      "2026-11-21T10:02:45.600000Z",
-      "2026-11-21T10:02:48.360000Z",
-      "2026-11-21T10:02:51.120000Z",
-      "2026-11-21T10:02:53.880000Z",
-      "2026-11-21T10:02:56.640000Z",
-      "2026-11-21T10:02:59.400000Z",
-      "2026-11-21T10:03:02.160000Z",
-      "2026-11-21T10:03:04.920000Z",
-      "2026-11-21T10:03:07.680000Z",
-      "2026-11-21T10:03:10.440000Z",
-      "2026-11-21T10:03:13.200000Z",
-      "2026-11-21T10:03:15.960000Z",
-      "2026-11-21T10:03:18.720000Z",
-      "2026-11-21T10:03:21.480000Z",
-      "2026-11-21T10:03:24.240000Z",
-      "2026-11-21T10:03:27Z",
-      "2026-11-21T10:03:29.760000Z",
-      "2026-11-21T10:03:32.520000Z",
-      "2026-11-21T10:03:35.280000Z",
-      "2026-11-21T10:03:38.040000Z",
-      "2026-11-21T10:03:40.800000Z",
-      "2026-11-21T10:03:43.560000Z",
-      "2026-11-21T10:03:46.320000Z",
-      "2026-11-21T10:03:49.080000Z",
-      "2026-11-21T10:03:51.840000Z",
-      "2026-11-21T10:03:54.600000Z",
-      "2026-11-21T10:03:57.360000Z",
-      "2026-11-21T10:04:00.120000Z",
-      "2026-11-21T10:04:02.880000Z",
-      "2026-11-21T10:04:05.640000Z",
-      "2026-11-21T10:04:08.400000Z",
-      "2026-11-21T10:04:11.160000Z",
-      "2026-11-21T10:04:13.920000Z",
-      "2026-11-21T10:04:16.680000Z",
-      "2026-11-21T10:04:19.440000Z",
-      "2026-11-21T10:04:22.200000Z",
-      "2026-11-21T10:04:24.960000Z",
-      "2026-11-21T10:04:27.720000Z",
-      "2026-11-21T10:04:30.480000Z",
-      "2026-11-21T10:04:33.240000Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:02:00Z",
+      "2026-11-21T10:04:00Z",
+      "2026-11-21T10:06:00Z",
+      "2026-11-21T10:08:00Z",
+      "2026-11-21T10:10:00Z",
+      "2026-11-21T10:12:00Z",
+      "2026-11-21T10:14:00Z",
+      "2026-11-21T10:16:00Z"
     ],
     "errors_per_bucket": [
       0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      2,
-      4,
-      7,
-      1,
-      1,
-      6,
-      7,
-      4,
-      2,
-      5,
-      4,
       8,
-      5,
-      2,
-      5,
-      8,
-      3,
-      5,
-      4,
-      4,
-      5,
-      5,
-      7,
-      6,
-      3,
-      4,
-      5,
-      5,
-      6,
-      7,
-      7,
-      9,
-      3,
-      6,
-      2,
-      6,
-      4,
-      4,
-      12,
-      7,
-      8,
-      3,
-      2,
-      10,
-      6,
-      4,
-      4,
-      6,
-      4,
-      6,
-      4,
-      6,
-      7,
-      9,
-      5,
-      5,
-      6,
-      7,
-      7,
-      9,
-      4,
-      7,
-      3,
-      4,
-      6
+      39,
+      153,
+      275,
+      420,
+      392,
+      265
     ]
   },
   "crashes": [
     {
       "trigger": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500,
-        "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
+        "ts": "2026-11-21T10:15:32.410000Z",
+        "line_no": 524298,
+        "message": "fatal error: OutOfMemoryError in worker thread pool"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:03:55.297000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/69136 in 21ms with status 200",
-          "cluster_id": null,
+          "ts": "2026-11-21T10:02:45.310000Z",
+          "level": "WARN",
+          "message": "Connection pool usage above threshold: 88%",
+          "cluster_id": "c2",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:12.102000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "cluster_id": "c1",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:30.000000Z",
+          "level": "WARN",
+          "message": "Retrying operation after error: 'Connection refused'",
+          "cluster_id": "c3",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:15.000000Z",
+          "level": "WARN",
+          "message": "... repeated x45 times",
+          "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.122",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.392000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/25422 in 45ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.420000Z",
-          "level": "INFO",
-          "message": "User 82510 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.428000Z",
-          "level": "INFO",
-          "message": "User 75552 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.473000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/47954 in 19ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.205",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.502000Z",
-          "level": "INFO",
-          "message": "User 1467 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.512000Z",
-          "level": "INFO",
-          "message": "User 80969 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.557000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/69096 in 21ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.87",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.621000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/56209 in 39ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.660000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/30710 in 28ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.696000Z",
-          "level": "INFO",
-          "message": "User 87331 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.714000Z",
+          "ts": "2026-11-21T10:15:20.000000Z",
           "level": "FATAL",
           "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-          "cluster_id": "c5",
+          "cluster_id": "c4",
           "is_first_occurrence": true,
-          "is_trigger": true
-        }
-      ]
-    },
-    {
-      "trigger": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500,
-        "message": "error: OutOfMemoryError in worker thread pool"
-      },
-      "sequence": [
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.115",
-          "cluster_id": null,
-          "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:22.245000Z",
-          "level": "INFO",
-          "message": "User 53418 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.285000Z",
-          "level": "INFO",
-          "message": "User 27081 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.293000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/31536 in 41ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.318000Z",
-          "level": "INFO",
-          "message": "User 86007 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.332000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/19924 in 21ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.348000Z",
-          "level": "INFO",
-          "message": "User 16763 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.361000Z",
-          "level": "INFO",
-          "message": "User 92222 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.394000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/60741 in 16ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.412000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/20069 in 34ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.77",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.2",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.120",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.185",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.522000Z",
+          "ts": "2026-11-21T10:15:32.410000Z",
           "level": "FATAL",
-          "message": "error: OutOfMemoryError in worker thread pool",
-          "cluster_id": "c6",
+          "message": "fatal error: OutOfMemoryError in worker thread pool",
+          "cluster_id": null,
           "is_first_occurrence": true,
           "is_trigger": true
         }
       ]
     }
   ],
-  "ai_summary": null
+  "ai_summary": "Root cause: Initial warning for database connection pool saturation escalated into a series of connection timeouts against 10.0.4.12:5432. Repeated retry attempts rapidly depleted remaining worker threads and heap memory, culminating in pool exhaustion and a final OutOfMemoryError crash."
 }
   </script>
 
@@ -2711,160 +1779,72 @@
       try {
         if (rawJson && !rawJson.includes("{
   "meta": {
-    "file": "sample.log",
-    "size_bytes": 1174162,
-    "lines": 10000,
-    "events": 9988,
-    "malformed_lines": 0,
-    "duration_s": 0.05,
-    "peak_mem_mb": 52.67,
+    "file": "sample_crash.log",
+    "size_bytes": 104857600,
+    "lines": 524300,
+    "events": 512000,
+    "malformed_lines": 12,
+    "duration_s": 1.42,
+    "peak_mem_mb": 48.6,
     "time_range": [
-      "2026-11-21T10:00:00Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:00:00.000000Z",
+      "2026-11-21T10:15:32.410000Z"
     ],
     "level_counts": {
-      "DEBUG": 0,
-      "INFO": 9644,
-      "WARN": 2,
-      "ERROR": 339,
-      "FATAL": 2,
-      "UNKNOWN": 1
+      "DEBUG": 120000,
+      "INFO": 382000,
+      "WARN": 8400,
+      "ERROR": 1580,
+      "FATAL": 8
     }
   },
   "clusters": [
     {
-      "id": "c3",
+      "id": "c1",
       "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 338,
+      "count": 942,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.309000Z",
-        "line_no": 3518
+        "ts": "2026-11-21T10:04:12.102000Z",
+        "line_no": 42100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:35.444000Z",
-        "line_no": 9978
+        "ts": "2026-11-21T10:15:10.005000Z",
+        "line_no": 518200
       },
-      "sample": "Connection to database 10.0.2.86:5432 timed out after 9542ms",
-      "stack_top": [],
+      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+      "stack_top": [
+        "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl",
+        "org.postgresql.Driver.connect",
+        "com.zaxxer.hikari.pool.PoolBase.newConnection"
+      ],
       "services": [
-        "order-service"
+        "order-service",
+        "billing-service"
       ],
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        4,
-        7,
-        1,
-        1,
-        6,
-        7,
-        4,
-        2,
         5,
-        4,
-        8,
-        5,
-        2,
-        5,
-        8,
-        3,
-        5,
-        4,
-        4,
-        4,
-        5,
-        7,
-        6,
-        3,
-        4,
-        5,
-        5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        6,
-        2,
-        6,
-        4,
-        4,
-        12,
-        7,
-        8,
-        3,
-        2,
-        10,
-        6,
-        4,
-        4,
-        6,
-        4,
-        6,
-        3,
-        6,
-        7,
-        9,
-        5,
-        5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        7,
-        3,
-        4,
-        6
+        45,
+        120,
+        250,
+        310,
+        212
       ]
     },
     {
-      "id": "c1",
+      "id": "c2",
       "template": "Connection pool usage above threshold: <NUM>%",
-      "count": 1,
+      "count": 480,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:02:45.310000Z",
+        "line_no": 12500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:14:50.880000Z",
+        "line_no": 501300
       },
       "sample": "Connection pool usage above threshold: 88%",
       "stack_top": [],
@@ -2873,244 +1853,27 @@
       ],
       "buckets": [
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        8,
+        32,
+        90,
+        110,
+        120,
+        80,
+        40
       ]
     },
     {
-      "id": "c2",
-      "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 1,
-      "level": "ERROR",
-      "first_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
-        "line_no": 3500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
-        "line_no": 3500
-      },
-      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
-      "stack_top": [
-        "Traceback (most recent call last):",
-        "File \"/app/services/checkout.py\", line 142, in process_payment",
-        "conn = db_pool.get_connection(timeout=5.0)"
-      ],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c4",
+      "id": "c3",
       "template": "Retrying operation after error: <STR>",
-      "count": 1,
+      "count": 158,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:02:33Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:04:30.000000Z",
+        "line_no": 44800
       },
       "last_seen": {
-        "ts": "2026-11-21T10:02:33Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:15:00.120000Z",
+        "line_no": 510000
       },
       "sample": "Retrying operation after error: 'Connection refused'",
       "stack_top": [],
@@ -3120,121 +1883,32 @@
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        2,
+        18,
+        45,
+        50,
+        30,
+        13
       ]
     },
     {
-      "id": "c5",
+      "id": "c4",
       "template": "Pool exhausted: cannot allocate connection to <PATH>",
-      "count": 1,
+      "count": 12,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:20.000000Z",
+        "line_no": 523100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:30.200000Z",
+        "line_no": 524100
       },
       "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-      "stack_top": [],
+      "stack_top": [
+        "com.zaxxer.hikari.pool.HikariPool.getConnection",
+        "com.example.orders.CheckoutService.processPayment"
+      ],
       "services": [
         "order-service"
       ],
@@ -3245,692 +1919,94 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c6",
-      "template": "error: OutOfMemoryError in worker thread pool",
-      "count": 1,
-      "level": "FATAL",
-      "first_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500
-      },
-      "sample": "error: OutOfMemoryError in worker thread pool",
-      "stack_top": [],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0
+        2,
+        10
       ]
     }
   ],
   "timeline": {
     "bucket_edges": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:00:02.760000Z",
-      "2026-11-21T10:00:05.520000Z",
-      "2026-11-21T10:00:08.280000Z",
-      "2026-11-21T10:00:11.040000Z",
-      "2026-11-21T10:00:13.800000Z",
-      "2026-11-21T10:00:16.560000Z",
-      "2026-11-21T10:00:19.320000Z",
-      "2026-11-21T10:00:22.080000Z",
-      "2026-11-21T10:00:24.840000Z",
-      "2026-11-21T10:00:27.600000Z",
-      "2026-11-21T10:00:30.360000Z",
-      "2026-11-21T10:00:33.120000Z",
-      "2026-11-21T10:00:35.880000Z",
-      "2026-11-21T10:00:38.640000Z",
-      "2026-11-21T10:00:41.400000Z",
-      "2026-11-21T10:00:44.160000Z",
-      "2026-11-21T10:00:46.920000Z",
-      "2026-11-21T10:00:49.680000Z",
-      "2026-11-21T10:00:52.440000Z",
-      "2026-11-21T10:00:55.200000Z",
-      "2026-11-21T10:00:57.960000Z",
-      "2026-11-21T10:01:00.720000Z",
-      "2026-11-21T10:01:03.480000Z",
-      "2026-11-21T10:01:06.240000Z",
-      "2026-11-21T10:01:09Z",
-      "2026-11-21T10:01:11.760000Z",
-      "2026-11-21T10:01:14.520000Z",
-      "2026-11-21T10:01:17.280000Z",
-      "2026-11-21T10:01:20.040000Z",
-      "2026-11-21T10:01:22.800000Z",
-      "2026-11-21T10:01:25.560000Z",
-      "2026-11-21T10:01:28.320000Z",
-      "2026-11-21T10:01:31.080000Z",
-      "2026-11-21T10:01:33.840000Z",
-      "2026-11-21T10:01:36.600000Z",
-      "2026-11-21T10:01:39.360000Z",
-      "2026-11-21T10:01:42.120000Z",
-      "2026-11-21T10:01:44.880000Z",
-      "2026-11-21T10:01:47.640000Z",
-      "2026-11-21T10:01:50.400000Z",
-      "2026-11-21T10:01:53.160000Z",
-      "2026-11-21T10:01:55.920000Z",
-      "2026-11-21T10:01:58.680000Z",
-      "2026-11-21T10:02:01.440000Z",
-      "2026-11-21T10:02:04.200000Z",
-      "2026-11-21T10:02:06.960000Z",
-      "2026-11-21T10:02:09.720000Z",
-      "2026-11-21T10:02:12.480000Z",
-      "2026-11-21T10:02:15.240000Z",
-      "2026-11-21T10:02:18Z",
-      "2026-11-21T10:02:20.760000Z",
-      "2026-11-21T10:02:23.520000Z",
-      "2026-11-21T10:02:26.280000Z",
-      "2026-11-21T10:02:29.040000Z",
-      "2026-11-21T10:02:31.800000Z",
-      "2026-11-21T10:02:34.560000Z",
-      "2026-11-21T10:02:37.320000Z",
-      "2026-11-21T10:02:40.080000Z",
-      "2026-11-21T10:02:42.840000Z",
-      "2026-11-21T10:02:45.600000Z",
-      "2026-11-21T10:02:48.360000Z",
-      "2026-11-21T10:02:51.120000Z",
-      "2026-11-21T10:02:53.880000Z",
-      "2026-11-21T10:02:56.640000Z",
-      "2026-11-21T10:02:59.400000Z",
-      "2026-11-21T10:03:02.160000Z",
-      "2026-11-21T10:03:04.920000Z",
-      "2026-11-21T10:03:07.680000Z",
-      "2026-11-21T10:03:10.440000Z",
-      "2026-11-21T10:03:13.200000Z",
-      "2026-11-21T10:03:15.960000Z",
-      "2026-11-21T10:03:18.720000Z",
-      "2026-11-21T10:03:21.480000Z",
-      "2026-11-21T10:03:24.240000Z",
-      "2026-11-21T10:03:27Z",
-      "2026-11-21T10:03:29.760000Z",
-      "2026-11-21T10:03:32.520000Z",
-      "2026-11-21T10:03:35.280000Z",
-      "2026-11-21T10:03:38.040000Z",
-      "2026-11-21T10:03:40.800000Z",
-      "2026-11-21T10:03:43.560000Z",
-      "2026-11-21T10:03:46.320000Z",
-      "2026-11-21T10:03:49.080000Z",
-      "2026-11-21T10:03:51.840000Z",
-      "2026-11-21T10:03:54.600000Z",
-      "2026-11-21T10:03:57.360000Z",
-      "2026-11-21T10:04:00.120000Z",
-      "2026-11-21T10:04:02.880000Z",
-      "2026-11-21T10:04:05.640000Z",
-      "2026-11-21T10:04:08.400000Z",
-      "2026-11-21T10:04:11.160000Z",
-      "2026-11-21T10:04:13.920000Z",
-      "2026-11-21T10:04:16.680000Z",
-      "2026-11-21T10:04:19.440000Z",
-      "2026-11-21T10:04:22.200000Z",
-      "2026-11-21T10:04:24.960000Z",
-      "2026-11-21T10:04:27.720000Z",
-      "2026-11-21T10:04:30.480000Z",
-      "2026-11-21T10:04:33.240000Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:02:00Z",
+      "2026-11-21T10:04:00Z",
+      "2026-11-21T10:06:00Z",
+      "2026-11-21T10:08:00Z",
+      "2026-11-21T10:10:00Z",
+      "2026-11-21T10:12:00Z",
+      "2026-11-21T10:14:00Z",
+      "2026-11-21T10:16:00Z"
     ],
     "errors_per_bucket": [
       0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      2,
-      4,
-      7,
-      1,
-      1,
-      6,
-      7,
-      4,
-      2,
-      5,
-      4,
       8,
-      5,
-      2,
-      5,
-      8,
-      3,
-      5,
-      4,
-      4,
-      5,
-      5,
-      7,
-      6,
-      3,
-      4,
-      5,
-      5,
-      6,
-      7,
-      7,
-      9,
-      3,
-      6,
-      2,
-      6,
-      4,
-      4,
-      12,
-      7,
-      8,
-      3,
-      2,
-      10,
-      6,
-      4,
-      4,
-      6,
-      4,
-      6,
-      4,
-      6,
-      7,
-      9,
-      5,
-      5,
-      6,
-      7,
-      7,
-      9,
-      4,
-      7,
-      3,
-      4,
-      6
+      39,
+      153,
+      275,
+      420,
+      392,
+      265
     ]
   },
   "crashes": [
     {
       "trigger": {
-        "ts": "2026-11-21T10:03:55.714000Z",
-        "line_no": 8500,
-        "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
+        "ts": "2026-11-21T10:15:32.410000Z",
+        "line_no": 524298,
+        "message": "fatal error: OutOfMemoryError in worker thread pool"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:03:55.297000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/69136 in 21ms with status 200",
-          "cluster_id": null,
+          "ts": "2026-11-21T10:02:45.310000Z",
+          "level": "WARN",
+          "message": "Connection pool usage above threshold: 88%",
+          "cluster_id": "c2",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:12.102000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "cluster_id": "c1",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:30.000000Z",
+          "level": "WARN",
+          "message": "Retrying operation after error: 'Connection refused'",
+          "cluster_id": "c3",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:15.000000Z",
+          "level": "WARN",
+          "message": "... repeated x45 times",
+          "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.122",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.392000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/25422 in 45ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.420000Z",
-          "level": "INFO",
-          "message": "User 82510 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.428000Z",
-          "level": "INFO",
-          "message": "User 75552 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.473000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/47954 in 19ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.205",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.502000Z",
-          "level": "INFO",
-          "message": "User 1467 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.512000Z",
-          "level": "INFO",
-          "message": "User 80969 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.557000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/69096 in 21ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.87",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.621000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/56209 in 39ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.660000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/30710 in 28ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.696000Z",
-          "level": "INFO",
-          "message": "User 87331 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.714000Z",
+          "ts": "2026-11-21T10:15:20.000000Z",
           "level": "FATAL",
           "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-          "cluster_id": "c5",
+          "cluster_id": "c4",
           "is_first_occurrence": true,
-          "is_trigger": true
-        }
-      ]
-    },
-    {
-      "trigger": {
-        "ts": "2026-11-21T10:04:22.522000Z",
-        "line_no": 9500,
-        "message": "error: OutOfMemoryError in worker thread pool"
-      },
-      "sequence": [
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.115",
-          "cluster_id": null,
-          "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:22.245000Z",
-          "level": "INFO",
-          "message": "User 53418 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.285000Z",
-          "level": "INFO",
-          "message": "User 27081 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.293000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/31536 in 41ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.318000Z",
-          "level": "INFO",
-          "message": "User 86007 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.332000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/19924 in 21ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.348000Z",
-          "level": "INFO",
-          "message": "User 16763 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.361000Z",
-          "level": "INFO",
-          "message": "User 92222 authenticated successfully",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.394000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/60741 in 16ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.412000Z",
-          "level": "INFO",
-          "message": "Processed HTTP GET /api/v1/items/20069 in 34ms with status 200",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.77",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.2",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.120",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22Z",
-          "level": "INFO",
-          "message": "packet accepted from 192.168.1.185",
-          "cluster_id": null,
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.522000Z",
+          "ts": "2026-11-21T10:15:32.410000Z",
           "level": "FATAL",
-          "message": "error: OutOfMemoryError in worker thread pool",
-          "cluster_id": "c6",
+          "message": "fatal error: OutOfMemoryError in worker thread pool",
+          "cluster_id": null,
           "is_first_occurrence": true,
           "is_trigger": true
         }
       ]
     }
   ],
-  "ai_summary": null
+  "ai_summary": "Root cause: Initial warning for database connection pool saturation escalated into a series of connection timeouts against 10.0.4.12:5432. Repeated retry attempts rapidly depleted remaining worker threads and heap memory, culminating in pool exhaustion and a final OutOfMemoryError crash."
 }") && !rawJson.includes("{{ result_json")) {
           resultData = JSON.parse(rawJson);
         }
@@ -4571,12 +2647,17 @@
       const timelineTree = document.getElementById('timelineTreeContainer');
       const crashIntro = document.getElementById('crashTriggerTitle');
       const crashSubtext = document.getElementById('crashTriggerSubtext');
+      const btnToggleCascade = document.getElementById('btnToggleCascade');
+      let isCascadeCollapsed = false;
 
       function renderCrashSequence(crashes) {
         timelineTree.innerHTML = '';
+        const toggleBtn = document.getElementById('btnToggleCascade');
+
         if (!crashes || crashes.length === 0) {
           crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
           crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
+          if (toggleBtn) toggleBtn.style.display = 'none';
           return;
         }
 
@@ -4586,9 +2667,52 @@
         crashSubtext.textContent = `Triggered at ${formatIso(trigger.ts)} (Line ${formatNumber(trigger.line_no)})`;
 
         const sequence = crash.sequence || [];
-        const baseTime = sequence.length > 0 && sequence[0].ts ? new Date(sequence[0].ts).getTime() : 0;
+        if (sequence.length <= 2 && toggleBtn) {
+          toggleBtn.style.display = 'none';
+        } else if (toggleBtn) {
+          toggleBtn.style.display = 'inline-flex';
+          const icon = document.getElementById('cascadeToggleIcon');
+          const text = document.getElementById('cascadeToggleText');
+          if (isCascadeCollapsed) {
+            icon.textContent = '▸';
+            text.textContent = `Expand Pre-Crash Cascade (${sequence.length} events)`;
+          } else {
+            icon.textContent = '▾';
+            text.textContent = 'Collapse Pre-Crash Cascade';
+          }
+        }
 
-        sequence.forEach((evt) => {
+        const triggerTime = trigger.ts ? new Date(trigger.ts).getTime() : (sequence.length > 0 ? new Date(sequence[sequence.length - 1].ts).getTime() : 0);
+
+        const shouldCollapse = isCascadeCollapsed && sequence.length > 2;
+        let intermediateCollapsedRendered = false;
+        const intermediateCount = sequence.length - 2;
+
+        sequence.forEach((evt, idx) => {
+          const isFirstItem = idx === 0;
+          const isLastItem = idx === sequence.length - 1 || evt.is_trigger;
+
+          if (shouldCollapse && !isFirstItem && !isLastItem) {
+            if (!intermediateCollapsedRendered) {
+              const collapseCard = document.createElement('div');
+              collapseCard.className = 'cascade-collapsed-card';
+              collapseCard.innerHTML = `
+                <span style="font-size: 1.1rem;">⚡</span>
+                <div>
+                  <strong>${intermediateCount} pre-crash warning/error events collapsed</strong>
+                  <div style="font-size: 0.775rem; color: var(--text-subtle); margin-top: 0.15rem;">Click here to expand the full event cascade leading to termination</div>
+                </div>
+              `;
+              collapseCard.addEventListener('click', () => {
+                isCascadeCollapsed = false;
+                renderCrashSequence(crashes);
+              });
+              timelineTree.appendChild(collapseCard);
+              intermediateCollapsedRendered = true;
+            }
+            return;
+          }
+
           const item = document.createElement('div');
           let itemClass = 'timeline-item';
           let nodeIcon = '⚡';
@@ -4604,13 +2728,20 @@
 
           item.className = itemClass;
 
-          let deltaStr = '+00:00';
-          if (evt.ts && baseTime > 0) {
-            const curTime = new Date(evt.ts).getTime();
-            const diffSeconds = Math.max(0, Math.floor((curTime - baseTime) / 1000));
-            const mins = String(Math.floor(diffSeconds / 60)).padStart(2, '0');
-            const secs = String(diffSeconds % 60).padStart(2, '0');
-            deltaStr = `+${mins}:${secs}`;
+          // Time delta relative to the crash trigger
+          const curTime = evt.ts ? new Date(evt.ts).getTime() : 0;
+          let deltaBadgeHtml = '';
+
+          if (evt.is_trigger || (triggerTime > 0 && curTime >= triggerTime)) {
+            deltaBadgeHtml = `<span class="pill pill-time-delta pill-trigger-moment">00:00 (Crash Trigger)</span>`;
+          } else if (triggerTime > 0 && curTime > 0) {
+            const diffSeconds = Math.max(0, Math.round((triggerTime - curTime) / 1000));
+            const mins = Math.floor(diffSeconds / 60);
+            const secs = diffSeconds % 60;
+            const formattedDelta = `-${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}s before crash`;
+            deltaBadgeHtml = `<span class="pill pill-time-delta" title="${diffSeconds}s before crash trigger">⏱ ${formattedDelta}</span>`;
+          } else {
+            deltaBadgeHtml = `<span class="pill pill-time-delta">-- before crash</span>`;
           }
 
           let levelPill = 'pill-neutral';
@@ -4636,10 +2767,10 @@
             <div class="timeline-content-card">
               <div class="timeline-item-meta">
                 <div class="timeline-time-info">
-                  <span class="timeline-delta">${deltaStr}</span>
+                  ${deltaBadgeHtml}
                   <span>${formatIso(evt.ts)}</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                   ${badges}
                   ${clusterLink}
                 </div>
@@ -4651,6 +2782,14 @@
           `;
 
           timelineTree.appendChild(item);
+        });
+      }
+
+      if (btnToggleCascade) {
+        btnToggleCascade.addEventListener('click', () => {
+          isCascadeCollapsed = !isCascadeCollapsed;
+          const crashes = resultData.crashes || [];
+          renderCrashSequence(crashes);
         });
       }
 
