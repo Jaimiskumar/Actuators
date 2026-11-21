@@ -124,7 +124,7 @@ def synthesize_heuristic_summary(result: Result) -> str:
     return "\n".join(lines)
 
 
-def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Optional[str]:
+def generate_ai_summary(result: Result, model: str = "gemini-3.5-flash") -> Optional[str]:
     """Generate an AI summary using the Gemini API, with offline deterministic fallback.
     
     Reads GEMINI_API_KEY (or GOOGLE_API_KEY) from environment.
@@ -156,7 +156,7 @@ def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Opti
         ],
         "generationConfig": {
             "temperature": 0.2,
-            "maxOutputTokens": 300,
+            "maxOutputTokens": 1500,
         }
     }
 
@@ -186,7 +186,7 @@ def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Opti
     return synthesize_heuristic_summary(result)
 
 
-def investigate_incident(result: Result, model: str = "gemini-2.5-flash") -> dict[str, str]:
+def investigate_incident(result: Result, model: str = "gemini-3.5-flash") -> dict[str, str]:
     """AI SRE Agent: Investigates incident and provides simple-English explanation and concrete fix."""
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 
@@ -260,7 +260,7 @@ def investigate_incident(result: Result, model: str = "gemini-2.5-flash") -> dic
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 400}
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1500}
     }
     req = urllib.request.Request(
         url,

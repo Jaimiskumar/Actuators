@@ -109,7 +109,7 @@ def agent(
         ...,
         help="Path to log file to investigate with AI Agent",
     ),
-    model: str = typer.Option("gemini-2.5-flash", "--model", help="Gemini model name"),
+    model: str = typer.Option("gemini-3.5-flash", "--model", help="Gemini model name"),
     threshold: Optional[float] = typer.Option(
         512.0,
         "--threshold",
