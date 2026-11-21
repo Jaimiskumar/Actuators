@@ -68,7 +68,8 @@ def build_compact_prompt(result: Result, agent_mode: bool = False) -> str:
             '  "summary": "1-2 sentences explaining what happened in simple terms",',
             '  "patient_zero": "1 sentence describing the very first error that started the whole incident",',
             '  "cascade_analysis": "1 sentence explaining how the error multiplied into a crash",',
-            '  "recommended_fix": "1-2 practical action steps developers should take right now"',
+            '  "recommended_fix": "1-2 practical action steps developers should take right now",',
+            '  "recommended_code": "Ready-to-use, copy-pasteable code or configuration snippet (with comments) that directly fixes the root cause"',
             "}"
         ])
     else:
@@ -195,6 +196,16 @@ def investigate_incident(result: Result, model: str = "gemini-3.5-flash") -> dic
         "patient_zero": "The incident began with an initial unhandled warning/error that saturated system resources.",
         "cascade_analysis": "Rapid retry bursts compounded queue latency until the process terminated with a fatal crash.",
         "recommended_fix": "Increase database connection pool capacity, add exponential backoff on retries, and set alert thresholds on resource utilization.",
+        "recommended_code": (
+            "# application.yml: HikariCP connection pool optimization\n"
+            "spring:\n"
+            "  datasource:\n"
+            "    hikari:\n"
+            "      maximum-pool-size: 50\n"
+            "      connection-timeout: 30000  # 30 seconds\n"
+            "      idle-timeout: 600000       # 10 minutes\n"
+            "      max-lifetime: 1800000      # 30 minutes"
+        ),
     }
 
     if result.clusters:
@@ -232,17 +243,47 @@ def investigate_incident(result: Result, model: str = "gemini-3.5-flash") -> dic
                 "2. Inspect block replication status and fsck health. "
                 "3. Increase dfs.datanode.socket.write.timeout in hdfs-site.xml."
             )
+            fallback["recommended_code"] = (
+                "<!-- hdfs-site.xml: Fix DataNode socket timeouts and receiver limits -->\n"
+                "<property>\n"
+                "  <name>dfs.datanode.socket.write.timeout</name>\n"
+                "  <value>300000</value> <!-- 5 minutes -->\n"
+                "</property>\n"
+                "<property>\n"
+                "  <name>dfs.datanode.max.transfer.threads</name>\n"
+                "  <value>4096</value>\n"
+                "</property>"
+            )
         elif "apache" in sample_low or "client denied" in sample_low or "mod_jk" in sample_low or "workerenv" in sample_low:
             fallback["recommended_fix"] = (
                 "1. Check Tomcat / backend AJP connector port and worker thread saturation. "
                 "2. Verify mod_jk worker configuration, connection timeouts, and socket_keepalive. "
                 "3. Ensure backend application servers are accepting connections."
             )
+            fallback["recommended_code"] = (
+                "# workers.properties: Optimize Tomcat AJP worker pool & timeouts\n"
+                "worker.worker1.type=ajp13\n"
+                "worker.worker1.host=localhost\n"
+                "worker.worker1.port=8009\n"
+                "worker.worker1.connection_pool_timeout=60\n"
+                "worker.worker1.socket_keepalive=true\n"
+                "worker.worker1.connection_pool_size=100"
+            )
         elif "connection" in sample_low or "pool" in sample_low or "timed out" in sample_low:
             fallback["recommended_fix"] = (
                 "1. Increase database connection pool capacity (e.g. HikariCP maxPoolSize). "
                 "2. Add exponential backoff and jitter on retry loops to stop thundering herd. "
                 "3. Configure alerts on connection acquisition latency."
+            )
+            fallback["recommended_code"] = (
+                "# application.yml: HikariCP connection pool optimization\n"
+                "spring:\n"
+                "  datasource:\n"
+                "    hikari:\n"
+                "      maximum-pool-size: 50\n"
+                "      connection-timeout: 30000  # 30s\n"
+                "      idle-timeout: 600000       # 10m\n"
+                "      max-lifetime: 1800000      # 30m"
             )
 
     if result.crashes:
@@ -260,7 +301,7 @@ def investigate_incident(result: Result, model: str = "gemini-3.5-flash") -> dic
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1500}
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 2048}
     }
     req = urllib.request.Request(
         url,
@@ -279,6 +320,8 @@ def investigate_incident(result: Result, model: str = "gemini-3.5-flash") -> dic
                     clean_text = clean_text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
                 parsed = json.loads(clean_text)
                 if isinstance(parsed, dict) and "summary" in parsed:
+                    if not parsed.get("recommended_code"):
+                        parsed["recommended_code"] = fallback.get("recommended_code", "")
                     return parsed
     except urllib.error.HTTPError as exc:
         if exc.code == 403:

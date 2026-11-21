@@ -149,6 +149,7 @@ def test_investigate_incident_fallback_offline():
     assert "patient_zero" in report
     assert "cascade_analysis" in report
     assert "recommended_fix" in report
+    assert "recommended_code" in report
     assert "Line 120" in report["patient_zero"]
     assert "Line 9999" in report["cascade_analysis"]
 
@@ -167,7 +168,8 @@ def test_investigate_incident_with_gemini_api(monkeypatch):
                                 "summary": "The order service failed due to a database outage.",
                                 "patient_zero": "Timeout error at line 120 started the chain reaction.",
                                 "cascade_analysis": "Requests queued up until memory ran out.",
-                                "recommended_fix": "Increase DB connection pool and restart the pod."
+                                "recommended_fix": "Increase DB connection pool and restart the pod.",
+                                "recommended_code": "spring.datasource.hikari.maximum-pool-size: 50"
                             })
                         }
                     ]
@@ -185,3 +187,4 @@ def test_investigate_incident_with_gemini_api(monkeypatch):
         assert report["summary"] == "The order service failed due to a database outage."
         assert "Timeout error at line 120" in report["patient_zero"]
         assert "Increase DB connection pool" in report["recommended_fix"]
+        assert "maximum-pool-size" in report["recommended_code"]

@@ -139,7 +139,13 @@ def agent(
         agent_text.append(f"  {report['cascade_analysis']}\n\n", style="white")
 
         agent_text.append("Recommended Solution:\n", style="bold green")
-        agent_text.append(f"  {report['recommended_fix']}\n", style="white")
+        agent_text.append(f"  {report['recommended_fix']}\n\n", style="white")
+
+        if report.get("recommended_code"):
+            agent_text.append("Recommended Code / Configuration Fix:\n", style="bold cyan")
+            for line in report["recommended_code"].strip().splitlines():
+                style = "bright_black" if line.strip().startswith(("#", "//", "<!--", "<")) else "bold yellow"
+                agent_text.append(f"    {line}\n", style=style)
 
         console.print(Panel(agent_text, title="[bold white]AI INCIDENT INVESTIGATION REPORT[/bold white]", border_style="magenta"))
     except Exception as exc:

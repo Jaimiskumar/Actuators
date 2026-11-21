@@ -1453,6 +1453,49 @@
       margin-bottom: 1.25rem;
     }
 
+
+    .term-code-block {
+      background: #120F0D;
+      border: 1px solid #3E342B;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 0.5rem 1rem;
+      font-family: inherit;
+      color: #F0E8D5;
+      font-size: 0.82rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .ai-code-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+    .ai-code-header {
+      background: var(--bg-surface-elevated);
+      padding: 0.55rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .ai-code-pre {
+      padding: 1rem;
+      background: var(--bg-code);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      overflow-x: auto;
+      line-height: 1.5;
+      color: var(--text-main);
+      white-space: pre-wrap;
+    }
+
   </style>
 </head>
 <body>
@@ -1624,6 +1667,15 @@
         <span class="pill pill-neutral">Generated Offline / Opt-in</span>
       </div>
       <p id="aiSummaryText" class="ai-box-content"></p>
+      
+      <!-- Recommended Fix Code Snippet -->
+      <div id="aiCodeBox" class="ai-code-card" style="display: none;">
+        <div class="ai-code-header">
+          <span>Recommended Code / Configuration Fix</span>
+          <button id="btnCopyAiCode" class="btn btn-sm btn-outline" type="button">Copy Code</button>
+        </div>
+        <pre class="ai-code-pre"><code id="aiCodeContent"></code></pre>
+      </div>
     </div>
 
     <!-- 1. KPI Summary Cards Header -->
@@ -3256,11 +3308,23 @@ __CHART_JS__
           ? `Pre-crash sequence of ${crashes[0].sequence ? crashes[0].sequence.length : 1} warning/error events escalated until process crashed at Line ${crashes[0].trigger.line_no}: '${crashes[0].trigger.message}'`
           : "Error signature repeated across recorded sessions, deteriorating overall service throughput.";
 
+        let codeSnippet = "";
+        if (sampleLow.includes("dfs") || sampleLow.includes("datanode") || sampleLow.includes("blk_")) {
+          codeSnippet = "<!-- hdfs-site.xml: Fix DataNode socket timeouts & receiver thread saturation -->\n<property>\n  <name>dfs.datanode.socket.write.timeout</name>\n  <value>300000</value> <!-- 5 minutes -->\n</property>\n<property>\n  <name>dfs.datanode.max.transfer.threads</name>\n  <value>4096</value>\n</property>";
+        } else if (sampleLow.includes("apache") || sampleLow.includes("httpd") || sampleLow.includes("mod_jk") || sampleLow.includes("workerenv")) {
+          codeSnippet = "# workers.properties: Optimize Tomcat AJP worker pool & connection timeouts\nworker.worker1.type=ajp13\nworker.worker1.host=localhost\nworker.worker1.port=8009\nworker.worker1.connection_pool_timeout=60\nworker.worker1.socket_keepalive=true\nworker.worker1.connection_pool_size=100";
+        } else if (sampleLow.includes("connection") || sampleLow.includes("pool") || sampleLow.includes("timed out")) {
+          codeSnippet = "# application.yml: HikariCP connection pool optimization\nspring:\n  datasource:\n    hikari:\n      maximum-pool-size: 50\n      connection-timeout: 30000  # 30 seconds\n      idle-timeout: 600000       # 10 minutes\n      max-lifetime: 1800000      # 30 minutes";
+        } else {
+          codeSnippet = "# Python retry handler with exponential backoff & jitter\nimport time, random\n\ndef retry_operation(fn, retries=3, base_delay=0.5):\n    for attempt in range(retries):\n        try:\n            return fn()\n        except Exception as e:\n            if attempt == retries - 1: raise\n            time.sleep((base_delay * (2 ** attempt)) + random.uniform(0, 0.1))";
+        }
+
         return {
           summary: `Service [${svc}] experienced repeated failures (${root ? root.count.toLocaleString() : 0} events) that triggered a fatal process termination.`,
           patient_zero: pzText,
           cascade_analysis: cascText,
-          recommended_fix: fix
+          recommended_fix: fix,
+          recommended_code: data.recommended_code || codeSnippet
         };
       }
 
@@ -3444,6 +3508,10 @@ __CHART_JS__
   <div class="term-row">│</div>
   <div class="term-row">│ <span class="term-green">Recommended Solution:</span></div>
   <div class="term-row">│   <span class="term-white">${aiReport.recommended_fix.replace(/\n/g, '<br>│   ')}</span></div>
+  ${aiReport.recommended_code ? `
+  <div class="term-row">│</div>
+  <div class="term-row">│ <span class="term-cyan">Recommended Code / Configuration Fix:</span></div>
+  <div class="term-code-block">${aiReport.recommended_code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
   <div class="term-title">╰──────────────────────────────────────────────────────────────────────────────╯</div>
 </div>\n`;
 
@@ -3456,6 +3524,12 @@ __CHART_JS__
         plain += `│   ${aiReport.cascade_analysis}\n│\n`;
         plain += `│ Recommended Solution:\n`;
         plain += `│   ${aiReport.recommended_fix}\n`;
+        if (aiReport.recommended_code) {
+          plain += `│\n│ Recommended Code / Configuration Fix:\n`;
+          aiReport.recommended_code.split('\n').forEach(l => {
+            plain += `│     ${l}\n`;
+          });
+        }
         plain += `╰──────────────────────────────────────────────────────────────────────────────╯\n`;
 
         const termScreen = document.getElementById('terminalScreen');
@@ -3536,6 +3610,21 @@ __CHART_JS__
         if (saved === 'dashboard') initialView = 'dashboard';
       } catch (e) {}
       switchView(initialView);
+
+      const btnCopyAiCode = document.getElementById('btnCopyAiCode');
+      if (btnCopyAiCode) {
+        btnCopyAiCode.addEventListener('click', () => {
+          const codeEl = document.getElementById('aiCodeContent');
+          if (codeEl && codeEl.textContent) {
+            navigator.clipboard.writeText(codeEl.textContent).then(() => {
+              const orig = btnCopyAiCode.textContent;
+              btnCopyAiCode.textContent = "Copied!";
+              setTimeout(() => { btnCopyAiCode.textContent = orig; }, 2000);
+            });
+          }
+        });
+      }
+
 
       // Check query param e.g. ?file=...
       const urlParams = new URLSearchParams(window.location.search);
