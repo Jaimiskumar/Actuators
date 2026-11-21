@@ -21,6 +21,9 @@ app = typer.Typer(
 console = Console()
 
 
+err_console = Console(stderr=True)
+
+
 @app.command(name="analyze")
 def analyze(
     file: Path = typer.Argument(
@@ -96,7 +99,51 @@ def analyze(
     except Exception as exc:
         if debug:
             raise
-        console.print(f"[bold red]Error:[/bold red] {exc}", file=sys.stderr)
+        err_console.print(f"[bold red]Error:[/bold red] {exc}")
+        raise typer.Exit(code=1)
+
+
+@app.command(name="agent")
+def agent(
+    file: Path = typer.Argument(
+        ...,
+        help="Path to log file to investigate with AI Agent",
+    ),
+    model: str = typer.Option("gemini-2.5-flash", "--model", help="Gemini model name"),
+    threshold: Optional[float] = typer.Option(
+        512.0,
+        "--threshold",
+        "-t",
+        help="Max peak memory threshold in MB (e.g. 512, 1024, 256)",
+    ),
+):
+    """Run interactive AI SRE Agent to investigate incident and prescribe solutions."""
+    try:
+        from rich.panel import Panel
+        from rich.text import Text
+        from logdetective.ai import investigate_incident
+
+        engine = Engine()
+        result = engine.analyze(file, memory_threshold_mb=threshold)
+        console.print("\n[bold magenta]🤖 Log Detective AI SRE Agent Investigating...[/bold magenta]")
+        report = investigate_incident(result, model=model)
+
+        agent_text = Text()
+        agent_text.append("📋 Summary:\n", style="bold cyan")
+        agent_text.append(f"  {report['summary']}\n\n", style="white")
+
+        agent_text.append("🎯 Patient-Zero Trigger (Root Cause):\n", style="bold yellow")
+        agent_text.append(f"  {report['patient_zero']}\n\n", style="white")
+
+        agent_text.append("💥 Cascade Mechanism:\n", style="bold red")
+        agent_text.append(f"  {report['cascade_analysis']}\n\n", style="white")
+
+        agent_text.append("🛠️ Recommended Solution (Fix):\n", style="bold green")
+        agent_text.append(f"  {report['recommended_fix']}\n", style="white")
+
+        console.print(Panel(agent_text, title="🔍 [bold white]AI INCIDENT INVESTIGATION REPORT[/bold white]", border_style="magenta"))
+    except Exception as exc:
+        err_console.print(f"[bold red]Error:[/bold red] {exc}")
         raise typer.Exit(code=1)
 
 
@@ -119,7 +166,7 @@ def serve(
 
 
 def main():
-    if len(sys.argv) > 1 and not sys.argv[1].startswith("-") and sys.argv[1] not in ("analyze", "serve"):
+    if len(sys.argv) > 1 and not sys.argv[1].startswith("-") and sys.argv[1] not in ("analyze", "serve", "agent"):
         sys.argv.insert(1, "analyze")
     app()
 

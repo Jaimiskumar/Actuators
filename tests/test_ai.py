@@ -138,3 +138,50 @@ def test_generate_ai_summary_mock_success(monkeypatch):
         assert summary is not None
         assert "Database connection timeouts" in summary
         assert "Recommended Fix:" in summary
+
+
+def test_investigate_incident_fallback_offline():
+    from logdetective.ai import investigate_incident
+    result = _make_dummy_result()
+    report = investigate_incident(result)
+    assert isinstance(report, dict)
+    assert "summary" in report
+    assert "patient_zero" in report
+    assert "cascade_analysis" in report
+    assert "recommended_fix" in report
+    assert "Line 120" in report["patient_zero"]
+    assert "Line 9999" in report["cascade_analysis"]
+
+
+def test_investigate_incident_with_gemini_api(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-fake-key")
+    from logdetective.ai import investigate_incident
+
+    mock_resp_data = {
+        "candidates": [
+            {
+                "content": {
+                    "parts": [
+                        {
+                            "text": json.dumps({
+                                "summary": "The order service failed due to a database outage.",
+                                "patient_zero": "Timeout error at line 120 started the chain reaction.",
+                                "cascade_analysis": "Requests queued up until memory ran out.",
+                                "recommended_fix": "Increase DB connection pool and restart the pod."
+                            })
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+
+    mock_cm = MagicMock()
+    mock_cm.__enter__.return_value = io.BytesIO(json.dumps(mock_resp_data).encode("utf-8"))
+
+    with patch("urllib.request.urlopen", return_value=mock_cm):
+        result = _make_dummy_result()
+        report = investigate_incident(result)
+        assert report["summary"] == "The order service failed due to a database outage."
+        assert "Timeout error at line 120" in report["patient_zero"]
+        assert "Increase DB connection pool" in report["recommended_fix"]

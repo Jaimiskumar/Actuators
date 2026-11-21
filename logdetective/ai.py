@@ -10,27 +10,33 @@ from typing import Optional
 from logdetective.contract import Result
 
 
-def build_compact_prompt(result: Result) -> str:
+def build_compact_prompt(result: Result, agent_mode: bool = False) -> str:
     """Build a compact incident prompt (few KB) from aggregated patterns.
     
     Privacy guarantee: Raw logs NEVER leave the machine. Only top templates
     and pre-crash event summaries are sent.
     """
     meta = result.meta
+    role_instruction = (
+        "You are an expert AI SRE and Incident Commander investigating a production outage. "
+        "Explain the incident clearly in simple English so developers and managers can understand it immediately."
+        if agent_mode
+        else "You are an expert site reliability engineer (SRE) and software debugger. Analyze this aggregated crash report."
+    )
+
     prompt_lines = [
-        "You are an expert site reliability engineer (SRE) and software debugger.",
-        "Analyze this aggregated production crash report and summarize the likely root cause in 2-3 concise sentences.",
+        role_instruction,
         "",
         "### Incident Metadata",
-        f"- File: {meta.file}",
+        f"- Log File: {meta.file}",
         f"- Processed: {meta.lines:,} lines across {meta.events:,} events",
         f"- Time Span: {meta.time_range[0] or 'N/A'} to {meta.time_range[1] or 'N/A'}",
-        f"- Errors/Fatals: {meta.level_counts.get('ERROR', 0)} errors, {meta.level_counts.get('FATAL', 0)} fatal triggers",
+        f"- Breakdown: {meta.level_counts.get('ERROR', 0)} errors, {meta.level_counts.get('FATAL', 0)} fatal terminations",
         "",
         "### Top Error Clusters (Patient-Zero First Occurrences)",
     ]
 
-    for c in result.clusters[:5]:
+    for c in result.clusters[:6]:
         fo_line = f"Line {c.first_seen.line_no}"
         fo_ts = c.first_seen.ts or "unknown time"
         prompt_lines.append(
@@ -46,21 +52,33 @@ def build_compact_prompt(result: Result) -> str:
         primary_crash = result.crashes[0]
         prompt_lines.extend([
             "",
-            "### Primary Crash Trigger & Cascade",
-            f"Trigger at Line {primary_crash.trigger.line_no}: {primary_crash.trigger.message}",
+            "### Crash Sequence & Pre-Crash Domino Cascade",
+            f"Terminal Trigger at Line {primary_crash.trigger.line_no}: {primary_crash.trigger.message}",
             "Sequence of leading events:",
         ])
         for step in primary_crash.sequence[-8:]:
             prefix = "[TRIGGER] " if step.is_trigger else ("[ROOT FO] " if step.is_first_occurrence else "")
             prompt_lines.append(f"  - {prefix}[{step.level}] {step.message}")
 
-    prompt_lines.extend([
-        "",
-        "Provide your analysis in this exact format:",
-        "Root Cause: <one sentence identifying what started the incident>",
-        "Failure Cascade: <one sentence explaining the chain reaction leading to the crash>",
-        "Recommended Fix: <one sentence actionable remediation>",
-    ])
+    if agent_mode:
+        prompt_lines.extend([
+            "",
+            "Provide your investigation in this exact JSON format with simple, non-jargon English:",
+            "{",
+            '  "summary": "1-2 sentences explaining what happened in simple terms",',
+            '  "patient_zero": "1 sentence describing the very first error that started the whole incident",',
+            '  "cascade_analysis": "1 sentence explaining how the error multiplied into a crash",',
+            '  "recommended_fix": "1-2 practical action steps developers should take right now"',
+            "}"
+        ])
+    else:
+        prompt_lines.extend([
+            "",
+            "Provide your analysis in this exact format:",
+            "Root Cause: <one sentence identifying what started the incident>",
+            "Failure Cascade: <one sentence explaining the chain reaction leading to the crash>",
+            "Recommended Fix: <one sentence actionable remediation>",
+        ])
 
     return "\n".join(prompt_lines)
 
@@ -166,3 +184,103 @@ def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Opti
         return synthesize_heuristic_summary(result)
 
     return synthesize_heuristic_summary(result)
+
+
+def investigate_incident(result: Result, model: str = "gemini-2.5-flash") -> dict[str, str]:
+    """AI SRE Agent: Investigates incident and provides simple-English explanation and concrete fix."""
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+
+    fallback = {
+        "summary": "The application suffered a cascading service failure caused by connection timeouts and resource exhaustion.",
+        "patient_zero": "The incident began with an initial unhandled warning/error that saturated system resources.",
+        "cascade_analysis": "Rapid retry bursts compounded queue latency until the process terminated with a fatal crash.",
+        "recommended_fix": "Increase database connection pool capacity, add exponential backoff on retries, and set alert thresholds on resource utilization.",
+    }
+
+    if result.clusters:
+        first_c = min(result.clusters, key=lambda c: c.first_seen.line_no or 999999999)
+        fo = first_c.first_seen
+        ts_info = f" at {fo.ts}" if fo.ts else ""
+        fallback["patient_zero"] = (
+            f"Initial error signature [{first_c.level}] started at Line {fo.line_no}{ts_info}: "
+            f"'{first_c.sample or first_c.template}'"
+        )
+        # Extract component/service name intelligently
+        svc = "Application Service"
+        if first_c.services:
+            svc = first_c.services[0]
+        else:
+            sample = (first_c.sample or first_c.template).lower()
+            if "dfs." in sample or "datanode" in sample or "namenode" in sample or "blk_" in sample:
+                svc = "HDFS DataNode"
+            elif "httpd" in sample or "apache" in sample or "client denied" in sample or "mod_jk" in sample or "workerenv" in sample:
+                svc = "Apache mod_jk / HTTP Server"
+            elif "database" in sample or "postgresql" in sample or "pool" in sample:
+                svc = "Database Pool Service"
+            elif "kafka" in sample:
+                svc = "Kafka Broker"
+
+        fallback["summary"] = (
+            f"Service [{svc}] experienced repeated failures ({first_c.count:,} events) "
+            f"that triggered a fatal process termination."
+        )
+
+        sample_low = (first_c.sample or first_c.template).lower()
+        if "dfs" in sample_low or "datanode" in sample_low or "blk_" in sample_low:
+            fallback["recommended_fix"] = (
+                "1. Verify network socket health and file descriptor limits on DataNodes. "
+                "2. Inspect block replication status and fsck health. "
+                "3. Increase dfs.datanode.socket.write.timeout in hdfs-site.xml."
+            )
+        elif "apache" in sample_low or "client denied" in sample_low or "mod_jk" in sample_low or "workerenv" in sample_low:
+            fallback["recommended_fix"] = (
+                "1. Check Tomcat / backend AJP connector port and worker thread saturation. "
+                "2. Verify mod_jk worker configuration, connection timeouts, and socket_keepalive. "
+                "3. Ensure backend application servers are accepting connections."
+            )
+        elif "connection" in sample_low or "pool" in sample_low or "timed out" in sample_low:
+            fallback["recommended_fix"] = (
+                "1. Increase database connection pool capacity (e.g. HikariCP maxPoolSize). "
+                "2. Add exponential backoff and jitter on retry loops to stop thundering herd. "
+                "3. Configure alerts on connection acquisition latency."
+            )
+
+    if result.crashes:
+        primary = result.crashes[0]
+        crash_ts = f" at {primary.trigger.ts}" if primary.trigger.ts else ""
+        fallback["cascade_analysis"] = (
+            f"Pre-crash sequence of {len(primary.sequence)} warning/error events escalated "
+            f"until process crashed at Line {primary.trigger.line_no}{crash_ts}: '{primary.trigger.message}'"
+        )
+
+    if not api_key:
+        return fallback
+
+    prompt = build_compact_prompt(result, agent_mode=True)
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 400}
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            candidates = data.get("candidates", [])
+            if candidates:
+                text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                clean_text = text.strip()
+                if clean_text.startswith("```"):
+                    clean_text = clean_text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+                parsed = json.loads(clean_text)
+                if isinstance(parsed, dict) and "summary" in parsed:
+                    return parsed
+    except Exception:
+        pass
+
+    return fallback

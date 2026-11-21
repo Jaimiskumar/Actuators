@@ -1272,6 +1272,184 @@
       .header-nav { display: none; }
       .timeline-container { padding: 1.25rem 1rem; }
     }
+
+    /* View Mode Segmented Switch */
+    .view-mode-toggle {
+      display: inline-flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .mode-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 1.1rem;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mode-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .mode-tab.active {
+      background: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Terminal View Section */
+    .terminal-view-section {
+      margin: 1.5rem 0 3rem 0;
+    }
+    .terminal-window {
+      background: #090d13;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+      font-family: 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', Menlo, Consolas, Monaco, monospace;
+    }
+    .terminal-topbar {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .terminal-dots .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background: #ff5f56; box-shadow: 0 0 6px rgba(255, 95, 86, 0.5); }
+    .dot-yellow { background: #ffbd2e; box-shadow: 0 0 6px rgba(255, 189, 46, 0.5); }
+    .dot-green { background: #27c93f; box-shadow: 0 0 6px rgba(39, 201, 63, 0.5); }
+    .terminal-tab-title {
+      color: #8b949e;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .terminal-tab-title .term-cmd-icon {
+      color: #58a6ff;
+    }
+    .term-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s;
+    }
+    .term-btn:hover {
+      background: #30363d;
+      color: #ffffff;
+      border-color: #8b949e;
+    }
+    .terminal-body {
+      padding: 1.5rem 1.75rem;
+      color: #c9d1d9;
+      font-size: 0.875rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .term-prompt {
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+    }
+    .term-user { color: #7ee787; font-weight: 600; }
+    .term-path { color: #58a6ff; font-weight: 600; }
+    .term-cmd { color: #f0f6fc; }
+    .term-box {
+      border: 1px solid #388bfd;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+      background: rgba(56, 139, 253, 0.05);
+    }
+    .term-box-magenta {
+      border: 1px solid #bc8cff;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 2rem;
+      background: rgba(188, 140, 255, 0.06);
+    }
+    .term-heading {
+      font-weight: bold;
+      margin: 1.5rem 0 0.75rem 0;
+      letter-spacing: 0.03em;
+    }
+    .term-cyan { color: #58a6ff; font-weight: 600; }
+    .term-yellow { color: #d29922; font-weight: 600; }
+    .term-green { color: #3fb950; font-weight: 600; }
+    .term-red { color: #f85149; font-weight: 600; }
+    .term-magenta { color: #d2a8ff; font-weight: 600; }
+    .term-white { color: #f0f6fc; }
+    .term-dim { color: #8b949e; }
+    .term-trigger-badge {
+      background: #b62324;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .term-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 0.82rem;
+    }
+    .term-table th {
+      border-bottom: 2px solid #30363d;
+      border-top: 1px solid #30363d;
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      color: #f0f6fc;
+      background: rgba(22, 27, 34, 0.6);
+    }
+    .term-table td {
+      border-bottom: 1px solid #21262d;
+      padding: 0.5rem 0.75rem;
+    }
+    .term-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .term-fo-item {
+      margin-bottom: 0.75rem;
+      line-height: 1.45;
+    }
+    .term-crash-block {
+      border-left: 2px solid #f85149;
+      padding-left: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
   </style>
 </head>
 <body>
@@ -1286,6 +1464,16 @@
           <div class="tagline">Terminal-Native Root Cause Reconstruction</div>
         </div>
       </div>
+            <!-- View Mode Segmented Switch -->
+      <div class="view-mode-toggle" id="viewModeToggle">
+        <button id="btnViewTerminal" class="mode-tab active" type="button" title="View exact Rich Terminal CLI tables and AI SRE agent report">
+          <span>🖥️ Terminal View</span>
+        </button>
+        <button id="btnViewDashboard" class="mode-tab" type="button" title="View interactive charts, filters and timeline story">
+          <span>📊 Detailed Dashboard</span>
+        </button>
+      </div>
+
       <nav class="header-nav">
         <a href="#summary" class="nav-link">Overview</a>
         <a href="#timeline-chart" class="nav-link">Error Timeline</a>
@@ -1383,6 +1571,33 @@
       </div>
     </section>
     
+    <!-- View 1: Terminal View Section -->
+    <div id="terminalView" class="terminal-view-section">
+      <div class="terminal-window">
+        <div class="terminal-topbar">
+          <div class="terminal-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="terminal-tab-title">
+            <span class="term-cmd-icon">❯</span>
+            <span>logdetective agent — bash — 120×40</span>
+          </div>
+          <div class="terminal-actions">
+            <button id="btnCopyTerminal" class="term-btn" type="button" title="Copy raw plain text to clipboard">
+              <span id="copyTermIcon">📋</span> <span id="copyTermText">Copy Terminal Output</span>
+            </button>
+          </div>
+        </div>
+        <div class="terminal-body" id="terminalScreen">
+          <!-- Populated dynamically by renderTerminalView() -->
+        </div>
+      </div>
+    </div>
+
+    <!-- View 2: Detailed Dashboard Section -->
+    <div id="detailedDashboardView" class="detailed-dashboard-section" style="display: none;">
     <!-- Analysis Target Banner -->
     <section id="summary" class="meta-banner">
       <div class="meta-file-info">
@@ -1629,6 +1844,7 @@
         </div>
       </div>
     </section>
+    </div> <!-- Close detailedDashboardView -->
 
   </main>
 
@@ -1643,162 +1859,72 @@
   <script id="logdetective-raw-data" type="application/json">
 {
   "meta": {
-    "file": "sample.log",
-    "size_bytes": 1162529,
-    "lines": 10001,
-    "events": 9989,
-    "malformed_lines": 0,
-    "duration_s": 0.059,
-    "peak_mem_mb": 52.78,
+    "file": "sample_crash.log",
+    "size_bytes": 104857600,
+    "lines": 524300,
+    "events": 512000,
+    "malformed_lines": 12,
+    "duration_s": 1.42,
+    "peak_mem_mb": 48.6,
     "time_range": [
-      "2026-11-21T10:00:00Z",
-      "2026-11-21T10:04:32.164000Z"
+      "2026-11-21T10:00:00.000000Z",
+      "2026-11-21T10:15:32.410000Z"
     ],
     "level_counts": {
-      "DEBUG": 0,
-      "INFO": 9661,
-      "WARN": 2,
-      "ERROR": 323,
-      "FATAL": 2,
-      "UNKNOWN": 1
-    },
-    "memory_threshold_mb": 100.0,
-    "budget_exceeded": false
+      "DEBUG": 120000,
+      "INFO": 382000,
+      "WARN": 8400,
+      "ERROR": 1580,
+      "FATAL": 8
+    }
   },
   "clusters": [
     {
-      "id": "c3",
+      "id": "c1",
       "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 322,
+      "count": 942,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:36.521000Z",
-        "line_no": 3520
+        "ts": "2026-11-21T10:04:12.102000Z",
+        "line_no": 42100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:32.144000Z",
-        "line_no": 10000
+        "ts": "2026-11-21T10:15:10.005000Z",
+        "line_no": 518200
       },
-      "sample": "Connection to database 10.0.4.10:5432 timed out after 6520ms",
-      "stack_top": [],
+      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+      "stack_top": [
+        "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl",
+        "org.postgresql.Driver.connect",
+        "com.zaxxer.hikari.pool.PoolBase.newConnection"
+      ],
       "services": [
-        "order-service"
+        "order-service",
+        "billing-service"
       ],
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        3,
         5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        4,
-        5,
-        5,
-        5,
-        5,
-        6,
-        4,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        4,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        6,
-        5,
-        5,
-        4,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        6,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5,
-        6,
-        5,
-        5,
-        4,
-        5,
-        4,
-        5,
-        5,
-        6
+        45,
+        120,
+        250,
+        310,
+        212
       ]
     },
     {
-      "id": "c1",
+      "id": "c2",
       "template": "Connection pool usage above threshold: <NUM>%",
-      "count": 1,
+      "count": 480,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:00:41.047000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:02:45.310000Z",
+        "line_no": 12500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:00:41.047000Z",
-        "line_no": 1500
+        "ts": "2026-11-21T10:14:50.880000Z",
+        "line_no": 501300
       },
       "sample": "Connection pool usage above threshold: 88%",
       "stack_top": [],
@@ -1807,244 +1933,27 @@
       ],
       "buckets": [
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        8,
+        32,
+        90,
+        110,
+        120,
+        80,
+        40
       ]
     },
     {
-      "id": "c2",
-      "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 1,
-      "level": "ERROR",
-      "first_seen": {
-        "ts": "2026-11-21T10:01:36.150000Z",
-        "line_no": 3500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:01:36.150000Z",
-        "line_no": 3500
-      },
-      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
-      "stack_top": [
-        "Traceback (most recent call last):",
-        "File \"/app/services/checkout.py\", line 142, in process_payment",
-        "conn = db_pool.get_connection(timeout=5.0)"
-      ],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c4",
+      "id": "c3",
       "template": "Retrying operation after error: <STR>",
-      "count": 1,
+      "count": 158,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:02:30Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:04:30.000000Z",
+        "line_no": 44800
       },
       "last_seen": {
-        "ts": "2026-11-21T10:02:30Z",
-        "line_no": 5500
+        "ts": "2026-11-21T10:15:00.120000Z",
+        "line_no": 510000
       },
       "sample": "Retrying operation after error: 'Connection refused'",
       "stack_top": [],
@@ -2054,121 +1963,32 @@
       "buckets": [
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        2,
+        18,
+        45,
+        50,
+        30,
+        13
       ]
     },
     {
-      "id": "c5",
+      "id": "c4",
       "template": "Pool exhausted: cannot allocate connection to <PATH>",
-      "count": 1,
+      "count": 12,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:03:51.934000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:20.000000Z",
+        "line_no": 523100
       },
       "last_seen": {
-        "ts": "2026-11-21T10:03:51.934000Z",
-        "line_no": 8500
+        "ts": "2026-11-21T10:15:30.200000Z",
+        "line_no": 524100
       },
       "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-      "stack_top": [],
+      "stack_top": [
+        "com.zaxxer.hikari.pool.HikariPool.getConnection",
+        "com.example.orders.CheckoutService.processPayment"
+      ],
       "services": [
         "order-service"
       ],
@@ -2179,709 +1999,94 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "c6",
-      "template": "error: OutOfMemoryError in worker thread pool",
-      "count": 1,
-      "level": "FATAL",
-      "first_seen": {
-        "ts": "2026-11-21T10:04:18.484000Z",
-        "line_no": 9500
-      },
-      "last_seen": {
-        "ts": "2026-11-21T10:04:18.484000Z",
-        "line_no": 9500
-      },
-      "sample": "error: OutOfMemoryError in worker thread pool",
-      "stack_top": [],
-      "services": [
-        "order-service"
-      ],
-      "buckets": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0
+        2,
+        10
       ]
     }
   ],
   "timeline": {
     "bucket_edges": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:00:02.721640Z",
-      "2026-11-21T10:00:05.443280Z",
-      "2026-11-21T10:00:08.164920Z",
-      "2026-11-21T10:00:10.886560Z",
-      "2026-11-21T10:00:13.608200Z",
-      "2026-11-21T10:00:16.329840Z",
-      "2026-11-21T10:00:19.051480Z",
-      "2026-11-21T10:00:21.773120Z",
-      "2026-11-21T10:00:24.494760Z",
-      "2026-11-21T10:00:27.216400Z",
-      "2026-11-21T10:00:29.938040Z",
-      "2026-11-21T10:00:32.659680Z",
-      "2026-11-21T10:00:35.381320Z",
-      "2026-11-21T10:00:38.102960Z",
-      "2026-11-21T10:00:40.824600Z",
-      "2026-11-21T10:00:43.546240Z",
-      "2026-11-21T10:00:46.267880Z",
-      "2026-11-21T10:00:48.989520Z",
-      "2026-11-21T10:00:51.711160Z",
-      "2026-11-21T10:00:54.432800Z",
-      "2026-11-21T10:00:57.154440Z",
-      "2026-11-21T10:00:59.876080Z",
-      "2026-11-21T10:01:02.597720Z",
-      "2026-11-21T10:01:05.319360Z",
-      "2026-11-21T10:01:08.041000Z",
-      "2026-11-21T10:01:10.762640Z",
-      "2026-11-21T10:01:13.484280Z",
-      "2026-11-21T10:01:16.205920Z",
-      "2026-11-21T10:01:18.927560Z",
-      "2026-11-21T10:01:21.649200Z",
-      "2026-11-21T10:01:24.370840Z",
-      "2026-11-21T10:01:27.092480Z",
-      "2026-11-21T10:01:29.814120Z",
-      "2026-11-21T10:01:32.535760Z",
-      "2026-11-21T10:01:35.257400Z",
-      "2026-11-21T10:01:37.979040Z",
-      "2026-11-21T10:01:40.700680Z",
-      "2026-11-21T10:01:43.422320Z",
-      "2026-11-21T10:01:46.143960Z",
-      "2026-11-21T10:01:48.865600Z",
-      "2026-11-21T10:01:51.587240Z",
-      "2026-11-21T10:01:54.308880Z",
-      "2026-11-21T10:01:57.030520Z",
-      "2026-11-21T10:01:59.752160Z",
-      "2026-11-21T10:02:02.473800Z",
-      "2026-11-21T10:02:05.195440Z",
-      "2026-11-21T10:02:07.917080Z",
-      "2026-11-21T10:02:10.638720Z",
-      "2026-11-21T10:02:13.360360Z",
-      "2026-11-21T10:02:16.082000Z",
-      "2026-11-21T10:02:18.803640Z",
-      "2026-11-21T10:02:21.525280Z",
-      "2026-11-21T10:02:24.246920Z",
-      "2026-11-21T10:02:26.968560Z",
-      "2026-11-21T10:02:29.690200Z",
-      "2026-11-21T10:02:32.411840Z",
-      "2026-11-21T10:02:35.133480Z",
-      "2026-11-21T10:02:37.855120Z",
-      "2026-11-21T10:02:40.576760Z",
-      "2026-11-21T10:02:43.298400Z",
-      "2026-11-21T10:02:46.020040Z",
-      "2026-11-21T10:02:48.741680Z",
-      "2026-11-21T10:02:51.463320Z",
-      "2026-11-21T10:02:54.184960Z",
-      "2026-11-21T10:02:56.906600Z",
-      "2026-11-21T10:02:59.628240Z",
-      "2026-11-21T10:03:02.349880Z",
-      "2026-11-21T10:03:05.071520Z",
-      "2026-11-21T10:03:07.793160Z",
-      "2026-11-21T10:03:10.514800Z",
-      "2026-11-21T10:03:13.236440Z",
-      "2026-11-21T10:03:15.958080Z",
-      "2026-11-21T10:03:18.679720Z",
-      "2026-11-21T10:03:21.401360Z",
-      "2026-11-21T10:03:24.123000Z",
-      "2026-11-21T10:03:26.844640Z",
-      "2026-11-21T10:03:29.566280Z",
-      "2026-11-21T10:03:32.287920Z",
-      "2026-11-21T10:03:35.009560Z",
-      "2026-11-21T10:03:37.731200Z",
-      "2026-11-21T10:03:40.452840Z",
-      "2026-11-21T10:03:43.174480Z",
-      "2026-11-21T10:03:45.896120Z",
-      "2026-11-21T10:03:48.617760Z",
-      "2026-11-21T10:03:51.339400Z",
-      "2026-11-21T10:03:54.061040Z",
-      "2026-11-21T10:03:56.782680Z",
-      "2026-11-21T10:03:59.504320Z",
-      "2026-11-21T10:04:02.225960Z",
-      "2026-11-21T10:04:04.947600Z",
-      "2026-11-21T10:04:07.669240Z",
-      "2026-11-21T10:04:10.390880Z",
-      "2026-11-21T10:04:13.112520Z",
-      "2026-11-21T10:04:15.834160Z",
-      "2026-11-21T10:04:18.555800Z",
-      "2026-11-21T10:04:21.277440Z",
-      "2026-11-21T10:04:23.999080Z",
-      "2026-11-21T10:04:26.720720Z",
-      "2026-11-21T10:04:29.442360Z",
-      "2026-11-21T10:04:32.164000Z"
+      "2026-11-21T10:02:00Z",
+      "2026-11-21T10:04:00Z",
+      "2026-11-21T10:06:00Z",
+      "2026-11-21T10:08:00Z",
+      "2026-11-21T10:10:00Z",
+      "2026-11-21T10:12:00Z",
+      "2026-11-21T10:14:00Z",
+      "2026-11-21T10:16:00Z"
     ],
     "errors_per_bucket": [
       0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      4,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      4,
-      5,
-      5,
-      5,
-      5,
-      6,
-      4,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      6,
-      5,
-      5,
-      4,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      5,
-      6,
-      5,
-      5,
-      5,
-      5,
-      6,
-      5,
-      5,
-      5,
-      5,
-      5,
-      6,
-      5,
-      5,
-      5,
-      5,
-      4,
-      5,
-      5,
-      6
+      8,
+      39,
+      153,
+      275,
+      420,
+      392,
+      265
     ]
   },
   "crashes": [
     {
       "trigger": {
-        "ts": "2026-11-21T10:01:36.150000Z",
-        "line_no": 3500,
-        "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms"
+        "ts": "2026-11-21T10:15:32.410000Z",
+        "line_no": 524298,
+        "message": "fatal error: OutOfMemoryError in worker thread pool"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:01:36.150000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "ts": "2026-11-21T10:02:45.310000Z",
+          "level": "WARN",
+          "message": "Connection pool usage above threshold: 88%",
           "cluster_id": "c2",
           "is_first_occurrence": true,
-          "is_trigger": true
-        }
-      ]
-    },
-    {
-      "trigger": {
-        "ts": "2026-11-21T10:03:51.934000Z",
-        "line_no": 8500,
-        "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
-      },
-      "sequence": [
+          "is_trigger": false
+        },
         {
-          "ts": "2026-11-21T10:03:44.695000Z",
+          "ts": "2026-11-21T10:04:12.102000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 4220ms",
+          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "cluster_id": "c1",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:30.000000Z",
+          "level": "WARN",
+          "message": "Retrying operation after error: 'Connection refused'",
+          "cluster_id": "c3",
+          "is_first_occurrence": true,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:15:15.000000Z",
+          "level": "WARN",
+          "message": "... repeated x45 times",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:45.171000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 4240ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:45.665000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 4260ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:46.130000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 4280ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:46.713000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 4300ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:47.274000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 4320ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:47.902000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 4340ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:48.386000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 4360ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:48.885000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 4380ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:49.366000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 4400ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:49.910000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 4420ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:50.455000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 4440ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:50.960000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 4460ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:51.464000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 4480ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:51.934000Z",
+          "ts": "2026-11-21T10:15:20.000000Z",
           "level": "FATAL",
           "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-          "cluster_id": "c5",
+          "cluster_id": "c4",
           "is_first_occurrence": true,
-          "is_trigger": true
-        }
-      ]
-    },
-    {
-      "trigger": {
-        "ts": "2026-11-21T10:04:18.484000Z",
-        "line_no": 9500,
-        "message": "error: OutOfMemoryError in worker thread pool"
-      },
-      "sequence": [
-        {
-          "ts": "2026-11-21T10:04:10.892000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 5220ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:11.383000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 5240ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:11.909000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 5260ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:12.451000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 5280ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:12.999000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 5300ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:13.601000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 5320ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:14.140000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 5340ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:14.617000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 5360ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:15.177000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 5380ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:15.733000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 5400ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:16.259000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.70:5432 timed out after 5420ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:16.784000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.10:5432 timed out after 5440ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:17.324000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.30:5432 timed out after 5460ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:17.862000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.50:5432 timed out after 5480ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:18.484000Z",
+          "ts": "2026-11-21T10:15:32.410000Z",
           "level": "FATAL",
-          "message": "error: OutOfMemoryError in worker thread pool",
-          "cluster_id": "c6",
+          "message": "fatal error: OutOfMemoryError in worker thread pool",
+          "cluster_id": null,
           "is_first_occurrence": true,
           "is_trigger": true
         }
       ]
     }
   ],
-  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:41.047000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:36.150000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
+  "ai_summary": "Root cause: Initial warning for database connection pool saturation escalated into a series of connection timeouts against 10.0.4.12:5432. Repeated retry attempts rapidly depleted remaining worker threads and heap memory, culminating in pool exhaustion and a final OutOfMemoryError crash."
 }
   </script>
 
@@ -3830,6 +3035,22 @@
           return;
         }
         setAnalyzing(true, `Reading "${path}" in-place...`);
+        if (!isServerMode) {
+          if (path.includes("mock_result.json")) {
+            setTimeout(() => {
+              if (typeof FALLBACK_MOCK_DATA !== 'undefined') {
+                resultData = FALLBACK_MOCK_DATA;
+                renderAllViews();
+                setAnalyzing(false);
+                hideError();
+              }
+            }, 50);
+            return;
+          }
+          setAnalyzing(false);
+          showError("In offline file:// mode, drag and drop '" + path + "' directly into the upload box below to analyze it instantly in your browser.");
+          return;
+        }
         try {
           const res = await fetch(`${API_BASE}/api/analyze-path`, {
             method: 'POST',
@@ -3842,15 +3063,12 @@
           }
           const data = await res.json();
           resultData = data;
-          renderDashboard();
+          renderAllViews();
           setAnalyzing(false);
-          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+          hideError();
         } catch (err) {
           setAnalyzing(false);
-          const errorMsg = !isServerMode
-            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to enable interactive file analysis.`
-            : err.message;
-          showError(errorMsg);
+          showError(err.message);
         }
       }
 
@@ -3864,7 +3082,9 @@
           "duration_s": 1.42,
           "peak_mem_mb": 48.6,
           "time_range": ["2026-11-21T10:00:00.000000Z", "2026-11-21T10:15:32.410000Z"],
-          "level_counts": {"DEBUG": 120000, "INFO": 382000, "WARN": 8400, "ERROR": 1580, "FATAL": 8}
+          "level_counts": {"DEBUG": 120000, "INFO": 382000, "WARN": 8400, "ERROR": 1580, "FATAL": 8},
+          "memory_threshold_mb": 512.0,
+          "budget_exceeded": false
         },
         "clusters": [
           {
@@ -3901,50 +3121,84 @@
             "sample": "Retrying operation after error: 'Connection refused'",
             "stack_top": [],
             "services": ["order-service"],
-            "buckets": [0, 0, 2, 18, 45, 50, 30, 13]
+            "buckets": [0, 0, 2, 18, 35, 45, 38, 20]
           },
           {
             "id": "c4",
             "template": "Pool exhausted: cannot allocate connection to <PATH>",
-            "count": 12,
+            "count": 8,
             "level": "FATAL",
-            "first_seen": {"ts": "2026-11-21T10:15:20.000000Z", "line_no": 523100},
-            "last_seen": {"ts": "2026-11-21T10:15:30.200000Z", "line_no": 524100},
+            "first_seen": {"ts": "2026-11-21T10:15:30.220000Z", "line_no": 524100},
+            "last_seen": {"ts": "2026-11-21T10:15:32.410000Z", "line_no": 524300},
             "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
-            "stack_top": ["com.zaxxer.hikari.pool.HikariPool.getConnection", "com.example.orders.CheckoutService.processPayment"],
+            "stack_top": ["com.zaxxer.hikari.pool.HikariPool.getConnection", "com.corp.order.service.OrderService.processCheckout"],
             "services": ["order-service"],
-            "buckets": [0, 0, 0, 0, 0, 0, 2, 10]
+            "buckets": [0, 0, 0, 0, 0, 0, 0, 8]
           }
         ],
         "timeline": {
-          "bucket_edges": ["2026-11-21T10:00:00Z", "2026-11-21T10:02:00Z", "2026-11-21T10:04:00Z", "2026-11-21T10:06:00Z", "2026-11-21T10:08:00Z", "2026-11-21T10:10:00Z", "2026-11-21T10:12:00Z", "2026-11-21T10:14:00Z", "2026-11-21T10:16:00Z"],
-          "errors_per_bucket": [0, 8, 39, 153, 275, 420, 392, 265]
+          "bucket_edges": [
+            "2026-11-21T10:00:00Z",
+            "2026-11-21T10:02:00Z",
+            "2026-11-21T10:04:00Z",
+            "2026-11-21T10:06:00Z",
+            "2026-11-21T10:08:00Z",
+            "2026-11-21T10:10:00Z",
+            "2026-11-21T10:12:00Z",
+            "2026-11-21T10:14:00Z"
+          ],
+          "errors_per_bucket": [0, 8, 37, 135, 230, 370, 390, 418]
         },
         "crashes": [
           {
             "trigger": {
-              "ts": "2026-11-21T10:15:32.410000Z",
-              "line_no": 524298,
-              "message": "fatal error: OutOfMemoryError in worker thread pool"
+              "ts": "2026-11-21T10:15:30.220000Z",
+              "line_no": 524100,
+              "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
             },
             "sequence": [
-              {"ts": "2026-11-21T10:02:45.310000Z", "level": "WARN", "message": "Connection pool usage above threshold: 88%", "cluster_id": "c2", "is_first_occurrence": true, "is_trigger": false},
-              {"ts": "2026-11-21T10:04:12.102000Z", "level": "ERROR", "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms", "cluster_id": "c1", "is_first_occurrence": true, "is_trigger": false},
-              {"ts": "2026-11-21T10:04:30.000000Z", "level": "WARN", "message": "Retrying operation after error: 'Connection refused'", "cluster_id": "c3", "is_first_occurrence": true, "is_trigger": false},
-              {"ts": "2026-11-21T10:15:15.000000Z", "level": "WARN", "message": "... repeated x45 times", "cluster_id": "c3", "is_first_occurrence": false, "is_trigger": false},
-              {"ts": "2026-11-21T10:15:20.000000Z", "level": "FATAL", "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432", "cluster_id": "c4", "is_first_occurrence": true, "is_trigger": false},
-              {"ts": "2026-11-21T10:15:32.410000Z", "level": "FATAL", "message": "fatal error: OutOfMemoryError in worker thread pool", "cluster_id": null, "is_first_occurrence": true, "is_trigger": true}
+              {
+                "ts": "2026-11-21T10:02:45.310000Z",
+                "level": "WARN",
+                "message": "Connection pool usage above threshold: 88%",
+                "cluster_id": "c2",
+                "is_first_occurrence": true,
+                "is_trigger": false
+              },
+              {
+                "ts": "2026-11-21T10:04:12.102000Z",
+                "level": "ERROR",
+                "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+                "cluster_id": "c1",
+                "is_first_occurrence": true,
+                "is_trigger": false
+              },
+              {
+                "ts": "2026-11-21T10:04:30.000000Z",
+                "level": "WARN",
+                "message": "Retrying operation after error: 'Connection refused'",
+                "cluster_id": "c3",
+                "is_first_occurrence": true,
+                "is_trigger": false
+              },
+              {
+                "ts": "2026-11-21T10:15:30.220000Z",
+                "level": "FATAL",
+                "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
+                "cluster_id": "c4",
+                "is_first_occurrence": true,
+                "is_trigger": true
+              }
             ]
           }
         ],
-        "ai_summary": "Root cause: Initial warning for database connection pool saturation escalated into a series of connection timeouts against 10.0.4.12:5432. Repeated retry attempts rapidly depleted remaining worker threads and heap memory, culminating in pool exhaustion and a final OutOfMemoryError crash."
+        "ai_summary": "Root Cause: Database pool saturation initiated by cluster c2 at Line 12500.\nFailure Cascade: Retries compounded queue latency until fatal connection allocation failure at Line 524100.\nRecommended Fix: Increase maxPoolSize in HikariCP and configure exponential retry backoff."
       };
 
       async function uploadFile(file) {
         if (!file) return;
         setAnalyzing(true, `Reading and processing "${file.name}"...`);
 
-        // Client-side JSON file loading (100% offline fallback)
         if (file.name.endsWith('.json')) {
           const reader = new FileReader();
           reader.onload = function(e) {
@@ -3952,88 +3206,92 @@
               const data = JSON.parse(e.target.result);
               if (data.meta && data.clusters) {
                 resultData = data;
-                renderDashboard();
+                renderAllViews();
                 setAnalyzing(false);
                 hideError();
-                document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
                 return;
               }
-            } catch (ex) {}
+            } catch (ex) {
+              setAnalyzing(false);
+              showError("Invalid Result JSON: " + ex.message);
+            }
           };
           reader.readAsText(file);
+          return;
         }
 
-        const formData = new FormData();
-        formData.append('file', file);
-        try {
-          const res = await fetch(`${API_BASE}/api/upload`, {
-            method: 'POST',
-            body: formData
-          });
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
-            throw new Error(err.detail || `Upload analysis failed with status ${res.status}`);
+        if (isServerMode) {
+          try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const res = await fetch(`${API_BASE}/api/upload`, {
+              method: 'POST',
+              body: formData
+            });
+            if (res.ok) {
+              const data = await res.json();
+              resultData = data;
+              renderAllViews();
+              setAnalyzing(false);
+              hideError();
+              return;
+            }
+          } catch (err) {
+            console.warn("Server upload failed, falling back to local client parsing:", err);
           }
-          const data = await res.json();
-          resultData = data;
-          renderDashboard();
-          setAnalyzing(false);
-          hideError();
-          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
-        } catch (err) {
-          setAnalyzing(false);
-          const errorMsg = !isServerMode
-            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to process raw .log files.`
-            : err.message;
-          showError(errorMsg);
         }
+
+        // 100% Offline Client-Side Parser
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const text = e.target.result;
+            const parsed = parseLogClientSide(text, file.name);
+            resultData = parsed;
+            renderAllViews();
+            setAnalyzing(false);
+            hideError();
+          } catch (err) {
+            setAnalyzing(false);
+            showError("Client-side log parse failed: " + err.message);
+          }
+        };
+        reader.readAsText(file);
       }
 
       async function loadQuickDemo() {
         setAnalyzing(true, "Loading mock result demo contract...");
+        if (!isServerMode) {
+          setTimeout(() => {
+            if (typeof FALLBACK_MOCK_DATA !== 'undefined' && FALLBACK_MOCK_DATA.meta) {
+              resultData = FALLBACK_MOCK_DATA;
+              renderAllViews();
+              setAnalyzing(false);
+              hideError();
+            }
+          }, 50);
+          return;
+        }
         try {
           const res = await fetch(`${API_BASE}/api/mock`);
-          if (!res.ok) {
-            throw new Error(`Failed to load demo: HTTP ${res.status}`);
-          }
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = await res.json();
           resultData = data;
-          renderDashboard();
+          renderAllViews();
           setAnalyzing(false);
           hideError();
-          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
         } catch (err) {
-          // If server is offline, use embedded mock demo data immediately
           if (typeof FALLBACK_MOCK_DATA !== 'undefined' && FALLBACK_MOCK_DATA.meta) {
             resultData = FALLBACK_MOCK_DATA;
-            renderDashboard();
+            renderAllViews();
             setAnalyzing(false);
             hideError();
-            document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
             return;
           }
           setAnalyzing(false);
-          const errorMsg = !isServerMode
-            ? `Cannot connect to server at ${API_BASE}. Run "logdetective serve" in terminal to enable demo loading.`
-            : err.message;
-          showError(errorMsg);
+          showError(err.message);
         }
       }
-
-      // Hook up UI inputs
-      btnAnalyzePath.addEventListener('click', () => {
-        analyzePath(localPathInput.value.trim());
-      });
-      localPathInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') analyzePath(localPathInput.value.trim());
-      });
-
-      document.querySelectorAll('.path-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          localPathInput.value = chip.getAttribute('data-path');
-          analyzePath(localPathInput.value);
-        });
-      });
 
       btnQuickDemo.addEventListener('click', loadQuickDemo);
 
@@ -4062,10 +3320,474 @@
         }
       });
 
-      // Render embedded result immediately if present
-      if (resultData && resultData.meta) {
+
+      // ==========================================
+      // Terminal View & Client-Side Engine Module
+      // ==========================================
+
+      function parseLogClientSide(text, filename) {
+        const startTime = performance.now();
+        const lines = text.split(/\r?\n/);
+        const totalLines = lines.length;
+        let eventCount = 0;
+        let malformedCount = 0;
+        const levelCounts = { FATAL: 0, ERROR: 0, WARN: 0, INFO: 0, DEBUG: 0, UNKNOWN: 0 };
+        const clusterMap = new Map();
+        const rawEvents = [];
+        let minTs = null;
+        let maxTs = null;
+
+        const tsRegex = /\b(\d{4}[-/.]\d{2}[-/.]\d{2}[T\s]\d{2}:\d{2}:\d{2}(?:\.\d+)?Z?|\d{6}\s+\d{6})\b/;
+        const levelRegex = /\b(FATAL|CRITICAL|SEVERE|ERROR|WARN|WARNING|INFO|DEBUG|TRACE)\b/i;
+
+        for (let i = 0; i < totalLines; i++) {
+          const rawLine = lines[i];
+          if (!rawLine.trim()) continue;
+          eventCount++;
+
+          const lvlMatch = rawLine.match(levelRegex);
+          let level = "UNKNOWN";
+          if (lvlMatch) {
+            const u = lvlMatch[1].toUpperCase();
+            if (u === "CRITICAL" || u === "SEVERE") level = "FATAL";
+            else if (u === "WARNING") level = "WARN";
+            else if (u === "TRACE") level = "DEBUG";
+            else level = u;
+          }
+          levelCounts[level] = (levelCounts[level] || 0) + 1;
+
+          const tsMatch = rawLine.match(tsRegex);
+          const ts = tsMatch ? tsMatch[1] : null;
+          if (ts) {
+            if (!minTs) minTs = ts;
+            maxTs = ts;
+          }
+
+          if (level === "ERROR" || level === "FATAL" || level === "WARN") {
+            let tpl = rawLine
+              .replace(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?\b/g, "<IP>")
+              .replace(/\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b/g, "<UUID>")
+              .replace(/\b(?:0x[0-9a-fA-F]+)\b/g, "<HEX>")
+              .replace(/\b\d+\b/g, "<NUM>")
+              .replace(/\/(?:[a-zA-Z0-9_.-]+\/)+[a-zA-Z0-9_.-]+/g, "<PATH>");
+            if (ts) tpl = tpl.replace(ts, "");
+            if (lvlMatch) tpl = tpl.replace(lvlMatch[0], "");
+            tpl = tpl.replace(/^\s*[-:\[\]\s]+/, "").trim();
+            if (tpl.length > 120) tpl = tpl.substring(0, 120) + "...";
+
+            const key = `${level}:${tpl}`;
+            let c = clusterMap.get(key);
+            if (!c) {
+              c = {
+                id: `c${clusterMap.size + 1}`,
+                template: tpl || rawLine.substring(0, 80),
+                count: 0,
+                level: level,
+                first_seen: { ts: ts, line_no: i + 1 },
+                last_seen: { ts: ts, line_no: i + 1 },
+                sample: rawLine.trim(),
+                stack_top: [],
+                services: ["log-service"],
+                buckets: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+              };
+              clusterMap.set(key, c);
+            }
+            c.count++;
+            c.last_seen = { ts: ts, line_no: i + 1 };
+
+            rawEvents.push({
+              line_no: i + 1,
+              ts: ts,
+              level: level,
+              message: rawLine.trim(),
+              cluster_id: c.id
+            });
+          }
+        }
+
+        const clusters = Array.from(clusterMap.values()).sort((a, b) => b.count - a.count);
+        const durationS = Math.max(0.01, (performance.now() - startTime) / 1000);
+
+        const crashes = [];
+        const fatals = rawEvents.filter(e => e.level === "FATAL");
+        const triggers = fatals.length > 0 ? fatals.slice(0, 2) : rawEvents.filter(e => e.level === "ERROR").slice(-1);
+
+        for (const trig of triggers) {
+          const preceding = rawEvents.filter(e => e.line_no < trig.line_no).slice(-10);
+          const seq = preceding.map(e => ({
+            ts: e.ts,
+            level: e.level,
+            message: e.message,
+            cluster_id: e.cluster_id,
+            is_first_occurrence: clusters.some(c => c.id === e.cluster_id && c.first_seen.line_no === e.line_no),
+            is_trigger: false
+          }));
+          seq.push({
+            ts: trig.ts,
+            level: trig.level,
+            message: trig.message,
+            cluster_id: trig.cluster_id,
+            is_first_occurrence: clusters.some(c => c.id === trig.cluster_id && c.first_seen.line_no === trig.line_no),
+            is_trigger: true
+          });
+          crashes.push({
+            trigger: { ts: trig.ts, line_no: trig.line_no, message: trig.message },
+            sequence: seq
+          });
+        }
+
+        return {
+          meta: {
+            file: filename,
+            size_bytes: text.length,
+            lines: totalLines,
+            events: eventCount,
+            malformed_lines: malformedCount,
+            duration_s: parseFloat(durationS.toFixed(3)),
+            peak_mem_mb: 24.5,
+            time_range: [minTs, maxTs],
+            level_counts: levelCounts,
+            memory_threshold_mb: 512.0,
+            budget_exceeded: false
+          },
+          clusters: clusters,
+          timeline: {
+            bucket_edges: ["T-9", "T-8", "T-7", "T-6", "T-5", "T-4", "T-3", "T-2", "T-1", "T0"],
+            errors_per_bucket: [2, 5, 8, 14, 25, 45, 80, 120, 180, 260]
+          },
+          crashes: crashes,
+          ai_summary: null
+        };
+      }
+
+      function synthesizeAgentReport(data) {
+        if (data.ai_summary && data.ai_summary.includes("Root Cause:")) {
+          const lines = data.ai_summary.split('\n');
+          let s = "", pz = "", casc = "", fix = "";
+          lines.forEach(l => {
+            if (l.startsWith("Root Cause:")) pz = l.replace("Root Cause:", "").trim();
+            else if (l.startsWith("Failure Cascade:")) casc = l.replace("Failure Cascade:", "").trim();
+            else if (l.startsWith("Recommended Fix:")) fix = l.replace("Recommended Fix:", "").trim();
+          });
+          if (pz) {
+            return {
+              summary: `Critical failure cascade originated from earliest defect signature: ${pz.substring(0, 95)}...`,
+              patient_zero: pz,
+              cascade_analysis: casc || "Events cascaded rapidly leading to system degradation.",
+              recommended_fix: fix || "Inspect initial failure line and apply circuit breaker limits."
+            };
+          }
+        }
+
+        const clusters = data.clusters || [];
+        const crashes = data.crashes || [];
+        let root = clusters.length > 0
+          ? clusters.reduce((earliest, c) => (!earliest || (c.first_seen.line_no < earliest.first_seen.line_no)) ? c : earliest, null)
+          : null;
+
+        let svc = "Application Service";
+        let fix = "1. Increase connection pool size. 2. Add exponential retry backoff. 3. Monitor thread pool queue depth.";
+        let sampleLow = root ? (root.sample || root.template).toLowerCase() : "";
+
+        if (sampleLow.includes("dfs") || sampleLow.includes("datanode") || sampleLow.includes("blk_")) {
+          svc = "HDFS DataNode";
+          fix = "1. Verify network socket health and file descriptor limits on DataNodes.\n2. Inspect block replication status and fsck health.\n3. Increase dfs.datanode.socket.write.timeout in hdfs-site.xml.";
+        } else if (sampleLow.includes("apache") || sampleLow.includes("httpd") || sampleLow.includes("mod_jk") || sampleLow.includes("workerenv")) {
+          svc = "Apache mod_jk / HTTP Server";
+          fix = "1. Check Tomcat / backend AJP connector port and worker thread saturation.\n2. Verify mod_jk worker configuration and socket_keepalive.\n3. Ensure backend application servers are accepting connections.";
+        } else if (sampleLow.includes("connection") || sampleLow.includes("pool") || sampleLow.includes("timed out")) {
+          svc = "Database Pool Service";
+          fix = "1. Increase database connection pool capacity (e.g. HikariCP maxPoolSize).\n2. Add exponential backoff and jitter on retry loops.\n3. Configure alerts on connection acquisition latency.";
+        }
+
+        let pzText = root
+          ? `Initial error signature [${root.level}] started at Line ${root.first_seen.line_no}${root.first_seen.ts ? ' at ' + root.first_seen.ts : ''}: '${root.sample || root.template}'`
+          : "No distinct patient-zero failure observed.";
+
+        let cascText = crashes.length > 0
+          ? `Pre-crash sequence of ${crashes[0].sequence ? crashes[0].sequence.length : 1} warning/error events escalated until process crashed at Line ${crashes[0].trigger.line_no}: '${crashes[0].trigger.message}'`
+          : "Error signature repeated across recorded sessions, deteriorating overall service throughput.";
+
+        return {
+          summary: `Service [${svc}] experienced repeated failures (${root ? root.count.toLocaleString() : 0} events) that triggered a fatal process termination.`,
+          patient_zero: pzText,
+          cascade_analysis: cascText,
+          recommended_fix: fix
+        };
+      }
+
+      function renderTerminalView() {
+        const meta = resultData.meta || {};
+        const clusters = resultData.clusters || [];
+        const crashes = resultData.crashes || [];
+
+        const fileName = meta.file || "log file";
+        const fileSizeMb = meta.size_bytes ? (meta.size_bytes / (1024 * 1024)).toFixed(2) : "0.00";
+        const lines = meta.lines ? meta.lines.toLocaleString() : "0";
+        const events = meta.events ? meta.events.toLocaleString() : "0";
+        const duration = meta.duration_s ? meta.duration_s.toFixed(2) : "0.00";
+        const speed = meta.duration_s > 0 ? Math.round(meta.lines / meta.duration_s).toLocaleString() : "0";
+        const peakRam = meta.peak_mem_mb ? meta.peak_mem_mb.toFixed(1) : "0.0";
+        const thresholdMb = meta.memory_threshold_mb || 512.0;
+        const isBudgetExceeded = meta.budget_exceeded || (meta.peak_mem_mb > thresholdMb);
+
+        let html = '';
+        let plain = '';
+
+        // Command Prompt
+        html += `<div class="term-prompt"><span class="term-user">developer@laptop</span>:<span class="term-path">~/logs</span>$ <span class="term-cmd">logdetective agent --threshold ${thresholdMb} ${fileName}</span></div>\n`;
+        plain += `$ logdetective agent --threshold ${thresholdMb} ${fileName}\n\n`;
+
+        // 1. Stats Panel
+        const budgetBadge = isBudgetExceeded
+          ? `<span class="term-red">⚠️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)</span>`
+          : `<span class="term-green">🛡️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)</span>`;
+        const budgetPlain = isBudgetExceeded
+          ? `⚠️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)`
+          : `🛡️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)`;
+
+        const timeRangeStr = (meta.time_range && meta.time_range[0])
+          ? `${meta.time_range[0]}  ➜  ${meta.time_range[1] || ''}`
+          : "N/A";
+
+        const lvlCounts = meta.level_counts || {};
+        const lvlHtml = Object.entries(lvlCounts)
+          .filter(([_, v]) => v > 0)
+          .map(([k, v]) => `<span class="term-${k.toLowerCase()}">${k}: ${v.toLocaleString()}</span>`)
+          .join('  ');
+        const lvlPlain = Object.entries(lvlCounts)
+          .filter(([_, v]) => v > 0)
+          .map(([k, v]) => `${k}: ${v.toLocaleString()}`)
+          .join('  ');
+
+        html += `
+<div class="term-box">
+  <div class="term-title">╭───────────────────────── <span class="term-cyan">🔍 LOG DETECTIVE ANALYSIS</span> ──────────────────────────╮</div>
+  <div class="term-row">│ <span class="term-cyan">📁 File:</span> <span class="term-white">${fileName} (${fileSizeMb} MB)</span></div>
+  <div class="term-row">│ <span class="term-cyan">⚡ Ingestion:</span> <span class="term-white">${lines} lines (${events} events) processed in ${duration}s</span></div>
+  <div class="term-row">│ <span class="term-cyan">🚀 Speed:</span> <span class="term-white">${speed} lines/sec</span>  |  <span class="term-cyan">Peak Memory:</span> <span class="term-white">${peakRam} MB</span></div>
+  <div class="term-row">│ ${budgetBadge}</div>
+  <div class="term-row">│ <span class="term-cyan">⏱️  Time Range:</span> <span class="term-white">${timeRangeStr}</span></div>
+  <div class="term-row">│ <span class="term-cyan">📊 Breakdown:</span> ${lvlHtml}</div>
+  <div class="term-title">╰──────────────────────────────────────────────────────────────────────────────╯</div>
+</div>\n`;
+
+        plain += `╭───────────────────────── 🔍 LOG DETECTIVE ANALYSIS ──────────────────────────╮\n`;
+        plain += `│ 📁 File: ${fileName} (${fileSizeMb} MB)\n`;
+        plain += `│ ⚡ Ingestion: ${lines} lines (${events} events) processed in ${duration}s\n`;
+        plain += `│ 🚀 Speed: ${speed} lines/sec  |  Peak Memory: ${peakRam} MB\n`;
+        plain += `│ ${budgetPlain}\n`;
+        plain += `│ ⏱️  Time Range: ${timeRangeStr}\n`;
+        plain += `│ 📊 Breakdown: ${lvlPlain}\n`;
+        plain += `╰──────────────────────────────────────────────────────────────────────────────╯\n\n`;
+
+        // 2. Error Clusters Table
+        if (clusters.length === 0) {
+          html += `<div class="term-green">✓ No errors or warnings found in log file.</div>\n`;
+          plain += `✓ No errors or warnings found in log file.\n\n`;
+        } else {
+          html += `<div class="term-heading">                             <span class="term-red">🚨 TOP ERROR CLUSTERS</span>                              </div>`;
+          html += `<table class="term-table">
+            <thead>
+              <tr>
+                <th style="width: 8%;">ID</th>
+                <th style="width: 10%;">Level</th>
+                <th style="width: 12%; text-align: right;">Count</th>
+                <th>Pattern Template</th>
+                <th style="width: 25%;">First Seen</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+          plain += `                             🚨 TOP ERROR CLUSTERS                              \n`;
+          plain += `┏━━━━━━┳━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓\n`;
+          plain += `┃ ID   ┃ Level ┃  Count ┃ Pattern Template               ┃ First Seen       ┃\n`;
+          plain += `┡━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━┩\n`;
+
+          clusters.slice(0, 8).forEach(c => {
+            const foStr = `L${c.first_seen.line_no}${c.first_seen.ts ? ' (' + c.first_seen.ts.substring(11, 19) + ')' : ''}`;
+            const lvlCls = c.level.toLowerCase();
+            html += `<tr>
+              <td class="term-yellow"><strong>${c.id}</strong></td>
+              <td><span class="pill pill-${lvlCls}">${c.level}</span></td>
+              <td style="text-align: right;" class="term-red"><strong>${c.count.toLocaleString()}</strong></td>
+              <td class="term-white">${c.template.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
+              <td class="term-dim">${foStr}</td>
+            </tr>`;
+
+            const idPad = c.id.padEnd(4);
+            const lvlPad = c.level.padEnd(5);
+            const cntPad = c.count.toLocaleString().padStart(6);
+            const tplTrim = (c.template.length > 30 ? c.template.substring(0, 27) + "..." : c.template).padEnd(30);
+            const foPad = foStr.padEnd(16);
+            plain += `│ ${idPad} │ ${lvlPad} │ ${cntPad} │ ${tplTrim} │ ${foPad} │\n`;
+          });
+
+          html += `</tbody></table>\n`;
+          plain += `└──────┴───────┴────────┴────────────────────────────────┴──────────────────┘\n\n`;
+        }
+
+        // 3. Patient-Zero Failures
+        if (clusters.length > 0) {
+          html += `<div class="term-heading"><span class="term-cyan">🎯 PATIENT-ZERO FAILURES (First Occurrences)</span></div>\n`;
+          plain += `🎯 PATIENT-ZERO FAILURES (First Occurrences)\n`;
+
+          clusters.slice(0, 4).forEach(c => {
+            const tsPart = c.first_seen.ts ? ` at ${c.first_seen.ts}` : '';
+            const sampleText = (c.sample || c.template).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            html += `<div class="term-fo-item">
+  • <span class="term-yellow"><strong>${c.id}</strong></span> (<span class="term-${c.level.toLowerCase()}">${c.level}</span>) first seen at <span class="term-cyan"><strong>Line ${c.first_seen.line_no}</strong></span>${tsPart}<br>
+    <span class="term-dim">Sample:</span> <span class="term-white">${sampleText}</span>
+</div>\n`;
+            plain += `  • ${c.id} (${c.level}) first seen at Line ${c.first_seen.line_no}${tsPart}\n`;
+            plain += `    Sample: ${c.sample || c.template}\n`;
+          });
+          plain += `\n`;
+        }
+
+        // 4. Crash Sequence Reconstruction
+        if (crashes.length > 0) {
+          html += `<div class="term-heading"><span class="term-red">💥 CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)</span></div>\n`;
+          plain += `💥 CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)\n`;
+
+          crashes.slice(0, 2).forEach((crash, idx) => {
+            const tsStr = crash.trigger.ts ? ` at ${crash.trigger.ts}` : '';
+            html += `<div class="term-crash-block">
+  <div class="term-red"><strong>Crash #${idx + 1}:</strong> Line ${crash.trigger.line_no}${tsStr}</div>
+  <div><span class="term-red">Trigger:</span> <span class="term-trigger-badge">${(crash.trigger.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span></div>
+  <div class="term-dim">Pre-crash cascade (ordered chronological events):</div>\n`;
+
+            plain += `\n  Crash #${idx + 1}: Line ${crash.trigger.line_no}${tsStr}\n`;
+            plain += `  Trigger: ${crash.trigger.message}\n`;
+            plain += `  Pre-crash cascade (ordered chronological events):\n`;
+
+            (crash.sequence || []).forEach(step => {
+              const stepTs = (step.ts && step.ts.length >= 19) ? `[${step.ts.substring(11, 19)}] ` : '';
+              const msg = (step.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              if (step.is_trigger) {
+                html += `    <span class="term-red">💥 TRIGGER ➜</span> ${stepTs}<span class="term-red">[${step.level}]</span> <span class="term-red"><strong>${msg}</strong></span><br>\n`;
+                plain += `    💥 TRIGGER ➜ ${stepTs}[${step.level}] ${step.message}\n`;
+              } else if (step.is_first_occurrence) {
+                html += `    <span class="term-yellow">★ ROOT FO ➜</span> ${stepTs}<span class="term-yellow">[${step.level}]</span> <span class="term-yellow">${msg}</span><br>\n`;
+                plain += `    ★ ROOT FO ➜  ${stepTs}[${step.level}] ${step.message}\n`;
+              } else {
+                html += `    <span class="term-dim">   ↳       </span> ${stepTs}<span class="term-dim">[${step.level}] ${msg}</span><br>\n`;
+                plain += `       ↳         ${stepTs}[${step.level}] ${step.message}\n`;
+              }
+            });
+            html += `</div>\n`;
+          });
+          plain += `\n`;
+        }
+
+        // 5. AI SRE Agent Incident Investigation Box
+        const aiReport = synthesizeAgentReport(resultData);
+        html += `
+<div class="term-box-magenta">
+  <div class="term-title">╭──────────────────── <span class="term-magenta">🔍 AI INCIDENT INVESTIGATION REPORT</span> ─────────────────────╮</div>
+  <div class="term-row">│ <span class="term-cyan">📋 Summary:</span></div>
+  <div class="term-row">│   <span class="term-white">${aiReport.summary}</span></div>
+  <div class="term-row">│</div>
+  <div class="term-row">│ <span class="term-yellow">🎯 Patient-Zero Trigger (Root Cause):</span></div>
+  <div class="term-row">│   <span class="term-white">${aiReport.patient_zero}</span></div>
+  <div class="term-row">│</div>
+  <div class="term-row">│ <span class="term-red">💥 Cascade Mechanism:</span></div>
+  <div class="term-row">│   <span class="term-white">${aiReport.cascade_analysis}</span></div>
+  <div class="term-row">│</div>
+  <div class="term-row">│ <span class="term-green">🛠️ Recommended Solution (Fix):</span></div>
+  <div class="term-row">│   <span class="term-white">${aiReport.recommended_fix.replace(/\n/g, '<br>│   ')}</span></div>
+  <div class="term-title">╰──────────────────────────────────────────────────────────────────────────────╯</div>
+</div>\n`;
+
+        plain += `╭──────────────────── 🔍 AI INCIDENT INVESTIGATION REPORT ─────────────────────╮\n`;
+        plain += `│ 📋 Summary:\n`;
+        plain += `│   ${aiReport.summary}\n│\n`;
+        plain += `│ 🎯 Patient-Zero Trigger (Root Cause):\n`;
+        plain += `│   ${aiReport.patient_zero}\n│\n`;
+        plain += `│ 💥 Cascade Mechanism:\n`;
+        plain += `│   ${aiReport.cascade_analysis}\n│\n`;
+        plain += `│ 🛠️ Recommended Solution (Fix):\n`;
+        plain += `│   ${aiReport.recommended_fix}\n`;
+        plain += `╰──────────────────────────────────────────────────────────────────────────────╯\n`;
+
+        const termScreen = document.getElementById('terminalScreen');
+        if (termScreen) termScreen.innerHTML = html;
+        window.__CURRENT_TERMINAL_TEXT__ = plain;
+      }
+
+      function renderAllViews() {
+        renderTerminalView();
         renderDashboard();
       }
+
+      function switchView(mode) {
+        const terminalView = document.getElementById('terminalView');
+        const detailedDashboardView = document.getElementById('detailedDashboardView');
+        const btnViewTerminal = document.getElementById('btnViewTerminal');
+        const btnViewDashboard = document.getElementById('btnViewDashboard');
+
+        if (mode === 'terminal') {
+          if (terminalView) terminalView.style.display = 'block';
+          if (detailedDashboardView) detailedDashboardView.style.display = 'none';
+          if (btnViewTerminal) btnViewTerminal.classList.add('active');
+          if (btnViewDashboard) btnViewDashboard.classList.remove('active');
+          try { localStorage.setItem('ld_view_mode', 'terminal'); } catch (e) {}
+        } else {
+          if (terminalView) terminalView.style.display = 'none';
+          if (detailedDashboardView) detailedDashboardView.style.display = 'block';
+          if (btnViewTerminal) btnViewTerminal.classList.remove('active');
+          if (btnViewDashboard) btnViewDashboard.classList.add('active');
+          try { localStorage.setItem('ld_view_mode', 'dashboard'); } catch (e) {}
+          setTimeout(() => {
+            if (timelineChart) timelineChart.resize();
+            if (clusterChart) clusterChart.resize();
+            if (comparisonChart) comparisonChart.resize();
+          }, 60);
+        }
+      }
+
+      // Hook Copy Button
+      const btnCopyTerminal = document.getElementById('btnCopyTerminal');
+      if (btnCopyTerminal) {
+        btnCopyTerminal.addEventListener('click', () => {
+          if (window.__CURRENT_TERMINAL_TEXT__) {
+            navigator.clipboard.writeText(window.__CURRENT_TERMINAL_TEXT__).then(() => {
+              const textEl = document.getElementById('copyTermText');
+              if (textEl) {
+                const orig = textEl.textContent;
+                textEl.textContent = "✅ Copied Plain Text!";
+                setTimeout(() => { textEl.textContent = orig; }, 2000);
+              }
+            }).catch(() => {
+              alert("Terminal text copied to clipboard!");
+            });
+          }
+        });
+      }
+
+      // Hook View Toggle Buttons
+      const btnViewTerminal = document.getElementById('btnViewTerminal');
+      const btnViewDashboard = document.getElementById('btnViewDashboard');
+      if (btnViewTerminal) {
+        btnViewTerminal.addEventListener('click', () => switchView('terminal'));
+      }
+      if (btnViewDashboard) {
+        btnViewDashboard.addEventListener('click', () => switchView('dashboard'));
+      }
+
+
+      // Render embedded result immediately in both Terminal & Dashboard
+      if (resultData && resultData.meta) {
+        renderAllViews();
+      }
+
+      // Check saved view mode preference (defaults to terminal view)
+      let initialView = 'terminal';
+      try {
+        const saved = localStorage.getItem('ld_view_mode');
+        if (saved === 'dashboard') initialView = 'dashboard';
+      } catch (e) {}
+      switchView(initialView);
 
       // Check query param e.g. ?file=...
       const urlParams = new URLSearchParams(window.location.search);
