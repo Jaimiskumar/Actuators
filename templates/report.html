@@ -1527,7 +1527,7 @@ __CHART_JS__
       let resultData = {};
 
       try {
-        if (rawJson && !rawJson.includes("__RESULT_JSON__") && !rawJson.includes("{{ result_json")) {
+        if (rawJson && (rawJson.startsWith('{') || rawJson.startsWith('['))) {
           resultData = JSON.parse(rawJson);
         }
       } catch (e) {
