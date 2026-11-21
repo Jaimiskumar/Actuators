@@ -59,6 +59,11 @@ def analyze(
         engine = Engine()
         result = engine.analyze(file)
 
+        if ai:
+            from logdetective.ai import generate_ai_summary
+            console.print("[dim]Analyzing incident patterns with Gemini AI...[/dim]")
+            result.ai_summary = generate_ai_summary(result)
+
         if json_output:
             typer.echo(json.dumps(result.to_dict(), indent=2))
             return

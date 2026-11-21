@@ -105,6 +105,17 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
                     marker = "   [dim]↳[/dim]       "
                     console.print(f"    {marker} {ts_step}{lvl_tag} [dim]{step.message}[/dim]")
 
+    # 5. AI Root Cause Summary (if generated)
+    if result.ai_summary:
+        console.print()
+        console.print(
+            Panel(
+                Text(result.ai_summary, style="white"),
+                title="🤖 [bold magenta]AI ROOT CAUSE SUMMARY (Gemini)[/bold magenta]",
+                border_style="magenta",
+            )
+        )
+
 
 def _level_color(level: str) -> str:
     lvl = level.upper()
