@@ -98,13 +98,13 @@ def analyze_file_in_place(file_path: Path) -> dict[str, Any]:
         except Exception:
             pass  # Fallback to log parser if not a valid result json
 
-    # Check if backend engine is implemented
+    # Use the full single-pass streaming Engine
     try:
-        from logdetective import engine
-        if hasattr(engine, "analyze_file") and callable(engine.analyze_file):
-            res = engine.analyze_file(file_path)
-            return res.to_dict() if hasattr(res, "to_dict") else res
-    except (ImportError, AttributeError):
+        from logdetective.engine import Engine
+        engine_inst = Engine()
+        res = engine_inst.analyze(file_path)
+        return res.to_dict() if hasattr(res, "to_dict") else res
+    except Exception:
         pass
 
     # In-place streaming pass using reader, parser, and stacktrace joiner
