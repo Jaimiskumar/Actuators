@@ -39,3 +39,9 @@ logdetective = "logdetective.cli:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["logdetective*"]
+
+[tool.setuptools.package-data]
+logdetective = [
+    "templates/*",
+    "static/*",
+]
