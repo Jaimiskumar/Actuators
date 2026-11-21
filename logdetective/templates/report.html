@@ -1103,30 +1103,48 @@ __CHART_JS__
       // Theme Management
       const themeToggleBtn = document.getElementById('themeToggleBtn');
       const themeIcon = document.getElementById('themeIcon');
-      let currentTheme = localStorage.getItem('ld_theme') || 'dark';
+      let currentTheme = 'dark';
+      try {
+        currentTheme = localStorage.getItem('ld_theme') || 'dark';
+      } catch (e) {
+        currentTheme = 'dark';
+      }
 
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         currentTheme = theme;
-        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-        localStorage.setItem('ld_theme', theme);
-        updateChartsTheme();
+        if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        try {
+          localStorage.setItem('ld_theme', theme);
+        } catch (e) {}
+        if (typeof updateChartsTheme === 'function' && timelineChart && clusterChart) {
+          try { updateChartsTheme(); } catch (e) {}
+        }
       }
-      themeToggleBtn.addEventListener('click', () => {
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-      });
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+      }
       applyTheme(currentTheme);
 
       // JSON Export
-      document.getElementById('downloadJsonBtn').addEventListener('click', () => {
-        const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `logdetective-report-${meta.file || 'result'}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+      const dlBtn = document.getElementById('downloadJsonBtn');
+      if (dlBtn) {
+        dlBtn.addEventListener('click', () => {
+          try {
+            const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `logdetective-report-${meta.file || 'result'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          } catch (e) {
+            console.error('Download JSON error:', e);
+          }
+        });
+      }
 
       // 2. Populate Summary Header & KPIs
       document.getElementById('metaFileName').textContent = meta.file || "Log Report";
@@ -1489,7 +1507,7 @@ __CHART_JS__
               <div class="detail-block">
                 <div class="detail-block-header">
                   <span class="detail-title">Raw First Sample</span>
-                  <button class="copy-btn" onclick="navigator.clipboard.writeText('${c.sample.replace(/'/g, "\\'")}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>
+                  <button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.detail-block').querySelector('.code-box').textContent); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>
                 </div>
                 <div class="code-box">${c.sample ? c.sample.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '--'}</div>
               </div>
@@ -1497,7 +1515,7 @@ __CHART_JS__
               <div class="detail-block">
                 <div class="detail-block-header">
                   <span class="detail-title">Top Stack Frames (${stackFrames.length})</span>
-                  ${stackFrames.length > 0 ? `<button class="copy-btn" onclick="navigator.clipboard.writeText('${stackFrames.join('\\n').replace(/'/g, "\\'")}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>` : ''}
+                  ${stackFrames.length > 0 ? `<button class="copy-btn" onclick="navigator.clipboard.writeText(this.closest('.detail-block').querySelector('.code-box').textContent); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>` : ''}
                 </div>
                 <div class="code-box">${stackHtml}</div>
               </div>
