@@ -52,8 +52,13 @@ def test_generate_html_report_from_mock_dict(tmp_path: Path):
     assert "clusterBarChartCanvas" in html
     assert "Top Patterns by Count" in html
 
-    # Verify first-occurrence cards
+    # Verify first-occurrence cards and search/filter bar
     assert "First-Occurrence Failure Patterns" in html
+    assert "clusterSearchInput" in html
+    assert "severityFilters" in html
+    assert "data-filter=\"WARN\"" in html
+    assert "data-filter=\"ERROR\"" in html
+    assert "data-filter=\"FATAL\"" in html
     assert "c1" in html
     assert "Connection to database" in html
     assert "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl" in html

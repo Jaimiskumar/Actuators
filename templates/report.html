@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log Detective | Investigation Report</title>
+  <title>Log Detective | Investigation Report & Dashboard</title>
   <style>
     :root {
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
@@ -194,6 +194,8 @@
       color: var(--text-main);
       cursor: pointer;
       transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
     }
     .btn:hover {
       background: var(--bg-surface-hover);
@@ -207,11 +209,249 @@
     .btn-primary:hover {
       background: #2563eb;
     }
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-strong);
+    }
+    .btn-outline:hover {
+      background: var(--bg-surface-hover);
+    }
     .theme-toggle-btn {
       padding: 0.45rem 0.7rem;
     }
 
-    /* Banner / Metadata strip */
+    /* Dashboard Source Selector Panel (for localhost:8000 & file loading) */
+    .dashboard-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      margin: 1.5rem 0 2rem;
+      box-shadow: var(--shadow-md);
+    }
+    .dashboard-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .panel-icon {
+      font-size: 1.5rem;
+    }
+    .panel-title h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .panel-subtitle {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .source-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .source-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .source-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-sm);
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .source-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .source-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .path-input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+    .path-input {
+      flex: 1;
+      background: var(--bg-body);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      color: var(--text-main);
+      outline: none;
+    }
+    .path-input:focus {
+      border-color: var(--border-focus);
+    }
+    .path-suggestions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .suggestion-label {
+      font-size: 0.725rem;
+      color: var(--text-subtle);
+    }
+    .path-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.725rem;
+      padding: 0.15rem 0.45rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .path-chip:hover {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    /* Drag & Drop Zone */
+    .drop-zone {
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg-body);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .drop-zone.dragover {
+      border-color: var(--color-primary);
+      background: rgba(59, 130, 246, 0.08);
+    }
+    .file-upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .drop-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.35rem;
+      display: inline-block;
+    }
+    .drop-text {
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+    .drop-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Status & Progress Bar */
+    .analysis-status-bar {
+      margin-top: 1rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status-info {
+      flex: 1;
+    }
+    .status-msg {
+      font-size: 0.825rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .progress-bar-track {
+      height: 6px;
+      background: var(--bg-body);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 45%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: var(--radius-full);
+      animation: progress-indeterminate 1.5s infinite ease-in-out;
+    }
+    @keyframes progress-indeterminate {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(250%); }
+    }
+
+    .alert-error {
+      margin-top: 1rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--color-fatal-bg);
+      border: 1px solid var(--color-fatal);
+      color: var(--color-fatal);
+      font-size: 0.825rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .alert-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--color-fatal);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Target Metadata Banner */
     .meta-banner {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
@@ -451,13 +691,19 @@
       font-weight: 600;
     }
 
-    /* Filter & Search Bar */
+    /* Enhanced Search & Filter Bar */
     .filter-bar {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
-      padding: 0.85rem 1.25rem;
+      padding: 1rem 1.25rem;
       margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-main-row {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -466,7 +712,7 @@
     }
     .search-input-wrap {
       flex: 1;
-      min-width: 250px;
+      min-width: 280px;
       position: relative;
     }
     .search-input {
@@ -474,7 +720,7 @@
       background: var(--bg-surface-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
-      padding: 0.5rem 0.85rem 0.5rem 2.25rem;
+      padding: 0.55rem 2.25rem 0.55rem 2.25rem;
       color: var(--text-main);
       font-size: 0.85rem;
       font-family: inherit;
@@ -492,10 +738,26 @@
       color: var(--text-subtle);
       pointer-events: none;
     }
+    .search-clear-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .search-clear-btn:hover {
+      color: var(--text-main);
+    }
     .filter-pills-group {
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      flex-wrap: wrap;
     }
     .filter-btn {
       font-size: 0.75rem;
@@ -507,11 +769,83 @@
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
     }
-    .filter-btn.active, .filter-btn:hover {
+    .filter-btn:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+    }
+    .filter-btn.active {
       background: var(--color-primary);
       color: #fff;
       border-color: var(--color-primary);
+    }
+    .filter-btn[data-filter="FATAL"].active {
+      background: var(--color-fatal);
+      border-color: var(--color-fatal);
+    }
+    .filter-btn[data-filter="ERROR"].active {
+      background: var(--color-error);
+      border-color: var(--color-error);
+    }
+    .filter-btn[data-filter="WARN"].active {
+      background: var(--color-warn);
+      border-color: var(--color-warn);
+      color: #000;
+    }
+    .filter-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.785rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .active-filters-chips {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .filter-tag {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-strong);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.725rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .filter-tag-remove {
+      cursor: pointer;
+      color: var(--text-subtle);
+      font-weight: bold;
+    }
+    .filter-tag-remove:hover {
+      color: var(--color-fatal);
+    }
+    .btn-reset-filters {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Search match highlight */
+    mark.search-match {
+      background: rgba(234, 179, 8, 0.35);
+      color: #fef08a;
+      padding: 0.05rem 0.2rem;
+      border-radius: 2px;
     }
 
     /* Cluster Cards List */
@@ -559,6 +893,7 @@
       display: flex;
       align-items: center;
       gap: 0.65rem;
+      flex-wrap: wrap;
     }
     .cluster-id-badge {
       font-family: var(--font-mono);
@@ -853,6 +1188,9 @@
         <a href="#crash-sequence" class="nav-link">Crash Story</a>
       </nav>
       <div class="header-actions">
+        <button id="btnToggleDashboard" class="btn btn-outline" title="Select or Upload Log File">
+          <span>📂 Load File</span>
+        </button>
         <button id="themeToggleBtn" class="btn theme-toggle-btn" title="Toggle Light/Dark Theme">
           <span id="themeIcon">☀️</span>
         </button>
@@ -864,6 +1202,80 @@
   </header>
 
   <main class="container">
+
+    <!-- Dashboard Source Selector Panel (FastAPI & Dynamic In-Place Ingestion) -->
+    <section id="dashboardPanel" class="dashboard-panel" style="display: none;">
+      <div class="dashboard-panel-header">
+        <div class="panel-title">
+          <span class="panel-icon">📂</span>
+          <div>
+            <h3>Select Log Source for In-Place Analysis</h3>
+            <p class="panel-subtitle">For multi-GB logs, enter the local file path to read in-place with zero upload latency and flat memory.</p>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="btnQuickDemo" class="btn btn-outline" title="Load sample crash log analysis">
+            <span>⚡ Load Mock Demo</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Local Path In-Place Input Box -->
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-badge">⚡ Recommended for Large Files</span>
+            <h4>Local File Path (In-Place Streaming)</h4>
+          </div>
+          <p class="source-desc">Direct filesystem path read with <code>O(1)</code> memory. Avoids uploading gigabytes over HTTP.</p>
+          <div class="path-input-group">
+            <input type="text" id="localPathInput" class="path-input" placeholder="/path/to/crash.log or tests/mock_result.json" value="tests/mock_result.json">
+            <button id="btnAnalyzePath" class="btn btn-primary">
+              <span id="btnPathText">Analyze In-Place</span>
+            </button>
+          </div>
+          <div class="path-suggestions">
+            <span class="suggestion-label">Quick select:</span>
+            <button class="path-chip" data-path="tests/mock_result.json">tests/mock_result.json</button>
+            <button class="path-chip" data-path="tests/sample_logs/sample.log">tests/sample_logs/sample.log</button>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Upload Box -->
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-badge">Drag & Drop</span>
+            <h4>Upload Log or Result JSON</h4>
+          </div>
+          <div id="dropZone" class="drop-zone">
+            <input type="file" id="fileUploadInput" class="file-upload-input" accept=".log,.txt,.json,.gz">
+            <div class="drop-zone-content">
+              <span class="drop-icon">📁</span>
+              <p class="drop-text"><strong>Click to browse</strong> or drag and drop a log file here</p>
+              <p class="drop-hint">Supports .log, .json, .txt, .gz</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress / Status Bar -->
+      <div id="analysisStatusBar" class="analysis-status-bar" style="display: none;">
+        <div class="spinner"></div>
+        <div class="status-info">
+          <div class="status-msg" id="statusMessage">Streaming and clustering log events...</div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error alert banner -->
+      <div id="dashboardErrorBanner" class="alert-error" style="display: none;">
+        <span class="alert-icon">⚠️</span>
+        <span id="dashboardErrorMessage">Error message</span>
+        <button class="alert-close" onclick="this.parentElement.style.display='none'">✕</button>
+      </div>
+    </section>
     
     <!-- Analysis Target Banner -->
     <section id="summary" class="meta-banner">
@@ -965,7 +1377,7 @@
 
     </div>
 
-    <!-- 3. First-Occurrence Expandable Cards Section -->
+    <!-- 3. First-Occurrence Expandable Cards Section with Search & Filter -->
     <section id="first-occurrences" class="section">
       <div class="section-header">
         <div>
@@ -975,17 +1387,27 @@
         <span class="pill pill-neutral" id="clusterCountBadge">-- clusters</span>
       </div>
 
-      <!-- Live Search & Severity Filter Bar -->
+      <!-- Enhanced Live Search & Severity Filter Bar -->
       <div class="filter-bar">
-        <div class="search-input-wrap">
-          <span class="search-icon">🔎</span>
-          <input type="text" id="clusterSearchInput" class="search-input" placeholder="Search patterns, samples, services, or IDs (e.g. timeout, c1, order-service)...">
+        <div class="filter-main-row">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔎</span>
+            <input type="text" id="clusterSearchInput" class="search-input" placeholder="Search patterns, samples, services, stack frames, or IDs (e.g. timeout, c1, HikariPool)...">
+            <button id="searchClearBtn" class="search-clear-btn" title="Clear search">✕</button>
+          </div>
+          <div class="filter-pills-group" id="severityFilters">
+            <button class="filter-btn active" data-filter="ALL">ALL <span id="countFilterALL"></span></button>
+            <button class="filter-btn" data-filter="FATAL">FATAL <span id="countFilterFATAL"></span></button>
+            <button class="filter-btn" data-filter="ERROR">ERROR <span id="countFilterERROR"></span></button>
+            <button class="filter-btn" data-filter="WARN">WARN <span id="countFilterWARN"></span></button>
+          </div>
         </div>
-        <div class="filter-pills-group" id="severityFilters">
-          <button class="filter-btn active" data-filter="ALL">ALL</button>
-          <button class="filter-btn" data-filter="FATAL">FATAL</button>
-          <button class="filter-btn" data-filter="ERROR">ERROR</button>
-          <button class="filter-btn" data-filter="WARN">WARN</button>
+
+        <div class="filter-status-row" id="filterStatusRow">
+          <div class="active-filters-chips" id="activeFilterChips">
+            <span>Showing all patterns</span>
+          </div>
+          <button id="btnResetFilters" class="btn-reset-filters" style="display: none;">Clear all filters</button>
         </div>
       </div>
 
@@ -1040,21 +1462,32 @@ __CHART_JS__
   <!-- Application Logic -->
   <script>
     (function() {
-      // 1. Load Result Data
+      // 1. Data Store
       let rawJson = document.getElementById('logdetective-raw-data').textContent.trim();
-      let resultData;
+      let resultData = {};
+
       try {
-        resultData = JSON.parse(rawJson);
+        if (rawJson && !rawJson.includes("__RESULT_JSON__") && !rawJson.includes("{{ result_json")) {
+          resultData = JSON.parse(rawJson);
+        }
       } catch (e) {
-        console.error("Failed to parse Result JSON:", e);
+        console.error("Failed to parse embedded Result JSON:", e);
         resultData = {};
       }
 
-      const meta = resultData.meta || {};
-      const clusters = resultData.clusters || [];
-      const timeline = resultData.timeline || {};
-      const crashes = resultData.crashes || [];
-      const aiSummary = resultData.ai_summary;
+      // Check if running on localhost or via server
+      const isServerMode = window.location.protocol.startsWith('http');
+      const dashboardPanel = document.getElementById('dashboardPanel');
+      if (isServerMode || !resultData.meta) {
+        dashboardPanel.style.display = 'block';
+      }
+
+      document.getElementById('btnToggleDashboard').addEventListener('click', () => {
+        dashboardPanel.style.display = dashboardPanel.style.display === 'none' ? 'block' : 'none';
+        if (dashboardPanel.style.display === 'block') {
+          dashboardPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
 
       // Formatting helpers
       function formatBytes(bytes) {
@@ -1093,11 +1526,27 @@ __CHART_JS__
       }
 
       // Highlight normalized tokens in templates like <IP>, <NUM>, <STR>, <PATH>, <ID>
-      function highlightTemplate(template) {
+      function highlightTemplate(template, query) {
         if (!template) return "";
-        return template
+        let escaped = template
           .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
           .replace(/&lt;([A-Z0-9_]+)&gt;/g, '<span class="template-token">&lt;$1&gt;</span>');
+        
+        if (query && query.length >= 2) {
+          const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          escaped = escaped.replace(re, '<mark class="search-match">$1</mark>');
+        }
+        return escaped;
+      }
+
+      function highlightText(text, query) {
+        if (!text) return "";
+        let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        if (query && query.length >= 2) {
+          const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          escaped = escaped.replace(re, '<mark class="search-match">$1</mark>');
+        }
+        return escaped;
       }
 
       // Theme Management
@@ -1119,6 +1568,7 @@ __CHART_JS__
 
       // JSON Export
       document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+        const meta = resultData.meta || {};
         const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1128,77 +1578,115 @@ __CHART_JS__
         URL.revokeObjectURL(url);
       });
 
-      // 2. Populate Summary Header & KPIs
-      document.getElementById('metaFileName').textContent = meta.file || "Log Report";
-      if (meta.time_range && meta.time_range.length === 2) {
-        document.getElementById('metaTimeRange').textContent = 
-          `Time Range: ${formatIso(meta.time_range[0])}  ➔  ${formatIso(meta.time_range[1])}`;
-      }
-
-      // Status pill
-      const crashPill = document.getElementById('crashStatusPill');
-      if (crashes.length === 0) {
-        crashPill.textContent = "NO CRASH DETECTED";
-        crashPill.className = "pill pill-success";
-      } else {
-        crashPill.textContent = `${crashes.length} CRASH DETECTED`;
-      }
-
-      // Level Counts
-      const levelContainer = document.getElementById('levelPillsContainer');
-      levelContainer.innerHTML = '';
-      if (meta.level_counts) {
-        const order = ['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'];
-        order.forEach(lvl => {
-          if (meta.level_counts[lvl] !== undefined) {
-            const count = meta.level_counts[lvl];
-            const pill = document.createElement('span');
-            let pillClass = 'pill-neutral';
-            if (lvl === 'FATAL') pillClass = 'pill-fatal';
-            else if (lvl === 'ERROR') pillClass = 'pill-error';
-            else if (lvl === 'WARN') pillClass = 'pill-warn';
-            else if (lvl === 'INFO') pillClass = 'pill-info';
-            pill.className = `pill ${pillClass}`;
-            pill.textContent = `${lvl}: ${formatNumber(count)}`;
-            levelContainer.appendChild(pill);
-          }
-        });
-      }
-
-      // KPIs
-      document.getElementById('kpiFileSize').textContent = formatBytes(meta.size_bytes);
-      document.getElementById('kpiMemory').textContent = `Peak RAM: ${meta.peak_mem_mb ? meta.peak_mem_mb.toFixed(1) + ' MB' : 'Flat'}`;
-      
-      document.getElementById('kpiLines').textContent = formatNumber(meta.lines);
-      document.getElementById('kpiEvents').textContent = `${formatNumber(meta.events)} events, ${formatNumber(meta.malformed_lines)} malformed`;
-
-      const durationS = meta.duration_s || 0;
-      document.getElementById('kpiDuration').textContent = `${durationS.toFixed(2)}s`;
-      const throughput = durationS > 0 && meta.lines ? Math.round(meta.lines / durationS) : 0;
-      document.getElementById('kpiThroughput').textContent = `${formatNumber(throughput)} lines/sec`;
-
-      document.getElementById('kpiClusters').textContent = formatNumber(clusters.length);
-      const crashEventsCount = crashes.reduce((acc, c) => acc + (c.sequence ? c.sequence.length : 0), 0);
-      document.getElementById('kpiCrashes').textContent = `${crashes.length} crash triggers (${crashEventsCount} events)`;
-
-      // AI Summary
-      if (aiSummary) {
-        document.getElementById('aiSummaryBox').style.display = 'block';
-        document.getElementById('aiSummaryText').textContent = aiSummary;
-      }
-
-      // 3. Error Timeline Chart
+      // Chart Instances
       let timelineChart = null;
       let clusterChart = null;
 
-      function initTimelineChart() {
+      // Master Render Function
+      function renderDashboard() {
+        const meta = resultData.meta || {};
+        const clusters = resultData.clusters || [];
+        const timeline = resultData.timeline || {};
+        const crashes = resultData.crashes || [];
+        const aiSummary = resultData.ai_summary;
+
+        // Populate Summary Header & KPIs
+        document.getElementById('metaFileName').textContent = meta.file || "Log Report";
+        if (meta.time_range && meta.time_range.length === 2 && meta.time_range[0]) {
+          document.getElementById('metaTimeRange').textContent = 
+            `Time Range: ${formatIso(meta.time_range[0])}  ➔  ${formatIso(meta.time_range[1])}`;
+        } else {
+          document.getElementById('metaTimeRange').textContent = "Time Range: --";
+        }
+
+        // Status pill
+        const crashPill = document.getElementById('crashStatusPill');
+        if (crashes.length === 0) {
+          crashPill.textContent = "NO CRASH DETECTED";
+          crashPill.className = "pill pill-success";
+        } else {
+          crashPill.textContent = `${crashes.length} CRASH DETECTED`;
+          crashPill.className = "pill pill-fatal pill-pulse";
+        }
+
+        // Level Counts
+        const levelContainer = document.getElementById('levelPillsContainer');
+        levelContainer.innerHTML = '';
+        if (meta.level_counts) {
+          const order = ['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'];
+          order.forEach(lvl => {
+            if (meta.level_counts[lvl] !== undefined) {
+              const count = meta.level_counts[lvl];
+              const pill = document.createElement('span');
+              let pillClass = 'pill-neutral';
+              if (lvl === 'FATAL') pillClass = 'pill-fatal';
+              else if (lvl === 'ERROR') pillClass = 'pill-error';
+              else if (lvl === 'WARN') pillClass = 'pill-warn';
+              else if (lvl === 'INFO') pillClass = 'pill-info';
+              pill.className = `pill ${pillClass}`;
+              pill.textContent = `${lvl}: ${formatNumber(count)}`;
+              levelContainer.appendChild(pill);
+            }
+          });
+        }
+
+        // Update Level Filter Counts
+        const levelCounts = { FATAL: 0, ERROR: 0, WARN: 0 };
+        clusters.forEach(c => {
+          if (levelCounts[c.level] !== undefined) {
+            levelCounts[c.level]++;
+          }
+        });
+        document.getElementById('countFilterALL').textContent = `(${clusters.length})`;
+        document.getElementById('countFilterFATAL').textContent = `(${levelCounts.FATAL})`;
+        document.getElementById('countFilterERROR').textContent = `(${levelCounts.ERROR})`;
+        document.getElementById('countFilterWARN').textContent = `(${levelCounts.WARN})`;
+
+        // KPIs
+        document.getElementById('kpiFileSize').textContent = formatBytes(meta.size_bytes);
+        document.getElementById('kpiMemory').textContent = `Peak RAM: ${meta.peak_mem_mb ? meta.peak_mem_mb.toFixed(1) + ' MB' : 'Flat'}`;
+        
+        document.getElementById('kpiLines').textContent = formatNumber(meta.lines);
+        document.getElementById('kpiEvents').textContent = `${formatNumber(meta.events)} events, ${formatNumber(meta.malformed_lines)} malformed`;
+
+        const durationS = meta.duration_s || 0;
+        document.getElementById('kpiDuration').textContent = `${durationS.toFixed(2)}s`;
+        const throughput = durationS > 0 && meta.lines ? Math.round(meta.lines / durationS) : 0;
+        document.getElementById('kpiThroughput').textContent = `${formatNumber(throughput)} lines/sec`;
+
+        document.getElementById('kpiClusters').textContent = formatNumber(clusters.length);
+        const crashEventsCount = crashes.reduce((acc, c) => acc + (c.sequence ? c.sequence.length : 0), 0);
+        document.getElementById('kpiCrashes').textContent = `${crashes.length} crash triggers (${crashEventsCount} events)`;
+
+        // AI Summary
+        const aiSummaryBox = document.getElementById('aiSummaryBox');
+        if (aiSummary) {
+          aiSummaryBox.style.display = 'block';
+          document.getElementById('aiSummaryText').textContent = aiSummary;
+        } else {
+          aiSummaryBox.style.display = 'none';
+        }
+
+        // Render Charts & Cards
+        initTimelineChart(timeline, crashes);
+        initClusterBarChart(clusters);
+        renderClusterCards();
+        renderCrashSequence(crashes);
+      }
+
+      // 2. Timeline Chart
+      function initTimelineChart(timeline, crashes) {
         const canvas = document.getElementById('timelineChartCanvas');
         if (!canvas || !window.Chart) return;
+
+        if (timelineChart) {
+          timelineChart.destroy();
+          timelineChart = null;
+        }
 
         const edges = timeline.bucket_edges || [];
         const errors = timeline.errors_per_bucket || [];
         
-        // Generate bucket labels
         const labels = [];
         for (let i = 0; i < errors.length; i++) {
           const start = edges[i] ? formatShortTime(edges[i]) : `B${i}`;
@@ -1206,8 +1694,7 @@ __CHART_JS__
           labels.push(end ? `${start} - ${end}` : start);
         }
 
-        // Identify bucket of first crash
-        let firstCrashTs = crashes.length > 0 && crashes[0].trigger ? crashes[0].trigger.ts : null;
+        let firstCrashTs = crashes && crashes.length > 0 && crashes[0].trigger ? crashes[0].trigger.ts : null;
         let crashBucketIndex = -1;
         if (firstCrashTs && edges.length > 1) {
           const crashTime = new Date(firstCrashTs).getTime();
@@ -1224,15 +1711,16 @@ __CHART_JS__
           }
         }
 
+        const banner = document.getElementById('crashAnnotationBar');
         if (firstCrashTs) {
-          const banner = document.getElementById('crashAnnotationBar');
           banner.style.display = 'flex';
           const crashMsg = crashes[0].trigger.message || 'Fatal crash';
           document.getElementById('crashAnnotationText').textContent = 
             `First Crash Trigger at ${formatIso(firstCrashTs)}: "${crashMsg}" (Bucket #${crashBucketIndex + 1})`;
+        } else {
+          banner.style.display = 'none';
         }
 
-        // Point styling: make the crash bucket point larger and vibrant red
         const pointBackgroundColors = errors.map((_, i) => i === crashBucketIndex ? '#f43f5e' : '#3b82f6');
         const pointBorderColors = errors.map((_, i) => i === crashBucketIndex ? '#ffffff' : '#1d4ed8');
         const pointRadii = errors.map((_, i) => i === crashBucketIndex ? 8 : 4);
@@ -1309,12 +1797,16 @@ __CHART_JS__
         });
       }
 
-      // 4. Top Cluster Distribution Bar Chart
-      function initClusterBarChart() {
+      // 3. Cluster Bar Chart
+      function initClusterBarChart(clusters) {
         const canvas = document.getElementById('clusterBarChartCanvas');
         if (!canvas || !window.Chart) return;
 
-        // Sort clusters by count descending
+        if (clusterChart) {
+          clusterChart.destroy();
+          clusterChart = null;
+        }
+
         const sortedClusters = [...clusters].sort((a, b) => b.count - a.count).slice(0, 8);
         const labels = sortedClusters.map(c => c.id);
         const data = sortedClusters.map(c => c.count);
@@ -1411,33 +1903,85 @@ __CHART_JS__
         });
       }
 
-      // 5. Render First-Occurrence Cards
+      // 4. Enhanced First-Occurrence Cards with Search & Level Filtering
       const cardsContainer = document.getElementById('clusterCardsContainer');
       const clusterCountBadge = document.getElementById('clusterCountBadge');
+      const searchInput = document.getElementById('clusterSearchInput');
+      const searchClearBtn = document.getElementById('searchClearBtn');
+      const activeFilterChips = document.getElementById('activeFilterChips');
+      const btnResetFilters = document.getElementById('btnResetFilters');
+
       let currentFilter = 'ALL';
       let searchQuery = '';
 
+      function updateFilterChips(filteredCount, totalCount) {
+        activeFilterChips.innerHTML = '';
+        const hasFilters = currentFilter !== 'ALL' || searchQuery.length > 0;
+
+        if (!hasFilters) {
+          activeFilterChips.innerHTML = `<span>Showing all <strong>${totalCount}</strong> failure patterns</span>`;
+          btnResetFilters.style.display = 'none';
+          return;
+        }
+
+        btnResetFilters.style.display = 'inline-block';
+        activeFilterChips.innerHTML = `<span>Showing <strong>${filteredCount}</strong> of ${totalCount} patterns:</span>`;
+
+        if (currentFilter !== 'ALL') {
+          const tag = document.createElement('span');
+          tag.className = 'filter-tag';
+          tag.innerHTML = `Level: <strong>${currentFilter}</strong> <span class="filter-tag-remove" data-action="clear-level">✕</span>`;
+          activeFilterChips.appendChild(tag);
+        }
+
+        if (searchQuery) {
+          const tag = document.createElement('span');
+          tag.className = 'filter-tag';
+          tag.innerHTML = `Keyword: "<strong>${searchQuery}</strong>" <span class="filter-tag-remove" data-action="clear-search">✕</span>`;
+          activeFilterChips.appendChild(tag);
+        }
+
+        activeFilterChips.querySelectorAll('.filter-tag-remove').forEach(el => {
+          el.addEventListener('click', (e) => {
+            const action = e.target.getAttribute('data-action');
+            if (action === 'clear-level') {
+              setFilterLevel('ALL');
+            } else if (action === 'clear-search') {
+              clearSearch();
+            }
+          });
+        });
+      }
+
       function renderClusterCards() {
+        const clusters = resultData.clusters || [];
         cardsContainer.innerHTML = '';
+
+        const query = searchQuery.toLowerCase().trim();
+
         const filtered = clusters.filter(c => {
           if (currentFilter !== 'ALL' && c.level !== currentFilter) return false;
-          if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            const matchId = c.id.toLowerCase().includes(query);
+          if (query) {
+            const matchId = (c.id || '').toLowerCase().includes(query);
             const matchTpl = (c.template || '').toLowerCase().includes(query);
             const matchSample = (c.sample || '').toLowerCase().includes(query);
             const matchSvc = (c.services || []).some(s => s.toLowerCase().includes(query));
-            if (!matchId && !matchTpl && !matchSample && !matchSvc) return false;
+            const matchStack = (c.stack_top || []).some(f => f.toLowerCase().includes(query));
+            if (!matchId && !matchTpl && !matchSample && !matchSvc && !matchStack) return false;
           }
           return true;
         });
 
         clusterCountBadge.textContent = `${filtered.length} of ${clusters.length} clusters`;
+        updateFilterChips(filtered.length, clusters.length);
 
         if (filtered.length === 0) {
           cardsContainer.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--bg-surface); border-radius: var(--radius-md);">
-              No error clusters match the current filter criteria.
+            <div style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted); background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-strong);">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+              <div style="font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No failure patterns match your criteria</div>
+              <p style="font-size: 0.825rem; margin-bottom: 1rem;">Try clearing your keyword query or switching log level filters.</p>
+              <button class="btn btn-outline" onclick="resetAllFilters()">Reset All Filters</button>
             </div>
           `;
           return;
@@ -1453,7 +1997,7 @@ __CHART_JS__
 
           card.className = `cluster-card ${borderClass}`;
 
-          const servicesHtml = (c.services || []).map(s => `<span class="chip">⚙ ${s}</span>`).join(' ');
+          const servicesHtml = (c.services || []).map(s => `<span class="chip">⚙ ${highlightText(s, query)}</span>`).join(' ');
 
           const firstSeenTs = c.first_seen ? formatIso(c.first_seen.ts) : '--';
           const firstSeenLine = c.first_seen && c.first_seen.line_no ? `Line ${formatNumber(c.first_seen.line_no)}` : '--';
@@ -1462,14 +2006,14 @@ __CHART_JS__
 
           const stackFrames = (c.stack_top || []);
           const stackHtml = stackFrames.length > 0 
-            ? stackFrames.map(f => `<div class="stack-trace-frame">  at ${f}</div>`).join('') 
+            ? stackFrames.map(f => `<div class="stack-trace-frame">  at ${highlightText(f, query)}</div>`).join('') 
             : `<span style="color: var(--text-subtle);">(No stack frames captured for this cluster)</span>`;
 
           card.innerHTML = `
             <div class="cluster-card-header" onclick="this.parentElement.classList.toggle('open')">
               <div class="cluster-header-top">
                 <div class="cluster-id-wrap">
-                  <span class="cluster-id-badge">ID: ${c.id}</span>
+                  <span class="cluster-id-badge">ID: ${highlightText(c.id, query)}</span>
                   <span class="pill ${levelPillClass}">${c.level}</span>
                   <span class="pill pill-neutral">${formatNumber(c.count)} occurrences</span>
                   ${servicesHtml}
@@ -1481,7 +2025,7 @@ __CHART_JS__
                 </div>
               </div>
               <div class="template-box">
-                ${highlightTemplate(c.template)}
+                ${highlightTemplate(c.template, query)}
               </div>
             </div>
 
@@ -1491,7 +2035,7 @@ __CHART_JS__
                   <span class="detail-title">Raw First Sample</span>
                   <button class="copy-btn" onclick="navigator.clipboard.writeText('${c.sample.replace(/'/g, "\\'")}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>
                 </div>
-                <div class="code-box">${c.sample ? c.sample.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '--'}</div>
+                <div class="code-box">${c.sample ? highlightText(c.sample, query) : '--'}</div>
               </div>
 
               <div class="detail-block">
@@ -1508,29 +2052,54 @@ __CHART_JS__
         });
       }
 
-      // Search & Severity event listeners
-      document.getElementById('clusterSearchInput').addEventListener('input', (e) => {
+      function setFilterLevel(level) {
+        currentFilter = level;
+        document.querySelectorAll('#severityFilters .filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-filter') === level);
+        });
+        renderClusterCards();
+      }
+
+      function clearSearch() {
+        searchQuery = '';
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        renderClusterCards();
+      }
+
+      window.resetAllFilters = function() {
+        currentFilter = 'ALL';
+        searchQuery = '';
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        document.querySelectorAll('#severityFilters .filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-filter') === 'ALL');
+        });
+        renderClusterCards();
+      };
+      btnResetFilters.addEventListener('click', window.resetAllFilters);
+
+      searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.trim();
+        searchClearBtn.style.display = searchQuery.length > 0 ? 'block' : 'none';
         renderClusterCards();
       });
+      searchClearBtn.addEventListener('click', clearSearch);
 
       document.querySelectorAll('#severityFilters .filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          document.querySelectorAll('#severityFilters .filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentFilter = btn.getAttribute('data-filter');
-          renderClusterCards();
+          setFilterLevel(btn.getAttribute('data-filter'));
         });
       });
 
-      // 6. Render Crash Sequence Timeline
+      // 5. Crash Sequence Reconstruction
       const timelineTree = document.getElementById('timelineTreeContainer');
       const crashIntro = document.getElementById('crashTriggerTitle');
       const crashSubtext = document.getElementById('crashTriggerSubtext');
 
-      function renderCrashSequence() {
+      function renderCrashSequence(crashes) {
         timelineTree.innerHTML = '';
-        if (crashes.length === 0) {
+        if (!crashes || crashes.length === 0) {
           crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
           crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
           return;
@@ -1544,7 +2113,7 @@ __CHART_JS__
         const sequence = crash.sequence || [];
         const baseTime = sequence.length > 0 && sequence[0].ts ? new Date(sequence[0].ts).getTime() : 0;
 
-        sequence.forEach((evt, idx) => {
+        sequence.forEach((evt) => {
           const item = document.createElement('div');
           let itemClass = 'timeline-item';
           let nodeIcon = '⚡';
@@ -1560,7 +2129,6 @@ __CHART_JS__
 
           item.className = itemClass;
 
-          // Time delta relative to start of sequence
           let deltaStr = '+00:00';
           if (evt.ts && baseTime > 0) {
             const curTime = new Date(evt.ts).getTime();
@@ -1611,11 +2179,163 @@ __CHART_JS__
         });
       }
 
-      // Initialize Everything
-      initTimelineChart();
-      initClusterBarChart();
-      renderClusterCards();
-      renderCrashSequence();
+      // 6. In-Place Analysis & Upload API Handlers
+      const localPathInput = document.getElementById('localPathInput');
+      const btnAnalyzePath = document.getElementById('btnAnalyzePath');
+      const btnPathText = document.getElementById('btnPathText');
+      const dropZone = document.getElementById('dropZone');
+      const fileUploadInput = document.getElementById('fileUploadInput');
+      const analysisStatusBar = document.getElementById('analysisStatusBar');
+      const statusMessage = document.getElementById('statusMessage');
+      const errorBanner = document.getElementById('dashboardErrorBanner');
+      const errorMessage = document.getElementById('dashboardErrorMessage');
+      const btnQuickDemo = document.getElementById('btnQuickDemo');
+
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorBanner.style.display = 'flex';
+        analysisStatusBar.style.display = 'none';
+      }
+
+      function hideError() {
+        errorBanner.style.display = 'none';
+      }
+
+      function setAnalyzing(isAnalyzing, msg) {
+        if (isAnalyzing) {
+          hideError();
+          analysisStatusBar.style.display = 'flex';
+          statusMessage.textContent = msg || "Analyzing log file with streaming pass...";
+          btnPathText.textContent = "Analyzing...";
+          btnAnalyzePath.disabled = true;
+        } else {
+          analysisStatusBar.style.display = 'none';
+          btnPathText.textContent = "Analyze In-Place";
+          btnAnalyzePath.disabled = false;
+        }
+      }
+
+      async function analyzePath(path) {
+        if (!path) {
+          showError("Please enter a valid file path to analyze.");
+          return;
+        }
+        setAnalyzing(true, `Reading "${path}" in-place...`);
+        try {
+          const res = await fetch('/api/analyze-path', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: path })
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+            throw new Error(err.detail || `Analysis failed with status ${res.status}`);
+          }
+          const data = await res.json();
+          resultData = data;
+          renderDashboard();
+          setAnalyzing(false);
+          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+          setAnalyzing(false);
+          showError(err.message);
+        }
+      }
+
+      async function uploadFile(file) {
+        if (!file) return;
+        setAnalyzing(true, `Uploading and processing "${file.name}"...`);
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+            throw new Error(err.detail || `Upload analysis failed with status ${res.status}`);
+          }
+          const data = await res.json();
+          resultData = data;
+          renderDashboard();
+          setAnalyzing(false);
+          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+          setAnalyzing(false);
+          showError(err.message);
+        }
+      }
+
+      async function loadQuickDemo() {
+        setAnalyzing(true, "Loading mock result demo contract...");
+        try {
+          const res = await fetch('/api/mock');
+          if (!res.ok) {
+            throw new Error(`Failed to load demo: HTTP ${res.status}`);
+          }
+          const data = await res.json();
+          resultData = data;
+          renderDashboard();
+          setAnalyzing(false);
+          document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+          setAnalyzing(false);
+          showError(err.message);
+        }
+      }
+
+      // Hook up UI inputs
+      btnAnalyzePath.addEventListener('click', () => {
+        analyzePath(localPathInput.value.trim());
+      });
+      localPathInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') analyzePath(localPathInput.value.trim());
+      });
+
+      document.querySelectorAll('.path-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          localPathInput.value = chip.getAttribute('data-path');
+          analyzePath(localPathInput.value);
+        });
+      });
+
+      btnQuickDemo.addEventListener('click', loadQuickDemo);
+
+      fileUploadInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          uploadFile(e.target.files[0]);
+        }
+      });
+
+      // Drag & Drop Handlers
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('dragover');
+        });
+      });
+      dropZone.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          uploadFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      // Check query param e.g. ?file=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryFile = urlParams.get('file') || urlParams.get('path');
+      if (queryFile && isServerMode) {
+        localPathInput.value = queryFile;
+        analyzePath(queryFile);
+      } else if (resultData.meta) {
+        renderDashboard();
+      }
 
     })();
   </script>
