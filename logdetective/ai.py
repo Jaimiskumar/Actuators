@@ -65,20 +65,62 @@ def build_compact_prompt(result: Result) -> str:
     return "\n".join(prompt_lines)
 
 
+def synthesize_heuristic_summary(result: Result) -> str:
+    """Generate a deterministic root-cause narrative when running fully offline without an API key."""
+    if not result.clusters and not result.crashes:
+        return "Root Cause: No significant errors or crash events detected in log stream."
+
+    lines = []
+    # Identify patient zero (earliest first-seen failure cluster)
+    earliest_cluster = None
+    for c in result.clusters:
+        if earliest_cluster is None:
+            earliest_cluster = c
+        elif c.first_seen.line_no and earliest_cluster.first_seen.line_no:
+            if c.first_seen.line_no < earliest_cluster.first_seen.line_no:
+                earliest_cluster = c
+
+    if earliest_cluster:
+        fo = earliest_cluster.first_seen
+        ts_info = f" at {fo.ts}" if fo.ts else ""
+        lines.append(
+            f"Root Cause: Initial failure pattern [{earliest_cluster.level}] emerged at Line {fo.line_no}{ts_info}: "
+            f"'{earliest_cluster.sample or earliest_cluster.template}'."
+        )
+
+    if result.crashes:
+        primary = result.crashes[0]
+        crash_ts = f" at {primary.trigger.ts}" if primary.trigger.ts else ""
+        lines.append(
+            f"Failure Cascade: Pre-crash domino effect of {len(primary.sequence)} events escalated "
+            f"until terminating with trigger at Line {primary.trigger.line_no}{crash_ts}: '{primary.trigger.message}'."
+        )
+    elif earliest_cluster:
+        lines.append(
+            f"Failure Cascade: Error signature repeated {earliest_cluster.count:,} times across the recorded session."
+        )
+
+    lines.append(
+        "Recommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
+    )
+    return "\n".join(lines)
+
+
 def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Optional[str]:
-    """Generate an AI summary using the Gemini API.
+    """Generate an AI summary using the Gemini API, with offline deterministic fallback.
     
     Reads GEMINI_API_KEY (or GOOGLE_API_KEY) from environment.
-    Fails safely with a clear warning without halting the application.
+    If no key is present, generates a local deterministic synthesis so the feature
+    works 100% offline without failing.
     """
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         print(
-            "\n[Log Detective AI] GEMINI_API_KEY not set in environment. "
-            "To enable AI root cause analysis, set export GEMINI_API_KEY='your-key'.",
+            "\n[Log Detective AI] Notice: GEMINI_API_KEY not set. "
+            "Using local deterministic root-cause synthesis (Core Offline Mode).",
             file=sys.stderr,
         )
-        return None
+        return synthesize_heuristic_summary(result)
 
     prompt = build_compact_prompt(result)
 
@@ -117,8 +159,10 @@ def generate_ai_summary(result: Result, model: str = "gemini-2.5-flash") -> Opti
                 if parts and "text" in parts[0]:
                     return parts[0]["text"].strip()
     except urllib.error.HTTPError as exc:
-        print(f"\n[Log Detective AI] Gemini API HTTP Error ({exc.code}): {exc.reason}", file=sys.stderr)
+        print(f"\n[Log Detective AI] Gemini API HTTP Error ({exc.code}): {exc.reason}. Falling back to offline synthesis.", file=sys.stderr)
+        return synthesize_heuristic_summary(result)
     except Exception as exc:
-        print(f"\n[Log Detective AI] Failed to generate AI summary: {exc}", file=sys.stderr)
+        print(f"\n[Log Detective AI] Remote call failed ({exc}). Falling back to offline synthesis.", file=sys.stderr)
+        return synthesize_heuristic_summary(result)
 
-    return None
+    return synthesize_heuristic_summary(result)

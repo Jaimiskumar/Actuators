@@ -103,7 +103,9 @@ def test_generate_ai_summary_no_key(monkeypatch):
 
     result = _make_dummy_result()
     summary = generate_ai_summary(result)
-    assert summary is None
+    assert summary is not None
+    assert "Root Cause:" in summary
+    assert "Failure Cascade:" in summary
 
 
 def test_generate_ai_summary_mock_success(monkeypatch):

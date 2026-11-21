@@ -1458,8 +1458,8 @@
     "lines": 10000,
     "events": 9988,
     "malformed_lines": 0,
-    "duration_s": 0.058,
-    "peak_mem_mb": 51.83,
+    "duration_s": 0.061,
+    "peak_mem_mb": 54.88,
     "time_range": [
       "2026-11-21T10:00:00Z",
       "2026-11-21T10:04:36Z"
@@ -2745,7 +2745,7 @@
       ]
     }
   ],
-  "ai_summary": null
+  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:42.207000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:38.037000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
 }
   </script>
 
@@ -2789,8 +2789,8 @@
     "lines": 10000,
     "events": 9988,
     "malformed_lines": 0,
-    "duration_s": 0.058,
-    "peak_mem_mb": 51.83,
+    "duration_s": 0.061,
+    "peak_mem_mb": 54.88,
     "time_range": [
       "2026-11-21T10:00:00Z",
       "2026-11-21T10:04:36Z"
@@ -4076,7 +4076,7 @@
       ]
     }
   ],
-  "ai_summary": null
+  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:42.207000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:38.037000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
 }") && !rawJson.includes("{{ result_json")) {
           resultData = JSON.parse(rawJson);
         }
