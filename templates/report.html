@@ -1932,8 +1932,8 @@ __CHART_JS__
       }
 
       // Check if running on localhost or via server
-      const isServerMode = window.location.protocol.startsWith('http');
-      const API_BASE = isServerMode ? '' : 'http://127.0.0.1:8000';
+      const isServerMode = window.location.protocol.startsWith('http') && (window.location.port === '8000' || window.location.host.includes(':8000'));
+      const API_BASE = isServerMode ? window.location.origin : '';
       const dashboardPanel = document.getElementById('dashboardPanel');
       if (isServerMode || !resultData.meta) {
         dashboardPanel.style.display = 'block';
@@ -2806,27 +2806,54 @@ __CHART_JS__
       const btnQuickDemo = document.getElementById('btnQuickDemo');
 
       function showError(msg) {
+        if (!errorMessage || !errorBanner) return;
         errorMessage.textContent = msg;
         errorBanner.style.display = 'flex';
-        analysisStatusBar.style.display = 'none';
+        if (analysisStatusBar) analysisStatusBar.style.display = 'none';
       }
 
       function hideError() {
-        errorBanner.style.display = 'none';
+        if (errorBanner) errorBanner.style.display = 'none';
       }
 
       function setAnalyzing(isAnalyzing, msg) {
         if (isAnalyzing) {
           hideError();
-          analysisStatusBar.style.display = 'flex';
-          statusMessage.textContent = msg || "Analyzing log file with streaming pass...";
-          btnPathText.textContent = "Analyzing...";
-          btnAnalyzePath.disabled = true;
+          if (analysisStatusBar) {
+            analysisStatusBar.style.display = 'flex';
+            statusMessage.textContent = msg || "Analyzing log file with streaming pass...";
+          }
+          if (btnPathText) btnPathText.textContent = "Analyzing...";
+          if (btnAnalyzePath) btnAnalyzePath.disabled = true;
         } else {
-          analysisStatusBar.style.display = 'none';
-          btnPathText.textContent = "Analyze In-Place";
-          btnAnalyzePath.disabled = false;
+          if (analysisStatusBar) analysisStatusBar.style.display = 'none';
+          if (btnPathText) btnPathText.textContent = "Analyze In-Place";
+          if (btnAnalyzePath) btnAnalyzePath.disabled = false;
         }
+      }
+
+      function loadQuickDemo() {
+        setAnalyzing(true, "Loading mock contract demo...");
+        setTimeout(() => {
+          if (typeof FALLBACK_MOCK_DATA !== 'undefined' && FALLBACK_MOCK_DATA.meta) {
+            resultData = FALLBACK_MOCK_DATA;
+            renderAllViews();
+            setAnalyzing(false);
+            hideError();
+          }
+        }, 40);
+      }
+
+      function loadSampleDemo() {
+        setAnalyzing(true, "Loading sample log analysis contract...");
+        setTimeout(() => {
+          if (typeof FALLBACK_SAMPLE_DATA !== 'undefined' && FALLBACK_SAMPLE_DATA.meta) {
+            resultData = FALLBACK_SAMPLE_DATA;
+            renderAllViews();
+            setAnalyzing(false);
+            hideError();
+          }
+        }, 40);
       }
 
       async function analyzePath(path) {
@@ -2834,32 +2861,29 @@ __CHART_JS__
           showError("Please enter a valid file path to analyze.");
           return;
         }
-        setAnalyzing(true, `Reading "${path}" in-place...`);
+        setAnalyzing(true, "Reading in-place: " + path);
         if (!isServerMode) {
-          if (path.includes("mock_result.json")) {
-            setTimeout(() => {
-              if (typeof FALLBACK_MOCK_DATA !== 'undefined') {
-                resultData = FALLBACK_MOCK_DATA;
-                renderAllViews();
-                setAnalyzing(false);
-                hideError();
-              }
-            }, 50);
+          if (path.includes("mock_result.json") || path.includes("mock")) {
+            loadQuickDemo();
+            return;
+          }
+          if (path.includes("sample.log") || path.includes("sample")) {
+            loadSampleDemo();
             return;
           }
           setAnalyzing(false);
-          showError("In offline file:// mode, drag and drop '" + path + "' directly into the upload box below to analyze it instantly in your browser.");
+          showError("In offline file:// mode, drag and drop '" + path + "' directly into the upload box on the right to analyze it instantly in your browser (100% offline). Or run 'logdetective serve' to enable filesystem path reading.");
           return;
         }
         try {
-          const res = await fetch(`${API_BASE}/api/analyze-path`, {
+          const res = await fetch((API_BASE || '') + '/api/analyze-path', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: path })
           });
           if (!res.ok) {
-            const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
-            throw new Error(err.detail || `Analysis failed with status ${res.status}`);
+            const err = await res.json().catch(() => ({ detail: "HTTP " + res.status }));
+            throw new Error(err.detail || ("Analysis failed with status " + res.status));
           }
           const data = await res.json();
           resultData = data;
@@ -2995,9 +3019,533 @@ __CHART_JS__
         "ai_summary": "Root Cause: Database pool saturation initiated by cluster c2 at Line 12500.\nFailure Cascade: Retries compounded queue latency until fatal connection allocation failure at Line 524100.\nRecommended Fix: Increase maxPoolSize in HikariCP and configure exponential retry backoff."
       };
 
+      const FALLBACK_SAMPLE_DATA = {
+  "meta": {
+    "file": "sample.log",
+    "size_bytes": 1162529,
+    "lines": 10001,
+    "events": 9989,
+    "malformed_lines": 0,
+    "duration_s": 0.059,
+    "peak_mem_mb": 52.59,
+    "time_range": [
+      "2026-11-21T10:00:00Z",
+      "2026-11-21T10:04:32.164000Z"
+    ],
+    "level_counts": {
+      "DEBUG": 0,
+      "INFO": 9661,
+      "WARN": 2,
+      "ERROR": 323,
+      "FATAL": 2,
+      "UNKNOWN": 1
+    },
+    "memory_threshold_mb": null,
+    "budget_exceeded": null
+  },
+  "clusters": [
+    {
+      "id": "c3",
+      "template": "Connection to database <IP> timed out after <NUM>ms",
+      "count": 322,
+      "level": "ERROR",
+      "first_seen": {
+        "ts": "2026-11-21T10:01:36.521000Z",
+        "line_no": 3520
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:04:32.144000Z",
+        "line_no": 10000
+      },
+      "sample": "Connection to database 10.0.4.10:5432 timed out after 6520ms",
+      "stack_top": [],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        0,
+        0,
+        23,
+        49,
+        49,
+        51,
+        49,
+        51,
+        50
+      ]
+    },
+    {
+      "id": "c1",
+      "template": "Connection pool usage above threshold: <NUM>%",
+      "count": 1,
+      "level": "WARN",
+      "first_seen": {
+        "ts": "2026-11-21T10:00:41.047000Z",
+        "line_no": 1500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:00:41.047000Z",
+        "line_no": 1500
+      },
+      "sample": "Connection pool usage above threshold: 88%",
+      "stack_top": [],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "c2",
+      "template": "Connection to database <IP> timed out after <NUM>ms",
+      "count": 1,
+      "level": "ERROR",
+      "first_seen": {
+        "ts": "2026-11-21T10:01:36.150000Z",
+        "line_no": 3500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:01:36.150000Z",
+        "line_no": 3500
+      },
+      "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+      "stack_top": [
+        "Traceback (most recent call last):",
+        "File \"/app/services/checkout.py\", line 142, in process_payment",
+        "conn = db_pool.get_connection(timeout=5.0)"
+      ],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "c4",
+      "template": "Retrying operation after error: <STR>",
+      "count": 1,
+      "level": "WARN",
+      "first_seen": {
+        "ts": "2026-11-21T10:02:30Z",
+        "line_no": 5500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:02:30Z",
+        "line_no": 5500
+      },
+      "sample": "Retrying operation after error: 'Connection refused'",
+      "stack_top": [],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "c5",
+      "template": "Pool exhausted: cannot allocate connection to <PATH>",
+      "count": 1,
+      "level": "FATAL",
+      "first_seen": {
+        "ts": "2026-11-21T10:03:51.934000Z",
+        "line_no": 8500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:03:51.934000Z",
+        "line_no": 8500
+      },
+      "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
+      "stack_top": [],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "c6",
+      "template": "error: OutOfMemoryError in worker thread pool",
+      "count": 1,
+      "level": "FATAL",
+      "first_seen": {
+        "ts": "2026-11-21T10:04:18.484000Z",
+        "line_no": 9500
+      },
+      "last_seen": {
+        "ts": "2026-11-21T10:04:18.484000Z",
+        "line_no": 9500
+      },
+      "sample": "error: OutOfMemoryError in worker thread pool",
+      "stack_top": [],
+      "services": [
+        "order-service"
+      ],
+      "buckets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "timeline": {
+    "bucket_edges": [
+      "2026-11-21T10:00:00Z",
+      "2026-11-21T10:00:27.216400Z",
+      "2026-11-21T10:00:54.432800Z",
+      "2026-11-21T10:01:21.649200Z",
+      "2026-11-21T10:01:48.865600Z",
+      "2026-11-21T10:02:16.082000Z",
+      "2026-11-21T10:02:43.298400Z",
+      "2026-11-21T10:03:10.514800Z",
+      "2026-11-21T10:03:37.731200Z",
+      "2026-11-21T10:04:04.947600Z",
+      "2026-11-21T10:04:32.164000Z"
+    ],
+    "errors_per_bucket": [
+      0,
+      1,
+      0,
+      24,
+      49,
+      50,
+      51,
+      49,
+      52,
+      51
+    ]
+  },
+  "crashes": [
+    {
+      "trigger": {
+        "ts": "2026-11-21T10:01:36.150000Z",
+        "line_no": 3500,
+        "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms"
+      },
+      "sequence": [
+        {
+          "ts": "2026-11-21T10:01:36.150000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
+          "cluster_id": "c2",
+          "is_first_occurrence": true,
+          "is_trigger": true
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "ts": "2026-11-21T10:03:51.934000Z",
+        "line_no": 8500,
+        "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
+      },
+      "sequence": [
+        {
+          "ts": "2026-11-21T10:03:44.695000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4220ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:45.171000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4240ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:45.665000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4260ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:46.130000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4280ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:46.713000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4300ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:47.274000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4320ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:47.902000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4340ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:48.386000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4360ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:48.885000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4380ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:49.366000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4400ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:49.910000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4420ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:50.455000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4440ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:50.960000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4460ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:51.464000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4480ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:03:51.934000Z",
+          "level": "FATAL",
+          "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
+          "cluster_id": "c5",
+          "is_first_occurrence": true,
+          "is_trigger": true
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "ts": "2026-11-21T10:04:18.484000Z",
+        "line_no": 9500,
+        "message": "error: OutOfMemoryError in worker thread pool"
+      },
+      "sequence": [
+        {
+          "ts": "2026-11-21T10:04:10.892000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5220ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:11.383000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5240ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:11.909000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5260ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:12.451000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5280ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:12.999000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5300ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:13.601000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5320ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:14.140000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5340ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:14.617000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5360ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:15.177000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5380ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:15.733000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5400ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:16.259000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5420ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:16.784000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5440ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:17.324000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5460ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:17.862000Z",
+          "level": "ERROR",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5480ms",
+          "cluster_id": "c3",
+          "is_first_occurrence": false,
+          "is_trigger": false
+        },
+        {
+          "ts": "2026-11-21T10:04:18.484000Z",
+          "level": "FATAL",
+          "message": "error: OutOfMemoryError in worker thread pool",
+          "cluster_id": "c6",
+          "is_first_occurrence": true,
+          "is_trigger": true
+        }
+      ]
+    }
+  ],
+  "ai_summary": "Root Cause: Database connection timeout to 10.0.4.10:5432 initiated at Line 3500.\nFailure Cascade: Connection pool exhaustion compounded queue latency until fatal OutOfMemoryError at Line 9500.\nRecommended Fix: Increase maxPoolSize in HikariCP, set connectionTimeout to 30000ms, and configure exponential retry backoff.",
+  "recommended_code": "# application.yml: HikariCP connection pool optimization\nspring:\n  datasource:\n    hikari:\n      maximum-pool-size: 50\n      connection-timeout: 30000  # 30 seconds\n      idle-timeout: 600000       # 10 minutes\n      max-lifetime: 1800000      # 30 minutes"
+};
+
       async function uploadFile(file) {
         if (!file) return;
-        setAnalyzing(true, `Reading and processing "${file.name}"...`);
+        setAnalyzing(true, "Reading and analyzing: " + file.name);
 
         if (file.name.endsWith('.json')) {
           const reader = new FileReader();
@@ -3011,6 +3559,7 @@ __CHART_JS__
                 hideError();
                 return;
               }
+              throw new Error("JSON file missing 'meta' or 'clusters' keys");
             } catch (ex) {
               setAnalyzing(false);
               showError("Invalid Result JSON: " + ex.message);
@@ -3020,28 +3569,8 @@ __CHART_JS__
           return;
         }
 
-        if (isServerMode) {
-          try {
-            const formData = new FormData();
-            formData.append('file', file);
-            const res = await fetch(`${API_BASE}/api/upload`, {
-              method: 'POST',
-              body: formData
-            });
-            if (res.ok) {
-              const data = await res.json();
-              resultData = data;
-              renderAllViews();
-              setAnalyzing(false);
-              hideError();
-              return;
-            }
-          } catch (err) {
-            console.warn("Server upload failed, falling back to local client parsing:", err);
-          }
-        }
-
-        // 100% Offline Client-Side Parser
+        // 100% Offline Client-Side Parser using browser FileReader
+        // Works seamlessly for .log, .txt, .csv, syslog, or any raw log stream!
         const reader = new FileReader();
         reader.onload = function(e) {
           try {
@@ -3059,67 +3588,86 @@ __CHART_JS__
         reader.readAsText(file);
       }
 
-      async function loadQuickDemo() {
-        setAnalyzing(true, "Loading mock result demo contract...");
-        if (!isServerMode) {
-          setTimeout(() => {
-            if (typeof FALLBACK_MOCK_DATA !== 'undefined' && FALLBACK_MOCK_DATA.meta) {
-              resultData = FALLBACK_MOCK_DATA;
-              renderAllViews();
-              setAnalyzing(false);
-              hideError();
-            }
-          }, 50);
-          return;
-        }
-        try {
-          const res = await fetch(`${API_BASE}/api/mock`);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          resultData = data;
-          renderAllViews();
-          setAnalyzing(false);
-          hideError();
-        } catch (err) {
-          if (typeof FALLBACK_MOCK_DATA !== 'undefined' && FALLBACK_MOCK_DATA.meta) {
-            resultData = FALLBACK_MOCK_DATA;
-            renderAllViews();
-            setAnalyzing(false);
-            hideError();
-            return;
-          }
-          setAnalyzing(false);
-          showError(err.message);
-        }
+      if (btnQuickDemo) {
+        btnQuickDemo.addEventListener('click', loadQuickDemo);
       }
 
-      btnQuickDemo.addEventListener('click', loadQuickDemo);
-
-      fileUploadInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files[0]) {
-          uploadFile(e.target.files[0]);
-        }
+      // Quick Select Path Chips
+      document.querySelectorAll('.path-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
+          const selectedPath = chip.getAttribute('data-path');
+          if (localPathInput) localPathInput.value = selectedPath;
+          if (selectedPath.includes('mock_result.json') || selectedPath.includes('mock')) {
+            loadQuickDemo();
+          } else if (selectedPath.includes('sample.log') || selectedPath.includes('sample')) {
+            loadSampleDemo();
+          } else {
+            analyzePath(selectedPath);
+          }
+        });
       });
+
+      if (btnAnalyzePath) {
+        btnAnalyzePath.addEventListener('click', () => {
+          const path = (localPathInput ? localPathInput.value : '').trim();
+          if (!path) {
+            showError("Please enter a file path to analyze.");
+            return;
+          }
+          if (path.includes('mock_result.json') || path.includes('mock')) {
+            loadQuickDemo();
+            return;
+          }
+          if (path.includes('sample.log') || path.includes('sample')) {
+            loadSampleDemo();
+            return;
+          }
+          if (isServerMode) {
+            analyzePath(path);
+          } else {
+            showError("In offline file:// mode, drag and drop '" + path + "' directly into the upload box on the right to analyze it instantly in your browser (100% offline). Or run 'logdetective serve' in your terminal.");
+          }
+        });
+      }
+
+      if (localPathInput) {
+        localPathInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            if (btnAnalyzePath) btnAnalyzePath.click();
+          }
+        });
+      }
+
+      if (fileUploadInput) {
+        fileUploadInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            uploadFile(e.target.files[0]);
+          }
+        });
+      }
 
       // Drag & Drop Handlers
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-          e.preventDefault();
-          dropZone.classList.add('dragover');
+      if (dropZone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+          });
         });
-      });
-      ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-          e.preventDefault();
-          dropZone.classList.remove('dragover');
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+          });
         });
-      });
-      dropZone.addEventListener('drop', (e) => {
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          uploadFile(e.dataTransfer.files[0]);
-        }
-      });
-
+        dropZone.addEventListener('drop', (e) => {
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            uploadFile(e.dataTransfer.files[0]);
+          }
+        });
+      }
 
       // ==========================================
       // Terminal View & Client-Side Engine Module

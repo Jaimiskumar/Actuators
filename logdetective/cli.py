@@ -71,7 +71,7 @@ def analyze(
 
         if ai:
             from logdetective.ai import generate_ai_summary
-            console.print("[dim]Analyzing incident patterns with Gemini AI...[/dim]")
+            err_console.print("[dim]Analyzing incident patterns with Gemini AI...[/dim]")
             result.ai_summary = generate_ai_summary(result)
 
         if json_output:
