@@ -99,7 +99,45 @@ def verify_one_command_install():
                 log(f"Log analysis returned error: {analyze_res.stderr}", "bold red")
                 sys.exit(1)
 
-        log("One-Command Installation Verified: PASS", "bold green")
+        # 5. Test building the wheel
+        dist_dir = tmp_path / "dist"
+        dist_dir.mkdir(parents=True, exist_ok=True)
+        log("Building wheel distribution package...", "yellow")
+        wheel_build_res = subprocess.run(
+            [sys.executable, "-m", "pip", "wheel", "--no-build-isolation", "--no-deps", "-w", str(dist_dir), str(repo_root)],
+            capture_output=True,
+            text=True,
+        )
+        if wheel_build_res.returncode != 0:
+            log(f"Wheel build failed:\n{wheel_build_res.stderr}", "bold red")
+            sys.exit(1)
+
+        wheels = list(dist_dir.glob("*.whl"))
+        if not wheels:
+            log("No .whl package found in dist output!", "bold red")
+            sys.exit(1)
+        wheel_file = wheels[0]
+        log(f"Successfully built wheel: {wheel_file.name} ({wheel_file.stat().st_size:,} bytes)", "bold green")
+
+        # 6. Test installing from built wheel into virtualenv
+        log(f"Testing installation from built wheel ({wheel_file.name})...", "yellow")
+        whl_install_res = subprocess.run(
+            [str(venv_pip), "install", "--force-reinstall", "--no-deps", str(wheel_file)],
+            capture_output=True,
+            text=True,
+        )
+        if whl_install_res.returncode != 0:
+            log(f"Wheel installation failed:\n{whl_install_res.stderr}", "bold red")
+            sys.exit(1)
+        log("Wheel installed successfully!", "bold green")
+
+        # 7. Final CLI verification from wheel installation
+        whl_cli_res = subprocess.run([str(venv_cli), "--help"], capture_output=True, text=True)
+        if whl_cli_res.returncode != 0:
+            log(f"CLI verification from wheel installation failed:\n{whl_cli_res.stderr}", "bold red")
+            sys.exit(1)
+
+        log("One-Command Installation & Wheel Packaging: ALL PASS", "bold green")
 
 
 if __name__ == "__main__":

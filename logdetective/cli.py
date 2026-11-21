@@ -92,15 +92,18 @@ def analyze(
 def serve(
     host: str = typer.Option("127.0.0.1", "--host", help="Dashboard host"),
     port: int = typer.Option(8000, "--port", help="Dashboard port"),
+    open_browser: bool = typer.Option(False, "--open", help="Open dashboard automatically in browser"),
 ):
-    """Launch local web dashboard."""
-    console.print(f"[bold green]Starting Log Detective local dashboard at http://{host}:{port}[/bold green]")
+    """Launch local web dashboard on localhost:8000."""
     try:
         import uvicorn
-        from logdetective.server import app as fastapi_app
-        uvicorn.run(fastapi_app, host=host, port=port)
-    except ImportError:
-        console.print("[yellow]FastAPI/Uvicorn not installed. Run `pip install '.[dashboard]'` to enable the dashboard.[/yellow]")
+        console.print(f"[bold green]Starting Log Detective local dashboard at http://{host}:{port}[/bold green]")
+        if open_browser:
+            webbrowser.open(f"http://{host}:{port}")
+        uvicorn.run("logdetective.server:app", host=host, port=port, log_level="info")
+    except ImportError as exc:
+        console.print(f"[bold red]Error:[/bold red] Missing dashboard dependencies: {exc}", file=sys.stderr)
+        raise typer.Exit(code=1)
 
 
 def main():

@@ -47,3 +47,27 @@ def test_pyproject_toml_configuration():
     assert 'logdetective = "logdetective.cli:main"' in content
     assert "typer" in content
     assert "rich" in content
+
+
+def test_wheel_build(tmp_path):
+    """Verify that a distributable wheel can be built cleanly."""
+    repo_root = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "wheel",
+            "--no-build-isolation",
+            "--no-deps",
+            "-w",
+            str(tmp_path),
+            str(repo_root),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+    wheels = list(tmp_path.glob("*.whl"))
+    assert len(wheels) == 1
+    assert wheels[0].name.startswith("logdetective-0.1.0")
