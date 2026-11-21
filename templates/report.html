@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="cream">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,86 +7,89 @@
   <style>
     :root {
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
-      --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
       
-      /* Dark Theme (Default) */
-      --bg-body: #0a0d14;
-      --bg-surface: #111622;
-      --bg-surface-elevated: #182030;
-      --bg-surface-hover: #1f293d;
-      --bg-code: #07090e;
-      --border-subtle: #1e2638;
-      --border-strong: #2e3a54;
-      --border-focus: #3b82f6;
+      /* Cream & Light Brown (PPT Palette - Default) */
+      --bg-body: #F7F4EE;            /* Warm Cream Ivory */
+      --bg-surface: #FFFFFF;         /* Crisp White Card Surface */
+      --bg-surface-elevated: #EFE8DD;/* Warm Cream Card Accent */
+      --bg-surface-hover: #E7DFD1;   /* Soft Warm Cream Hover */
+      --bg-code: #F0E8DD;            /* Warm Parchment Code */
+      --border-subtle: #E3D9CC;      /* Warm Taupe Subtle Border */
+      --border-strong: #D1C4B2;      /* Sandstone Strong Border */
+      --border-focus: #8C5828;       /* Warm Chestnut Focus */
       
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-subtle: #64748b;
+      --text-main: #241E1A;          /* Deep Espresso Charcoal */
+      --text-muted: #6E5F52;         /* Warm Roasted Walnut */
+      --text-subtle: #988877;        /* Soft Sandstone Stone */
       
-      --color-primary: #3b82f6;
-      --color-primary-glow: rgba(59, 130, 246, 0.25);
-      --color-fatal: #f43f5e;
-      --color-fatal-bg: rgba(244, 63, 94, 0.12);
-      --color-fatal-glow: rgba(244, 63, 94, 0.4);
-      --color-error: #f97316;
-      --color-error-bg: rgba(249, 115, 22, 0.12);
-      --color-warn: #eab308;
-      --color-warn-bg: rgba(234, 179, 8, 0.12);
-      --color-info: #06b6d4;
-      --color-info-bg: rgba(6, 182, 212, 0.12);
-      --color-success: #10b981;
-      --color-success-bg: rgba(16, 185, 129, 0.12);
-      --color-ai: #a855f7;
-      --color-ai-bg: rgba(168, 85, 247, 0.12);
+      --color-primary: #8C5828;      /* Warm Saddle Chestnut Brown (PPT Accent) */
+      --color-primary-glow: rgba(140, 88, 40, 0.16);
+      --color-primary-dark: #663C16;
+      
+      --color-fatal: #B83227;        /* Earthy Brick Crimson */
+      --color-fatal-bg: #FBECE9;     /* Soft Terracotta Tint */
+      --color-fatal-glow: rgba(184, 50, 39, 0.25);
+      --color-error: #C05621;        /* Warm Terracotta / Rust */
+      --color-error-bg: #FCF0E8;     /* Soft Peach Cream */
+      --color-warn: #A87018;         /* Warm Ochre / Dijon Amber */
+      --color-warn-bg: #FAF3E6;     /* Soft Warm Straw */
+      --color-info: #2B628A;         /* Slate Navy (PPT Bullet Accent) */
+      --color-info-bg: #E9F1F7;     /* Soft Ice Slate */
+      --color-success: #3A6941;      /* Sage Olive Green (PPT Complete Banner) */
+      --color-success-bg: #EBF3ED;  /* Soft Sage Mist */
+      --color-ai: #6A457D;           /* Elegant Heather Plum (PPT Hour 7-10) */
+      --color-ai-bg: #F4EFF8;       /* Soft Heather Tint */
 
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+      --shadow-sm: 0 1px 3px rgba(36, 30, 26, 0.05);
+      --shadow-md: 0 4px 14px rgba(36, 30, 26, 0.08);
+      --shadow-lg: 0 12px 28px rgba(36, 30, 26, 0.12);
       --radius-sm: 6px;
       --radius-md: 10px;
       --radius-lg: 16px;
       --radius-full: 9999px;
 
-      --chart-grid: rgba(255, 255, 255, 0.06);
-      --chart-tick: #94a3b8;
+      --chart-grid: rgba(110, 95, 82, 0.10);
+      --chart-tick: #6E5F52;
     }
 
-    [data-theme="light"] {
-      --bg-body: #f8fafc;
-      --bg-surface: #ffffff;
-      --bg-surface-elevated: #f1f5f9;
-      --bg-surface-hover: #e2e8f0;
-      --bg-code: #f1f5f9;
-      --border-subtle: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --border-focus: #2563eb;
+    /* Dark Espresso Mode */
+    [data-theme="dark"] {
+      --bg-body: #161311;
+      --bg-surface: #1E1A17;
+      --bg-surface-elevated: #28231F;
+      --bg-surface-hover: #332C27;
+      --bg-code: #13100E;
+      --border-subtle: #332C27;
+      --border-strong: #473E38;
+      --border-focus: #C48E59;
 
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --text-subtle: #94a3b8;
+      --text-main: #F4EFEB;
+      --text-muted: #B0A296;
+      --text-subtle: #7A6F65;
 
-      --color-primary: #2563eb;
-      --color-primary-glow: rgba(37, 99, 235, 0.2);
-      --color-fatal: #e11d48;
-      --color-fatal-bg: #ffe4e6;
-      --color-fatal-glow: rgba(225, 29, 72, 0.3);
-      --color-error: #ea580c;
-      --color-error-bg: #ffedd5;
-      --color-warn: #ca8a04;
-      --color-warn-bg: #fef9c3;
-      --color-info: #0891b2;
-      --color-info-bg: #cffafe;
-      --color-success: #059669;
-      --color-success-bg: #d1fae5;
-      --color-ai: #9333ea;
-      --color-ai-bg: #f3e8ff;
+      --color-primary: #C48E59;
+      --color-primary-glow: rgba(196, 142, 89, 0.2);
+      --color-fatal: #F87171;
+      --color-fatal-bg: rgba(248, 113, 113, 0.14);
+      --color-fatal-glow: rgba(248, 113, 113, 0.35);
+      --color-error: #FB923C;
+      --color-error-bg: rgba(251, 146, 60, 0.14);
+      --color-warn: #FBBF24;
+      --color-warn-bg: rgba(251, 191, 36, 0.14);
+      --color-info: #60A5FA;
+      --color-info-bg: rgba(96, 165, 250, 0.14);
+      --color-success: #4ADE80;
+      --color-success-bg: rgba(74, 222, 128, 0.14);
+      --color-ai: #C084FC;
+      --color-ai-bg: rgba(192, 132, 252, 0.14);
 
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.6);
 
-      --chart-grid: rgba(0, 0, 0, 0.06);
-      --chart-tick: #64748b;
+      --chart-grid: rgba(244, 239, 235, 0.08);
+      --chart-tick: #B0A296;
     }
 
     * {
@@ -1311,16 +1314,16 @@
       margin: 1.5rem 0 3rem 0;
     }
     .terminal-window {
-      background: #090d13;
-      border: 1px solid #30363d;
+      background: #181412;
+      border: 1px solid #38302A;
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
       font-family: 'JetBrains Mono', 'Fira Code', 'DejaVu Sans Mono', Menlo, Consolas, Monaco, monospace;
     }
     .terminal-topbar {
-      background: #161b22;
-      border-bottom: 1px solid #30363d;
+      background: #231E1A;
+      border-bottom: 1px solid #38302A;
       padding: 0.65rem 1.25rem;
       display: flex;
       align-items: center;
@@ -1467,10 +1470,10 @@
             <!-- View Mode Segmented Switch -->
       <div class="view-mode-toggle" id="viewModeToggle">
         <button id="btnViewTerminal" class="mode-tab active" type="button" title="View exact Rich Terminal CLI tables and AI SRE agent report">
-          <span>🖥️ Terminal View</span>
+          <span>Terminal View</span>
         </button>
         <button id="btnViewDashboard" class="mode-tab" type="button" title="View interactive charts, filters and timeline story">
-          <span>📊 Detailed Dashboard</span>
+          <span>Detailed Dashboard</span>
         </button>
       </div>
 
@@ -1483,13 +1486,13 @@
       </nav>
       <div class="header-actions">
         <button id="btnToggleDashboard" class="btn btn-outline" title="Select or Upload Log File">
-          <span>📂 Load File</span>
+          <span>Load Source</span>
         </button>
         <button id="themeToggleBtn" class="btn theme-toggle-btn" title="Toggle Light/Dark Theme">
-          <span id="themeIcon">☀️</span>
+          <span id="themeIcon">Theme</span>
         </button>
         <button id="downloadJsonBtn" class="btn" title="Download Raw Result JSON">
-          <span>⬇ JSON</span>
+          <span>Export JSON</span>
         </button>
       </div>
     </div>
@@ -1501,7 +1504,7 @@
     <section id="dashboardPanel" class="dashboard-panel" style="display: none;">
       <div class="dashboard-panel-header">
         <div class="panel-title">
-          <span class="panel-icon">📂</span>
+          
           <div>
             <h3>Select Log Source for In-Place Analysis</h3>
             <p class="panel-subtitle">For multi-GB logs, enter the local file path to read in-place with zero upload latency and flat memory.</p>
@@ -1509,7 +1512,7 @@
         </div>
         <div class="panel-actions">
           <button id="btnQuickDemo" class="btn btn-outline" title="Load sample crash log analysis">
-            <span>⚡ Load Mock Demo</span>
+            <span>Load Mock Demo</span>
           </button>
         </div>
       </div>
@@ -1518,7 +1521,7 @@
         <!-- Local Path In-Place Input Box -->
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-badge">⚡ Recommended for Large Files</span>
+            <span class="source-badge">In-Place Streaming</span>
             <h4>Local File Path (In-Place Streaming)</h4>
           </div>
           <p class="source-desc">Direct filesystem path read with <code>O(1)</code> memory. Avoids uploading gigabytes over HTTP.</p>
@@ -1544,8 +1547,8 @@
           <div id="dropZone" class="drop-zone">
             <input type="file" id="fileUploadInput" class="file-upload-input" accept=".log,.txt,.json,.gz">
             <div class="drop-zone-content">
-              <span class="drop-icon">📁</span>
-              <p class="drop-text"><strong>Click to browse</strong> or drag and drop a log file here</p>
+              
+              <p class="drop-text"><strong>Click to browse</strong> or drag & drop a log file here</p>
               <p class="drop-hint">Supports .log, .json, .txt, .gz</p>
             </div>
           </div>
@@ -1565,7 +1568,7 @@
 
       <!-- Error alert banner -->
       <div id="dashboardErrorBanner" class="alert-error" style="display: none;">
-        <span class="alert-icon">⚠️</span>
+        
         <span id="dashboardErrorMessage">Error message</span>
         <button class="alert-close" onclick="this.parentElement.style.display='none'">✕</button>
       </div>
@@ -1581,12 +1584,11 @@
             <span class="dot dot-green"></span>
           </div>
           <div class="terminal-tab-title">
-            <span class="term-cmd-icon">❯</span>
-            <span>logdetective agent — bash — 120×40</span>
+            <span>logdetective agent — 120×40</span>
           </div>
           <div class="terminal-actions">
             <button id="btnCopyTerminal" class="term-btn" type="button" title="Copy raw plain text to clipboard">
-              <span id="copyTermIcon">📋</span> <span id="copyTermText">Copy Terminal Output</span>
+              <span id="copyTermText">Copy Output</span>
             </button>
           </div>
         </div>
@@ -1601,7 +1603,7 @@
     <!-- Analysis Target Banner -->
     <section id="summary" class="meta-banner">
       <div class="meta-file-info">
-        <div class="file-icon">📄</div>
+        
         <div class="file-details">
           <h2>
             <span id="metaFileName">Analyzing log...</span>
@@ -1618,7 +1620,7 @@
     <!-- AI Root Cause Box (If present) -->
     <div id="aiSummaryBox" class="ai-box" style="display: none;">
       <div class="ai-box-header">
-        <span class="ai-badge">✦ AI Root Cause Analysis</span>
+        <span class="ai-badge">AI Root Cause Analysis</span>
         <span class="pill pill-neutral">Generated Offline / Opt-in</span>
       </div>
       <p id="aiSummaryText" class="ai-box-content"></p>
@@ -1629,7 +1631,6 @@
       <div class="kpi-card">
         <div class="kpi-title">
           <span>File Size</span>
-          <span>💾</span>
         </div>
         <div class="kpi-value" id="kpiFileSize">--</div>
         <div class="kpi-subtext" id="kpiMemory">Peak RAM: --</div>
@@ -1638,7 +1639,6 @@
       <div class="kpi-card">
         <div class="kpi-title">
           <span>Processed Lines</span>
-          <span>⚡</span>
         </div>
         <div class="kpi-value" id="kpiLines">--</div>
         <div class="kpi-subtext" id="kpiEvents">-- events, -- malformed</div>
@@ -1647,7 +1647,6 @@
       <div class="kpi-card">
         <div class="kpi-title">
           <span>Analysis Duration</span>
-          <span>⏱</span>
         </div>
         <div class="kpi-value" id="kpiDuration">--</div>
         <div class="kpi-subtext" id="kpiThroughput">-- lines/sec</div>
@@ -1656,7 +1655,6 @@
       <div class="kpi-card">
         <div class="kpi-title">
           <span>Unique Clusters</span>
-          <span>🔍</span>
         </div>
         <div class="kpi-value" id="kpiClusters">--</div>
         <div class="kpi-subtext" id="kpiCrashes">-- crash events reconstructed</div>
@@ -1670,7 +1668,7 @@
       <section id="timeline-chart" class="chart-card">
         <div class="chart-header">
           <h3>
-            <span>📈 Error Rate Over Time</span>
+            <span>Error Rate Over Time</span>
           </h3>
           <span class="chart-legend-badge">Adaptive Buckets</span>
         </div>
@@ -1678,7 +1676,7 @@
           <canvas id="timelineChartCanvas"></canvas>
         </div>
         <div id="crashAnnotationBar" class="chart-annotation-bar" style="display: none;">
-          <span>💥</span>
+          
           <span id="crashAnnotationText">First crash detected at --</span>
         </div>
       </section>
@@ -1687,7 +1685,7 @@
       <section id="clusters-chart" class="chart-card">
         <div class="chart-header">
           <h3>
-            <span>📊 Top Patterns by Count</span>
+            <span>Top Patterns by Count</span>
           </h3>
           <span class="chart-legend-badge">Click bar to jump</span>
         </div>
@@ -1702,7 +1700,7 @@
     <section id="first-occurrences" class="section">
       <div class="section-header">
         <div>
-          <h2>🎯 First-Occurrence Failure Patterns</h2>
+          <h2>First-Occurrence Failure Patterns</h2>
           <div class="section-desc">Identifies the earliest occurrence of each distinct failure cluster with sample and stack trace.</div>
         </div>
         <span class="pill pill-neutral" id="clusterCountBadge">-- clusters</span>
@@ -1712,7 +1710,7 @@
       <div class="filter-bar">
         <div class="filter-main-row">
           <div class="search-input-wrap">
-            <span class="search-icon">🔎</span>
+            
             <input type="text" id="clusterSearchInput" class="search-input" placeholder="Search patterns, samples, services, stack frames, or IDs (e.g. timeout, c1, HikariPool)...">
             <button id="searchClearBtn" class="search-clear-btn" title="Clear search">✕</button>
           </div>
@@ -1742,7 +1740,7 @@
     <section id="crash-sequence" class="section">
       <div class="section-header">
         <div>
-          <h2>⚡ Crash Sequence Reconstruction</h2>
+          <h2>Crash Sequence Reconstruction</h2>
           <div class="section-desc">Reconstructed sequence of events and warnings leading up to the fatal process termination.</div>
         </div>
       </div>
@@ -1752,7 +1750,7 @@
           <div class="timeline-intro-header">
             <div>
               <h3 id="crashTriggerTitle">
-                <span>💥 Reconstructed Crash Sequence</span>
+                <span>Reconstructed Crash Sequence</span>
               </h3>
               <div class="time-range" id="crashTriggerSubtext">--</div>
             </div>
@@ -1775,7 +1773,7 @@
     <section id="innovation-benchmark" class="section">
       <div class="section-header">
         <div>
-          <h2>⚡ Architectural Innovation: Log Detective vs Existing Solutions</h2>
+          <h2>Architectural Innovation: Log Detective vs Existing Solutions</h2>
           <div class="section-desc">Comparison against naive scripts, enterprise SIEMs (Splunk/Elastic), and cloud LLM prompt-stuffing.</div>
         </div>
         <span class="pill pill-success">Novel O(1) Streaming Architecture</span>
@@ -1835,7 +1833,7 @@
 
         <div class="chart-card">
           <div class="chart-header">
-            <h3><span>📊 Memory &amp; Speed Comparison</span></h3>
+            <h3><span>Performance Benchmarks</span></h3>
             <span class="chart-legend-badge">Normalized Benchmark</span>
           </div>
           <div class="chart-container" style="height: 250px;">
@@ -1964,17 +1962,17 @@ __CHART_JS__
       // Theme Management
       const themeToggleBtn = document.getElementById('themeToggleBtn');
       const themeIcon = document.getElementById('themeIcon');
-      let currentTheme = 'dark';
+      let currentTheme = 'cream';
       try {
-        currentTheme = localStorage.getItem('ld_theme') || 'dark';
+        currentTheme = localStorage.getItem('ld_theme') || 'cream';
       } catch (e) {
-        currentTheme = 'dark';
+        currentTheme = 'cream';
       }
 
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         currentTheme = theme;
-        if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        if (themeIcon) themeIcon.textContent = theme === 'dark' ? 'Dark' : 'Cream';
         try {
           localStorage.setItem('ld_theme', theme);
         } catch (e) {}
@@ -2199,7 +2197,7 @@ __CHART_JS__
                     const idx = items[0].dataIndex;
                     let title = `Bucket #${idx + 1}: ${labels[idx]}`;
                     if (idx === crashBucketIndex) {
-                      title += ' 💥 CRASH TRIGGER OCCURRED';
+                      title += ' [CRASH TRIGGER OCCURRED]';
                     }
                     return title;
                   },
@@ -2479,7 +2477,7 @@ __CHART_JS__
         if (filtered.length === 0) {
           cardsContainer.innerHTML = `
             <div style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted); background: var(--bg-surface); border-radius: var(--radius-md); border: 1px dashed var(--border-strong);">
-              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+              
               <div style="font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No failure patterns match your criteria</div>
               <p style="font-size: 0.825rem; margin-bottom: 1rem;">Try clearing your keyword query or switching log level filters.</p>
               <button class="btn btn-outline" onclick="resetAllFilters()">Reset All Filters</button>
@@ -2498,7 +2496,7 @@ __CHART_JS__
 
           card.className = `cluster-card ${borderClass}`;
 
-          const servicesHtml = (c.services || []).map(s => `<span class="chip">⚙ ${highlightText(s, query)}</span>`).join(' ');
+          const servicesHtml = (c.services || []).map(s => `<span class="chip">${highlightText(s, query)}</span>`).join(' ');
 
           const firstSeenTs = c.first_seen ? formatIso(c.first_seen.ts) : '--';
           const firstSeenLine = c.first_seen && c.first_seen.line_no ? `Line ${formatNumber(c.first_seen.line_no)}` : '--';
@@ -2520,7 +2518,7 @@ __CHART_JS__
                   ${servicesHtml}
                 </div>
                 <div class="cluster-meta-chips">
-                  <span class="chip" title="First Occurrence">⭐ First Seen: ${firstSeenTs} (${firstSeenLine})</span>
+                  <span class="chip" title="First Occurrence">First Seen: ${firstSeenTs} (${firstSeenLine})</span>
                   <span class="chip" title="Last Occurrence">⏱ Last Seen: ${lastSeenTs} (${lastSeenLine})</span>
                   <span class="accordion-indicator">▼</span>
                 </div>
@@ -2605,7 +2603,7 @@ __CHART_JS__
         const toggleBtn = document.getElementById('btnToggleCascade');
 
         if (!crashes || crashes.length === 0) {
-          crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
+          crashIntro.innerHTML = '<span>No Crashes Detected</span>';
           crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
           if (toggleBtn) toggleBtn.style.display = 'none';
           return;
@@ -2613,7 +2611,7 @@ __CHART_JS__
 
         const crash = crashes[0];
         const trigger = crash.trigger || {};
-        crashIntro.innerHTML = `<span>💥 Fatal Crash Trigger: "${trigger.message || 'Fatal Error'}"</span>`;
+        crashIntro.innerHTML = `<span>Fatal Crash Trigger: "${trigger.message || 'Fatal Error'}"</span>`;
         crashSubtext.textContent = `Triggered at ${formatIso(trigger.ts)} (Line ${formatNumber(trigger.line_no)})`;
 
         const sequence = crash.sequence || [];
@@ -2647,7 +2645,7 @@ __CHART_JS__
               const collapseCard = document.createElement('div');
               collapseCard.className = 'cascade-collapsed-card';
               collapseCard.innerHTML = `
-                <span style="font-size: 1.1rem;">⚡</span>
+                
                 <div>
                   <strong>${intermediateCount} pre-crash warning/error events collapsed</strong>
                   <div style="font-size: 0.775rem; color: var(--text-subtle); margin-top: 0.15rem;">Click here to expand the full event cascade leading to termination</div>
@@ -2665,15 +2663,15 @@ __CHART_JS__
 
           const item = document.createElement('div');
           let itemClass = 'timeline-item';
-          let nodeIcon = '⚡';
+          let nodeIcon = '■';
           if (evt.is_trigger) {
             itemClass += ' is-trigger';
-            nodeIcon = '💥';
+            nodeIcon = '●';
           } else if (evt.is_first_occurrence) {
             itemClass += ' is-first';
-            nodeIcon = '⭐';
+            nodeIcon = '▲';
           } else if (evt.message && evt.message.includes('repeated')) {
-            nodeIcon = '🔁';
+            nodeIcon = '↳';
           }
 
           item.className = itemClass;
@@ -3290,11 +3288,11 @@ __CHART_JS__
 
         // 1. Stats Panel
         const budgetBadge = isBudgetExceeded
-          ? `<span class="term-red">⚠️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)</span>`
-          : `<span class="term-green">🛡️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)</span>`;
+          ? `<span class="term-red">Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)</span>`
+          : `<span class="term-green">Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)</span>`;
         const budgetPlain = isBudgetExceeded
-          ? `⚠️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)`
-          : `🛡️  Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)`;
+          ? `Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (EXCEEDED)`
+          : `Memory Budget: ${peakRam} MB / ${thresholdMb.toFixed(1)} MB budget (MAINTAINED)`;
 
         const timeRangeStr = (meta.time_range && meta.time_range[0])
           ? `${meta.time_range[0]}  ➜  ${meta.time_range[1] || ''}`
@@ -3312,31 +3310,31 @@ __CHART_JS__
 
         html += `
 <div class="term-box">
-  <div class="term-title">╭───────────────────────── <span class="term-cyan">🔍 LOG DETECTIVE ANALYSIS</span> ──────────────────────────╮</div>
-  <div class="term-row">│ <span class="term-cyan">📁 File:</span> <span class="term-white">${fileName} (${fileSizeMb} MB)</span></div>
-  <div class="term-row">│ <span class="term-cyan">⚡ Ingestion:</span> <span class="term-white">${lines} lines (${events} events) processed in ${duration}s</span></div>
-  <div class="term-row">│ <span class="term-cyan">🚀 Speed:</span> <span class="term-white">${speed} lines/sec</span>  |  <span class="term-cyan">Peak Memory:</span> <span class="term-white">${peakRam} MB</span></div>
+  <div class="term-title">╭───────────────────────── <span class="term-cyan">LOG DETECTIVE ANALYSIS</span> ──────────────────────────╮</div>
+  <div class="term-row">│ <span class="term-cyan">File:</span> <span class="term-white">${fileName} (${fileSizeMb} MB)</span></div>
+  <div class="term-row">│ <span class="term-cyan">Ingestion:</span> <span class="term-white">${lines} lines (${events} events) processed in ${duration}s</span></div>
+  <div class="term-row">│ <span class="term-cyan">Throughput:</span> <span class="term-white">${speed} lines/sec</span>  |  <span class="term-cyan">Peak Memory:</span> <span class="term-white">${peakRam} MB</span></div>
   <div class="term-row">│ ${budgetBadge}</div>
-  <div class="term-row">│ <span class="term-cyan">⏱️  Time Range:</span> <span class="term-white">${timeRangeStr}</span></div>
-  <div class="term-row">│ <span class="term-cyan">📊 Breakdown:</span> ${lvlHtml}</div>
+  <div class="term-row">│ <span class="term-cyan">Time Range:</span> <span class="term-white">${timeRangeStr}</span></div>
+  <div class="term-row">│ <span class="term-cyan">Breakdown:</span> ${lvlHtml}</div>
   <div class="term-title">╰──────────────────────────────────────────────────────────────────────────────╯</div>
 </div>\n`;
 
-        plain += `╭───────────────────────── 🔍 LOG DETECTIVE ANALYSIS ──────────────────────────╮\n`;
-        plain += `│ 📁 File: ${fileName} (${fileSizeMb} MB)\n`;
-        plain += `│ ⚡ Ingestion: ${lines} lines (${events} events) processed in ${duration}s\n`;
-        plain += `│ 🚀 Speed: ${speed} lines/sec  |  Peak Memory: ${peakRam} MB\n`;
+        plain += `╭───────────────────────── LOG DETECTIVE ANALYSIS ──────────────────────────╮\n`;
+        plain += `│ File: ${fileName} (${fileSizeMb} MB)\n`;
+        plain += `│ Ingestion: ${lines} lines (${events} events) processed in ${duration}s\n`;
+        plain += `│ Throughput: ${speed} lines/sec  |  Peak Memory: ${peakRam} MB\n`;
         plain += `│ ${budgetPlain}\n`;
-        plain += `│ ⏱️  Time Range: ${timeRangeStr}\n`;
-        plain += `│ 📊 Breakdown: ${lvlPlain}\n`;
+        plain += `│ Time Range: ${timeRangeStr}\n`;
+        plain += `│ Breakdown: ${lvlPlain}\n`;
         plain += `╰──────────────────────────────────────────────────────────────────────────────╯\n\n`;
 
         // 2. Error Clusters Table
         if (clusters.length === 0) {
-          html += `<div class="term-green">✓ No errors or warnings found in log file.</div>\n`;
-          plain += `✓ No errors or warnings found in log file.\n\n`;
+          html += `<div class="term-green">No errors or warnings found in log file.</div>\n`;
+          plain += `No errors or warnings found in log file.\n\n`;
         } else {
-          html += `<div class="term-heading">                             <span class="term-red">🚨 TOP ERROR CLUSTERS</span>                              </div>`;
+          html += `<div class="term-heading">                             <span class="term-red">TOP ERROR CLUSTERS</span>                              </div>`;
           html += `<table class="term-table">
             <thead>
               <tr>
@@ -3349,7 +3347,7 @@ __CHART_JS__
             </thead>
             <tbody>`;
 
-          plain += `                             🚨 TOP ERROR CLUSTERS                              \n`;
+          plain += `                             TOP ERROR CLUSTERS                              \n`;
           plain += `┏━━━━━━┳━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓\n`;
           plain += `┃ ID   ┃ Level ┃  Count ┃ Pattern Template               ┃ First Seen       ┃\n`;
           plain += `┡━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━┩\n`;
@@ -3379,8 +3377,8 @@ __CHART_JS__
 
         // 3. Patient-Zero Failures
         if (clusters.length > 0) {
-          html += `<div class="term-heading"><span class="term-cyan">🎯 PATIENT-ZERO FAILURES (First Occurrences)</span></div>\n`;
-          plain += `🎯 PATIENT-ZERO FAILURES (First Occurrences)\n`;
+          html += `<div class="term-heading"><span class="term-cyan">PATIENT-ZERO FAILURES (First Occurrences)</span></div>\n`;
+          plain += `PATIENT-ZERO FAILURES (First Occurrences)\n`;
 
           clusters.slice(0, 4).forEach(c => {
             const tsPart = c.first_seen.ts ? ` at ${c.first_seen.ts}` : '';
@@ -3397,8 +3395,8 @@ __CHART_JS__
 
         // 4. Crash Sequence Reconstruction
         if (crashes.length > 0) {
-          html += `<div class="term-heading"><span class="term-red">💥 CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)</span></div>\n`;
-          plain += `💥 CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)\n`;
+          html += `<div class="term-heading"><span class="term-red">CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)</span></div>\n`;
+          plain += `CRASH SEQUENCE RECONSTRUCTION (${crashes.length} Crash Events Detected)\n`;
 
           crashes.slice(0, 2).forEach((crash, idx) => {
             const tsStr = crash.trigger.ts ? ` at ${crash.trigger.ts}` : '';
@@ -3415,11 +3413,11 @@ __CHART_JS__
               const stepTs = (step.ts && step.ts.length >= 19) ? `[${step.ts.substring(11, 19)}] ` : '';
               const msg = (step.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
               if (step.is_trigger) {
-                html += `    <span class="term-red">💥 TRIGGER ➜</span> ${stepTs}<span class="term-red">[${step.level}]</span> <span class="term-red"><strong>${msg}</strong></span><br>\n`;
-                plain += `    💥 TRIGGER ➜ ${stepTs}[${step.level}] ${step.message}\n`;
+                html += `    <span class="term-red">TRIGGER -></span> ${stepTs}<span class="term-red">[${step.level}]</span> <span class="term-red"><strong>${msg}</strong></span><br>\n`;
+                plain += `    TRIGGER -> ${stepTs}[${step.level}] ${step.message}\n`;
               } else if (step.is_first_occurrence) {
-                html += `    <span class="term-yellow">★ ROOT FO ➜</span> ${stepTs}<span class="term-yellow">[${step.level}]</span> <span class="term-yellow">${msg}</span><br>\n`;
-                plain += `    ★ ROOT FO ➜  ${stepTs}[${step.level}] ${step.message}\n`;
+                html += `    <span class="term-yellow">ROOT FO -></span> ${stepTs}<span class="term-yellow">[${step.level}]</span> <span class="term-yellow">${msg}</span><br>\n`;
+                plain += `    ROOT FO ->  ${stepTs}[${step.level}] ${step.message}\n`;
               } else {
                 html += `    <span class="term-dim">   ↳       </span> ${stepTs}<span class="term-dim">[${step.level}] ${msg}</span><br>\n`;
                 plain += `       ↳         ${stepTs}[${step.level}] ${step.message}\n`;
@@ -3434,29 +3432,29 @@ __CHART_JS__
         const aiReport = synthesizeAgentReport(resultData);
         html += `
 <div class="term-box-magenta">
-  <div class="term-title">╭──────────────────── <span class="term-magenta">🔍 AI INCIDENT INVESTIGATION REPORT</span> ─────────────────────╮</div>
-  <div class="term-row">│ <span class="term-cyan">📋 Summary:</span></div>
+  <div class="term-title">╭──────────────────── <span class="term-magenta">AI INCIDENT INVESTIGATION REPORT</span> ─────────────────────╮</div>
+  <div class="term-row">│ <span class="term-cyan">Summary:</span></div>
   <div class="term-row">│   <span class="term-white">${aiReport.summary}</span></div>
   <div class="term-row">│</div>
-  <div class="term-row">│ <span class="term-yellow">🎯 Patient-Zero Trigger (Root Cause):</span></div>
+  <div class="term-row">│ <span class="term-yellow">Patient-Zero Trigger:</span></div>
   <div class="term-row">│   <span class="term-white">${aiReport.patient_zero}</span></div>
   <div class="term-row">│</div>
-  <div class="term-row">│ <span class="term-red">💥 Cascade Mechanism:</span></div>
+  <div class="term-row">│ <span class="term-red">Cascade Mechanism:</span></div>
   <div class="term-row">│   <span class="term-white">${aiReport.cascade_analysis}</span></div>
   <div class="term-row">│</div>
-  <div class="term-row">│ <span class="term-green">🛠️ Recommended Solution (Fix):</span></div>
+  <div class="term-row">│ <span class="term-green">Recommended Solution:</span></div>
   <div class="term-row">│   <span class="term-white">${aiReport.recommended_fix.replace(/\n/g, '<br>│   ')}</span></div>
   <div class="term-title">╰──────────────────────────────────────────────────────────────────────────────╯</div>
 </div>\n`;
 
-        plain += `╭──────────────────── 🔍 AI INCIDENT INVESTIGATION REPORT ─────────────────────╮\n`;
-        plain += `│ 📋 Summary:\n`;
+        plain += `╭──────────────────── AI INCIDENT INVESTIGATION REPORT ─────────────────────╮\n`;
+        plain += `│ Summary:\n`;
         plain += `│   ${aiReport.summary}\n│\n`;
-        plain += `│ 🎯 Patient-Zero Trigger (Root Cause):\n`;
+        plain += `│ Patient-Zero Trigger:\n`;
         plain += `│   ${aiReport.patient_zero}\n│\n`;
-        plain += `│ 💥 Cascade Mechanism:\n`;
+        plain += `│ Cascade Mechanism:\n`;
         plain += `│   ${aiReport.cascade_analysis}\n│\n`;
-        plain += `│ 🛠️ Recommended Solution (Fix):\n`;
+        plain += `│ Recommended Solution:\n`;
         plain += `│   ${aiReport.recommended_fix}\n`;
         plain += `╰──────────────────────────────────────────────────────────────────────────────╯\n`;
 
@@ -3505,7 +3503,7 @@ __CHART_JS__
               const textEl = document.getElementById('copyTermText');
               if (textEl) {
                 const orig = textEl.textContent;
-                textEl.textContent = "✅ Copied Plain Text!";
+                textEl.textContent = "Copied to Clipboard!";
                 setTimeout(() => { textEl.textContent = orig; }, 2000);
               }
             }).catch(() => {

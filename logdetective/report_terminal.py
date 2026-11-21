@@ -20,25 +20,25 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
 
     # 1. Stats Panel
     stats_text = Text()
-    stats_text.append(f"📁 File: ", style="bold cyan")
+    stats_text.append(f"File: ", style="bold cyan")
     stats_text.append(f"{meta.file} ({meta.size_bytes / (1024*1024):.2f} MB)\n")
-    stats_text.append(f"⚡ Ingestion: ", style="bold cyan")
+    stats_text.append(f"Ingestion: ", style="bold cyan")
     stats_text.append(f"{meta.lines:,} lines ({meta.events:,} events) processed in {meta.duration_s:.2f}s\n")
     throughput = int(meta.lines / meta.duration_s) if meta.duration_s > 0 else 0
-    stats_text.append(f"🚀 Speed: ", style="bold cyan")
+    stats_text.append(f"Throughput: ", style="bold cyan")
     stats_text.append(f"{throughput:,} lines/sec  |  Peak Memory: {meta.peak_mem_mb:.1f} MB\n")
 
     if meta.memory_threshold_mb is not None:
         if meta.budget_exceeded:
-            stats_text.append(f"⚠️  Memory Budget: ", style="bold red")
+            stats_text.append(f"Memory Budget: ", style="bold red")
             stats_text.append(f"{meta.peak_mem_mb:.1f} MB / {meta.memory_threshold_mb:.1f} MB budget (EXCEEDED)\n", style="red")
         else:
-            stats_text.append(f"🛡️  Memory Budget: ", style="bold green")
+            stats_text.append(f"Memory Budget: ", style="bold green")
             stats_text.append(f"{meta.peak_mem_mb:.1f} MB / {meta.memory_threshold_mb:.1f} MB budget (MAINTAINED)\n", style="green")
     
     if meta.time_range and meta.time_range[0] and meta.time_range[1]:
-        stats_text.append(f"⏱️  Time Range: ", style="bold cyan")
-        stats_text.append(f"{meta.time_range[0]}  ➜  {meta.time_range[1]}\n")
+        stats_text.append(f"Time Range: ", style="bold cyan")
+        stats_text.append(f"{meta.time_range[0]}  ->  {meta.time_range[1]}\n")
 
     # Level breakdown summary
     lvl_str = "  ".join(
@@ -46,17 +46,17 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
         for k, v in meta.level_counts.items()
         if v > 0
     )
-    stats_text.append(f"📊 Breakdown: ", style="bold cyan")
+    stats_text.append(f"Breakdown: ", style="bold cyan")
     stats_text.append(Text.from_markup(lvl_str))
 
-    console.print(Panel(stats_text, title="🔍 [bold white]LOG DETECTIVE ANALYSIS[/bold white]", border_style="cyan"))
+    console.print(Panel(stats_text, title="[bold white]LOG DETECTIVE ANALYSIS[/bold white]", border_style="cyan"))
 
     # 2. Clusters Table
     if not result.clusters:
-        console.print("[bold green]✓ No errors or warnings found in log file.[/bold green]\n")
+        console.print("[bold green]No errors or warnings found in log file.[/bold green]\n")
         return
 
-    table = Table(title="🚨 [bold white]TOP ERROR CLUSTERS[/bold white]", border_style="dim", expand=True)
+    table = Table(title="[bold white]TOP ERROR CLUSTERS[/bold white]", border_style="dim", expand=True)
     table.add_column("ID", style="bold yellow", width=6)
     table.add_column("Level", width=8)
     table.add_column("Count", justify="right", style="bold red", width=9)
@@ -80,7 +80,7 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
     console.print(table)
 
     # 3. First Occurrence Highlights
-    console.print("\n🎯 [bold white]PATIENT-ZERO FAILURES (First Occurrences)[/bold white]")
+    console.print("\n[bold white]PATIENT-ZERO FAILURES (First Occurrences)[/bold white]")
     for c in result.clusters[:4]:
         fo = c.first_seen
         ts_part = f"at {fo.ts} " if fo.ts else ""
@@ -92,7 +92,7 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
 
     # 4. Crash Timeline Reconstruction
     if result.crashes:
-        console.print(f"\n💥 [bold red]CRASH SEQUENCE RECONSTRUCTION ({len(result.crashes)} Crash Events Detected)[/bold red]")
+        console.print(f"\n[bold red]CRASH SEQUENCE RECONSTRUCTION ({len(result.crashes)} Crash Events Detected)[/bold red]")
         for idx, crash in enumerate(result.crashes[:2], start=1):
             ts_str = f"at {crash.trigger.ts} " if crash.trigger.ts else ""
             console.print(f"\n  [bold red]Crash #{idx}:[/bold red] Line {crash.trigger.line_no} {ts_str}")
@@ -104,10 +104,10 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
                 lvl_tag = f"[{_level_color(step.level)}]{step.level:<5}[/{_level_color(step.level)}]"
                 
                 if step.is_trigger:
-                    marker = "[bold red]💥 TRIGGER ➜[/bold red]"
+                    marker = "[bold red]TRIGGER ->[/bold red]"
                     console.print(f"    {marker} {ts_step}{lvl_tag} [bold red]{step.message}[/bold red]")
                 elif step.is_first_occurrence:
-                    marker = "[bold yellow]★ ROOT FO ➜[/bold yellow]"
+                    marker = "[bold yellow]ROOT FO ->[/bold yellow]"
                     console.print(f"    {marker} {ts_step}{lvl_tag} [yellow]{step.message}[/yellow]")
                 else:
                     marker = "   [dim]↳[/dim]       "
@@ -119,7 +119,7 @@ def render_terminal_report(result: Result, console: Optional[Console] = None):
         console.print(
             Panel(
                 Text(result.ai_summary, style="white"),
-                title="🤖 [bold magenta]AI ROOT CAUSE SUMMARY (Gemini)[/bold magenta]",
+                title="[bold magenta]AI ROOT CAUSE SUMMARY (Gemini)[/bold magenta]",
                 border_style="magenta",
             )
         )

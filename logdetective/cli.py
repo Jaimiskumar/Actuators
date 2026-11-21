@@ -125,23 +125,23 @@ def agent(
 
         engine = Engine()
         result = engine.analyze(file, memory_threshold_mb=threshold)
-        console.print("\n[bold magenta]🤖 Log Detective AI SRE Agent Investigating...[/bold magenta]")
+        console.print("\n[bold magenta]Log Detective AI SRE Agent Investigating...[/bold magenta]")
         report = investigate_incident(result, model=model)
 
         agent_text = Text()
-        agent_text.append("📋 Summary:\n", style="bold cyan")
+        agent_text.append("Summary:\n", style="bold cyan")
         agent_text.append(f"  {report['summary']}\n\n", style="white")
 
-        agent_text.append("🎯 Patient-Zero Trigger (Root Cause):\n", style="bold yellow")
+        agent_text.append("Patient-Zero Trigger (Root Cause):\n", style="bold yellow")
         agent_text.append(f"  {report['patient_zero']}\n\n", style="white")
 
-        agent_text.append("💥 Cascade Mechanism:\n", style="bold red")
+        agent_text.append("Cascade Mechanism:\n", style="bold red")
         agent_text.append(f"  {report['cascade_analysis']}\n\n", style="white")
 
-        agent_text.append("🛠️ Recommended Solution (Fix):\n", style="bold green")
+        agent_text.append("Recommended Solution:\n", style="bold green")
         agent_text.append(f"  {report['recommended_fix']}\n", style="white")
 
-        console.print(Panel(agent_text, title="🔍 [bold white]AI INCIDENT INVESTIGATION REPORT[/bold white]", border_style="magenta"))
+        console.print(Panel(agent_text, title="[bold white]AI INCIDENT INVESTIGATION REPORT[/bold white]", border_style="magenta"))
     except Exception as exc:
         err_console.print(f"[bold red]Error:[/bold red] {exc}")
         raise typer.Exit(code=1)
