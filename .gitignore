@@ -48,4 +48,5 @@ htmlcov/
 *.log
 *.log.gz
 !tests/sample_logs/*.log
+tests/sample_logs/benchmark_*.log
 ground_truth.json

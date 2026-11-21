@@ -23,9 +23,19 @@ RE_SYSLOG_TIMESTAMP = re.compile(
     r"^([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})"
 )
 
+# Apache format: [Sun Dec 04 04:47:44 2005] or [Sun Dec 04 04:47:44.123 2005]
+RE_APACHE_TIMESTAMP = re.compile(
+    r"^\[([A-Z][a-z]{2}\s+[A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:\s+\d{4})?)\]"
+)
+
+# HDFS/Hadoop format: 081109 203615
+RE_HDFS_TIMESTAMP = re.compile(
+    r"^(\d{6}\s+\d{6})"
+)
+
 # Level matcher in text logs
 RE_LEVEL = re.compile(
-    r"\b(DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL|PANIC|SEVERE)\b",
+    r"\b(DEBUG|INFO|NOTICE|WARN(?:ING)?|ERROR|FATAL|CRITICAL|PANIC|SEVERE)\b",
     re.IGNORECASE,
 )
 
@@ -37,9 +47,29 @@ RE_SYSLOG_HEADER = re.compile(
     r"^[A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}\s+\S+\s+([a-zA-Z0-9_\-.]+)(?:\[\d+\])?:\s*(.*)$"
 )
 
+# Stack trace / traceback line patterns across Python, Java, JS, Go
+RE_STACK_TRACE_LINE = re.compile(
+    r"^(?:"
+    r"\s+at\s+.*"                                  # Java/JavaScript: '  at com.foo.Bar(Bar.java:42)'
+    r"|Traceback \(most recent call last\):"        # Python traceback header
+    r"|\s*File\s+\".*\",\s+line\s+\d+.*"           # Python frame: '  File "app.py", line 12'
+    r"|\s*(?:Caused by:|Suppressed:).*"             # Java root cause
+    r"|\s*\.\.\.\s*\d+\s+more"                      # Java omitted frames: '... 32 more'
+    r"|\s*[a-zA-Z0-9_.]*(?:Exception|Error|Failure|Panic):\s*.*"  # Exception message line
+    r"|\s*panic:\s*.*"                             # Go panic
+    r"|\s*goroutine\s+\d+\s+\[.*\]:"               # Go goroutine dump
+    r")"
+)
+
+
+def is_stack_trace_line(line: str) -> bool:
+    """Check if a line matches known stack trace or traceback patterns."""
+    return bool(RE_STACK_TRACE_LINE.match(line))
+
 LEVEL_NORMALIZATION = {
     "DEBUG": "DEBUG",
     "INFO": "INFO",
+    "NOTICE": "INFO",
     "WARN": "WARN",
     "WARNING": "WARN",
     "ERROR": "ERROR",
@@ -102,8 +132,21 @@ def parse_timestamp(ts_raw: Any) -> Optional[datetime]:
     # Try Syslog: Nov 21 03:01:02
     try:
         now_year = datetime.now().year
-        dt = datetime.strptime(s[:15], "%b %d %H:%M:%S")
-        return dt.replace(year=now_year)
+        dt = datetime.strptime(f"{now_year} {s[:15]}", "%Y %b %d %H:%M:%S")
+        return dt
+    except ValueError:
+        pass
+
+    # Try Apache: Sun Dec 04 04:47:44 2005
+    try:
+        clean_apache = re.sub(r"\.\d+", "", s)
+        return datetime.strptime(clean_apache[:24].strip(), "%a %b %d %H:%M:%S %Y")
+    except ValueError:
+        pass
+
+    # Try HDFS/Hadoop: 081109 203615
+    try:
+        return datetime.strptime(s[:13], "%y%m%d %H%M%S")
     except ValueError:
         pass
 
@@ -180,11 +223,13 @@ def parse_line(line_no: int, raw_line: str) -> Tuple[Optional[Event], bool]:
             # Not valid JSON, fall through to text parsing
             pass
 
-    # Check 2: Matches timestamp at line start (Plain text / Syslog)
+    # Check 2: Matches timestamp at line start (Plain text / Syslog / Apache / HDFS)
     ts_match = (
         RE_ISO_TIMESTAMP.match(raw_line)
         or RE_STD_TIMESTAMP.match(raw_line)
         or RE_SYSLOG_TIMESTAMP.match(raw_line)
+        or RE_APACHE_TIMESTAMP.match(raw_line)
+        or RE_HDFS_TIMESTAMP.match(raw_line)
     )
 
     if ts_match:
@@ -238,5 +283,21 @@ def parse_line(line_no: int, raw_line: str) -> Tuple[Optional[Event], bool]:
         )
         return event, False
 
-    # Check 3: Neither JSON nor timestamped line -> continuation line
-    return None, True
+    # Check 3: Check if line is a continuation / stack trace line
+    if is_stack_trace_line(raw_line) or raw_line.startswith((" ", "\t")):
+        return None, True
+
+    # Check 4: Standalone un-timestamped line (parse as independent Event)
+    lvl_match = RE_LEVEL.search(raw_line)
+    level = normalize_level(lvl_match.group(1)) if lvl_match else "UNKNOWN"
+    event = Event(
+        line_no=line_no,
+        ts=None,
+        level=level,
+        message=stripped,
+        stack=[],
+        fmt="text",
+        request_id=None,
+        service=None,
+    )
+    return event, False
