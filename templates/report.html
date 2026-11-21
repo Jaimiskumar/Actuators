@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Detective | Investigation Report</title>
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-body: #0a0d14;
+      --bg-surface: #111622;
+      --bg-surface-elevated: #182030;
+      --bg-surface-hover: #1f293d;
+      --bg-code: #07090e;
+      --border-subtle: #1e2638;
+      --border-strong: #2e3a54;
+      --border-focus: #3b82f6;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      
+      --color-primary: #3b82f6;
+      --color-primary-glow: rgba(59, 130, 246, 0.25);
+      --color-fatal: #f43f5e;
+      --color-fatal-bg: rgba(244, 63, 94, 0.12);
+      --color-fatal-glow: rgba(244, 63, 94, 0.4);
+      --color-error: #f97316;
+      --color-error-bg: rgba(249, 115, 22, 0.12);
+      --color-warn: #eab308;
+      --color-warn-bg: rgba(234, 179, 8, 0.12);
+      --color-info: #06b6d4;
+      --color-info-bg: rgba(6, 182, 212, 0.12);
+      --color-success: #10b981;
+      --color-success-bg: rgba(16, 185, 129, 0.12);
+      --color-ai: #a855f7;
+      --color-ai-bg: rgba(168, 85, 247, 0.12);
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+
+      --chart-grid: rgba(255, 255, 255, 0.06);
+      --chart-tick: #94a3b8;
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-surface-hover: #e2e8f0;
+      --bg-code: #f1f5f9;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --border-focus: #2563eb;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #94a3b8;
+
+      --color-primary: #2563eb;
+      --color-primary-glow: rgba(37, 99, 235, 0.2);
+      --color-fatal: #e11d48;
+      --color-fatal-bg: #ffe4e6;
+      --color-fatal-glow: rgba(225, 29, 72, 0.3);
+      --color-error: #ea580c;
+      --color-error-bg: #ffedd5;
+      --color-warn: #ca8a04;
+      --color-warn-bg: #fef9c3;
+      --color-info: #0891b2;
+      --color-info-bg: #cffafe;
+      --color-success: #059669;
+      --color-success-bg: #d1fae5;
+      --color-ai: #9333ea;
+      --color-ai-bg: #f3e8ff;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+      --chart-grid: rgba(0, 0, 0, 0.06);
+      --chart-tick: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 4rem;
+    }
+
+    /* Navbar / Header */
+    header.app-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 2px 8px var(--color-primary-glow);
+    }
+    .brand-text h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-text .tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-link {
+      font-size: 0.825rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+    }
+    .nav-link:hover {
+      color: var(--text-main);
+      background: var(--bg-surface-hover);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--border-strong);
+    }
+    .btn-primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+    .theme-toggle-btn {
+      padding: 0.45rem 0.7rem;
+    }
+
+    /* Banner / Metadata strip */
+    .meta-banner {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.75rem;
+      margin: 1.5rem 0 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .meta-file-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .file-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+    }
+    .file-details h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .file-details .time-range {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-top: 0.15rem;
+    }
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+    .pill-fatal { background: var(--color-fatal-bg); color: var(--color-fatal); border: 1px solid var(--color-fatal); }
+    .pill-error { background: var(--color-error-bg); color: var(--color-error); border: 1px solid var(--color-error); }
+    .pill-warn  { background: var(--color-warn-bg); color: var(--color-warn); border: 1px solid var(--color-warn); }
+    .pill-info  { background: var(--color-info-bg); color: var(--color-info); border: 1px solid var(--color-info); }
+    .pill-neutral { background: var(--bg-surface-elevated); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+    .pill-success { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success); }
+    .pill-pulse {
+      animation: pulse-glow 2s infinite ease-in-out;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 var(--color-fatal-glow); }
+      50% { box-shadow: 0 0 0 6px rgba(244, 63, 94, 0); }
+    }
+
+    /* KPI Summary Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+    }
+    .kpi-subtext {
+      font-size: 0.775rem;
+      color: var(--text-subtle);
+      margin-top: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* AI Summary Alert Box */
+    .ai-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--color-ai);
+      border-left: 5px solid var(--color-ai);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 16px var(--color-ai-bg);
+    }
+    .ai-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-ai);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ai-box-content {
+      font-size: 0.925rem;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* Section Layout */
+    .section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 5rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 1100px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .chart-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .chart-header h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .chart-legend-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+    }
+    .chart-container {
+      position: relative;
+      flex-grow: 1;
+      min-height: 300px;
+      width: 100%;
+    }
+    .chart-annotation-bar {
+      margin-top: 0.85rem;
+      padding: 0.65rem 1rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-fatal-bg);
+      border: 1px solid var(--color-fatal);
+      font-size: 0.8rem;
+      color: var(--color-fatal);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* Filter & Search Bar */
+    .filter-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .search-input-wrap {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.85rem 0.5rem 2.25rem;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .search-input:focus {
+      border-color: var(--border-focus);
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subtle);
+      pointer-events: none;
+    }
+    .filter-pills-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .filter-btn {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+
+    /* Cluster Cards List */
+    .cluster-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .cluster-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cluster-card:hover {
+      border-color: var(--border-strong);
+    }
+    .cluster-card.border-fatal { border-left: 4px solid var(--color-fatal); }
+    .cluster-card.border-error { border-left: 4px solid var(--color-error); }
+    .cluster-card.border-warn  { border-left: 4px solid var(--color-warn); }
+
+    .cluster-card-header {
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      background: transparent;
+      transition: background-color 0.15s ease;
+    }
+    .cluster-card-header:hover {
+      background: var(--bg-surface-hover);
+    }
+    .cluster-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .cluster-id-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .cluster-id-badge {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+    .cluster-meta-chips {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: var(--font-mono);
+      font-size: 0.775rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg-surface-elevated);
+      border-radius: var(--radius-sm);
+    }
+    .template-box {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .template-token {
+      background: rgba(59, 130, 246, 0.18);
+      color: #60a5fa;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* Expandable Body */
+    .cluster-card-body {
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-code);
+      display: none;
+    }
+    .cluster-card.open .cluster-card-body {
+      display: block;
+      padding-top: 1.25rem;
+    }
+    .accordion-indicator {
+      transition: transform 0.2s ease;
+    }
+    .cluster-card.open .accordion-indicator {
+      transform: rotate(180deg);
+    }
+
+    .detail-block {
+      margin-bottom: 1.25rem;
+    }
+    .detail-block:last-child {
+      margin-bottom: 0;
+    }
+    .detail-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .detail-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .code-box {
+      background: var(--bg-body);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      color: var(--text-main);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-surface-hover);
+    }
+    .stack-trace-frame {
+      color: #93c5fd;
+      padding: 0.15rem 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    /* Vertical Crash Sequence Timeline */
+    .timeline-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .timeline-intro {
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .timeline-intro h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .timeline-tree {
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .timeline-tree::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 15px;
+      bottom: 25px;
+      width: 2px;
+      background: var(--border-strong);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline-node {
+      position: absolute;
+      left: -2.5rem;
+      top: 0.25rem;
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-elevated);
+      border: 2px solid var(--border-strong);
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      z-index: 2;
+    }
+    .timeline-item.is-trigger .timeline-node {
+      background: var(--color-fatal);
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 16px var(--color-fatal-glow);
+    }
+    .timeline-item.is-first .timeline-node {
+      background: var(--color-warn);
+      border-color: #fff;
+      color: #000;
+    }
+    .timeline-content-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.35rem;
+      transition: all 0.15s ease;
+    }
+    .timeline-item.is-trigger .timeline-content-card {
+      border: 2px solid var(--color-fatal);
+      background: var(--color-fatal-bg);
+      box-shadow: 0 4px 20px var(--color-fatal-glow);
+    }
+    .timeline-item-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .timeline-time-info {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .timeline-delta {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .timeline-message {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+    .timeline-item.is-trigger .timeline-message {
+      color: var(--color-fatal);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .cluster-jump-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--bg-surface);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+    .cluster-jump-link:hover {
+      text-decoration: underline;
+      background: var(--bg-surface-hover);
+    }
+
+    /* Footer */
+    footer.app-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      padding: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .header-inner { padding: 0.75rem 1rem; }
+      .header-nav { display: none; }
+      .timeline-container { padding: 1.25rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo">LD</div>
+        <div class="brand-text">
+          <h1>Log Detective <span class="pill pill-neutral">v0.1.0</span></h1>
+          <div class="tagline">Terminal-Native Root Cause Reconstruction</div>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="#summary" class="nav-link">Overview</a>
+        <a href="#timeline-chart" class="nav-link">Error Timeline</a>
+        <a href="#clusters-chart" class="nav-link">Top Patterns</a>
+        <a href="#first-occurrences" class="nav-link">First Occurrences</a>
+        <a href="#crash-sequence" class="nav-link">Crash Story</a>
+      </nav>
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="btn theme-toggle-btn" title="Toggle Light/Dark Theme">
+          <span id="themeIcon">☀️</span>
+        </button>
+        <button id="downloadJsonBtn" class="btn" title="Download Raw Result JSON">
+          <span>⬇ JSON</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Analysis Target Banner -->
+    <section id="summary" class="meta-banner">
+      <div class="meta-file-info">
+        <div class="file-icon">📄</div>
+        <div class="file-details">
+          <h2>
+            <span id="metaFileName">Analyzing log...</span>
+            <span id="crashStatusPill" class="pill pill-fatal pill-pulse">CRASH DETECTED</span>
+          </h2>
+          <div class="time-range" id="metaTimeRange">--</div>
+        </div>
+      </div>
+      <div class="meta-pills" id="levelPillsContainer">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- AI Root Cause Box (If present) -->
+    <div id="aiSummaryBox" class="ai-box" style="display: none;">
+      <div class="ai-box-header">
+        <span class="ai-badge">✦ AI Root Cause Analysis</span>
+        <span class="pill pill-neutral">Generated Offline / Opt-in</span>
+      </div>
+      <p id="aiSummaryText" class="ai-box-content"></p>
+    </div>
+
+    <!-- 1. KPI Summary Cards Header -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>File Size</span>
+          <span>💾</span>
+        </div>
+        <div class="kpi-value" id="kpiFileSize">--</div>
+        <div class="kpi-subtext" id="kpiMemory">Peak RAM: --</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Processed Lines</span>
+          <span>⚡</span>
+        </div>
+        <div class="kpi-value" id="kpiLines">--</div>
+        <div class="kpi-subtext" id="kpiEvents">-- events, -- malformed</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Analysis Duration</span>
+          <span>⏱</span>
+        </div>
+        <div class="kpi-value" id="kpiDuration">--</div>
+        <div class="kpi-subtext" id="kpiThroughput">-- lines/sec</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Unique Clusters</span>
+          <span>🔍</span>
+        </div>
+        <div class="kpi-value" id="kpiClusters">--</div>
+        <div class="kpi-subtext" id="kpiCrashes">-- crash events reconstructed</div>
+      </div>
+    </section>
+
+    <!-- 2. Charts Section: Error Timeline & Top Clusters -->
+    <div class="charts-grid">
+      
+      <!-- 2A. Error Timeline Chart with First Crash Marked -->
+      <section id="timeline-chart" class="chart-card">
+        <div class="chart-header">
+          <h3>
+            <span>📈 Error Rate Over Time</span>
+          </h3>
+          <span class="chart-legend-badge">Adaptive Buckets</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="timelineChartCanvas"></canvas>
+        </div>
+        <div id="crashAnnotationBar" class="chart-annotation-bar" style="display: none;">
+          <span>💥</span>
+          <span id="crashAnnotationText">First crash detected at --</span>
+        </div>
+      </section>
+
+      <!-- 2B. Top Cluster Distribution Bar Chart -->
+      <section id="clusters-chart" class="chart-card">
+        <div class="chart-header">
+          <h3>
+            <span>📊 Top Patterns by Count</span>
+          </h3>
+          <span class="chart-legend-badge">Click bar to jump</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="clusterBarChartCanvas"></canvas>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3. First-Occurrence Expandable Cards Section -->
+    <section id="first-occurrences" class="section">
+      <div class="section-header">
+        <div>
+          <h2>🎯 First-Occurrence Failure Patterns</h2>
+          <div class="section-desc">Identifies the earliest occurrence of each distinct failure cluster with sample and stack trace.</div>
+        </div>
+        <span class="pill pill-neutral" id="clusterCountBadge">-- clusters</span>
+      </div>
+
+      <!-- Live Search & Severity Filter Bar -->
+      <div class="filter-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔎</span>
+          <input type="text" id="clusterSearchInput" class="search-input" placeholder="Search patterns, samples, services, or IDs (e.g. timeout, c1, order-service)...">
+        </div>
+        <div class="filter-pills-group" id="severityFilters">
+          <button class="filter-btn active" data-filter="ALL">ALL</button>
+          <button class="filter-btn" data-filter="FATAL">FATAL</button>
+          <button class="filter-btn" data-filter="ERROR">ERROR</button>
+          <button class="filter-btn" data-filter="WARN">WARN</button>
+        </div>
+      </div>
+
+      <!-- Cards Container -->
+      <div class="cluster-cards-list" id="clusterCardsContainer">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- 4. Crash Sequence Vertical Timeline Section -->
+    <section id="crash-sequence" class="section">
+      <div class="section-header">
+        <div>
+          <h2>⚡ Crash Sequence Reconstruction</h2>
+          <div class="section-desc">Reconstructed sequence of events and warnings leading up to the fatal process termination.</div>
+        </div>
+      </div>
+
+      <div class="timeline-container">
+        <div class="timeline-intro" id="crashIntroBanner">
+          <h3 id="crashTriggerTitle">
+            <span>💥 Reconstructed Crash Sequence</span>
+          </h3>
+          <div class="time-range" id="crashTriggerSubtext">--</div>
+        </div>
+
+        <div class="timeline-tree" id="timelineTreeContainer">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div>Log Detective • Single-pass Streaming Analysis Engine</div>
+      <div>100% Offline & Private • Zero External Calls</div>
+    </div>
+  </footer>
+
+  <!-- Raw Embedded JSON Contract Data Placeholder -->
+  <script id="logdetective-raw-data" type="application/json">
+__RESULT_JSON__
+  </script>
+
+  <!-- Embedded Chart.js Library -->
+  <script>
+__CHART_JS__
+  </script>
+
+  <!-- Application Logic -->
+  <script>
+    (function() {
+      // 1. Load Result Data
+      let rawJson = document.getElementById('logdetective-raw-data').textContent.trim();
+      let resultData;
+      try {
+        resultData = JSON.parse(rawJson);
+      } catch (e) {
+        console.error("Failed to parse Result JSON:", e);
+        resultData = {};
+      }
+
+      const meta = resultData.meta || {};
+      const clusters = resultData.clusters || [];
+      const timeline = resultData.timeline || {};
+      const crashes = resultData.crashes || [];
+      const aiSummary = resultData.ai_summary;
+
+      // Formatting helpers
+      function formatBytes(bytes) {
+        if (!bytes || isNaN(bytes)) return "0 B";
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      function formatNumber(num) {
+        if (num === undefined || num === null) return "0";
+        return num.toLocaleString();
+      }
+
+      function formatIso(isoStr) {
+        if (!isoStr) return "--";
+        try {
+          const d = new Date(isoStr);
+          if (isNaN(d.getTime())) return isoStr;
+          return d.toISOString().replace('T', ' ').replace('Z', ' UTC');
+        } catch {
+          return isoStr;
+        }
+      }
+
+      function formatShortTime(isoStr) {
+        if (!isoStr) return "--";
+        try {
+          const d = new Date(isoStr);
+          if (isNaN(d.getTime())) return isoStr;
+          return d.toTimeString().split(' ')[0] + '.' + String(d.getMilliseconds()).padStart(3, '0');
+        } catch {
+          return isoStr;
+        }
+      }
+
+      // Highlight normalized tokens in templates like <IP>, <NUM>, <STR>, <PATH>, <ID>
+      function highlightTemplate(template) {
+        if (!template) return "";
+        return template
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/&lt;([A-Z0-9_]+)&gt;/g, '<span class="template-token">&lt;$1&gt;</span>');
+      }
+
+      // Theme Management
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = document.getElementById('themeIcon');
+      let currentTheme = localStorage.getItem('ld_theme') || 'dark';
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        currentTheme = theme;
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('ld_theme', theme);
+        updateChartsTheme();
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+      applyTheme(currentTheme);
+
+      // JSON Export
+      document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(resultData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `logdetective-report-${meta.file || 'result'}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // 2. Populate Summary Header & KPIs
+      document.getElementById('metaFileName').textContent = meta.file || "Log Report";
+      if (meta.time_range && meta.time_range.length === 2) {
+        document.getElementById('metaTimeRange').textContent = 
+          `Time Range: ${formatIso(meta.time_range[0])}  ➔  ${formatIso(meta.time_range[1])}`;
+      }
+
+      // Status pill
+      const crashPill = document.getElementById('crashStatusPill');
+      if (crashes.length === 0) {
+        crashPill.textContent = "NO CRASH DETECTED";
+        crashPill.className = "pill pill-success";
+      } else {
+        crashPill.textContent = `${crashes.length} CRASH DETECTED`;
+      }
+
+      // Level Counts
+      const levelContainer = document.getElementById('levelPillsContainer');
+      levelContainer.innerHTML = '';
+      if (meta.level_counts) {
+        const order = ['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'];
+        order.forEach(lvl => {
+          if (meta.level_counts[lvl] !== undefined) {
+            const count = meta.level_counts[lvl];
+            const pill = document.createElement('span');
+            let pillClass = 'pill-neutral';
+            if (lvl === 'FATAL') pillClass = 'pill-fatal';
+            else if (lvl === 'ERROR') pillClass = 'pill-error';
+            else if (lvl === 'WARN') pillClass = 'pill-warn';
+            else if (lvl === 'INFO') pillClass = 'pill-info';
+            pill.className = `pill ${pillClass}`;
+            pill.textContent = `${lvl}: ${formatNumber(count)}`;
+            levelContainer.appendChild(pill);
+          }
+        });
+      }
+
+      // KPIs
+      document.getElementById('kpiFileSize').textContent = formatBytes(meta.size_bytes);
+      document.getElementById('kpiMemory').textContent = `Peak RAM: ${meta.peak_mem_mb ? meta.peak_mem_mb.toFixed(1) + ' MB' : 'Flat'}`;
+      
+      document.getElementById('kpiLines').textContent = formatNumber(meta.lines);
+      document.getElementById('kpiEvents').textContent = `${formatNumber(meta.events)} events, ${formatNumber(meta.malformed_lines)} malformed`;
+
+      const durationS = meta.duration_s || 0;
+      document.getElementById('kpiDuration').textContent = `${durationS.toFixed(2)}s`;
+      const throughput = durationS > 0 && meta.lines ? Math.round(meta.lines / durationS) : 0;
+      document.getElementById('kpiThroughput').textContent = `${formatNumber(throughput)} lines/sec`;
+
+      document.getElementById('kpiClusters').textContent = formatNumber(clusters.length);
+      const crashEventsCount = crashes.reduce((acc, c) => acc + (c.sequence ? c.sequence.length : 0), 0);
+      document.getElementById('kpiCrashes').textContent = `${crashes.length} crash triggers (${crashEventsCount} events)`;
+
+      // AI Summary
+      if (aiSummary) {
+        document.getElementById('aiSummaryBox').style.display = 'block';
+        document.getElementById('aiSummaryText').textContent = aiSummary;
+      }
+
+      // 3. Error Timeline Chart
+      let timelineChart = null;
+      let clusterChart = null;
+
+      function initTimelineChart() {
+        const canvas = document.getElementById('timelineChartCanvas');
+        if (!canvas || !window.Chart) return;
+
+        const edges = timeline.bucket_edges || [];
+        const errors = timeline.errors_per_bucket || [];
+        
+        // Generate bucket labels
+        const labels = [];
+        for (let i = 0; i < errors.length; i++) {
+          const start = edges[i] ? formatShortTime(edges[i]) : `B${i}`;
+          const end = edges[i + 1] ? formatShortTime(edges[i + 1]) : '';
+          labels.push(end ? `${start} - ${end}` : start);
+        }
+
+        // Identify bucket of first crash
+        let firstCrashTs = crashes.length > 0 && crashes[0].trigger ? crashes[0].trigger.ts : null;
+        let crashBucketIndex = -1;
+        if (firstCrashTs && edges.length > 1) {
+          const crashTime = new Date(firstCrashTs).getTime();
+          for (let i = 0; i < edges.length - 1; i++) {
+            const t0 = new Date(edges[i]).getTime();
+            const t1 = new Date(edges[i + 1]).getTime();
+            if (crashTime >= t0 && crashTime <= t1) {
+              crashBucketIndex = i;
+              break;
+            }
+          }
+          if (crashBucketIndex === -1 && crashTime >= new Date(edges[edges.length - 1]).getTime()) {
+            crashBucketIndex = errors.length - 1;
+          }
+        }
+
+        if (firstCrashTs) {
+          const banner = document.getElementById('crashAnnotationBar');
+          banner.style.display = 'flex';
+          const crashMsg = crashes[0].trigger.message || 'Fatal crash';
+          document.getElementById('crashAnnotationText').textContent = 
+            `First Crash Trigger at ${formatIso(firstCrashTs)}: "${crashMsg}" (Bucket #${crashBucketIndex + 1})`;
+        }
+
+        // Point styling: make the crash bucket point larger and vibrant red
+        const pointBackgroundColors = errors.map((_, i) => i === crashBucketIndex ? '#f43f5e' : '#3b82f6');
+        const pointBorderColors = errors.map((_, i) => i === crashBucketIndex ? '#ffffff' : '#1d4ed8');
+        const pointRadii = errors.map((_, i) => i === crashBucketIndex ? 8 : 4);
+        const pointHoverRadii = errors.map((_, i) => i === crashBucketIndex ? 10 : 6);
+
+        const isDark = currentTheme === 'dark';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+        const tickColor = isDark ? '#94a3b8' : '#64748b';
+
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.45)');
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+        timelineChart = new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Errors / Bucket',
+              data: errors,
+              borderColor: '#3b82f6',
+              borderWidth: 2.5,
+              backgroundColor: gradient,
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: pointBackgroundColors,
+              pointBorderColor: pointBorderColors,
+              pointBorderWidth: 2,
+              pointRadius: pointRadii,
+              pointHoverRadius: pointHoverRadii,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: isDark ? '#111622' : '#ffffff',
+                titleColor: isDark ? '#f1f5f9' : '#0f172a',
+                bodyColor: isDark ? '#94a3b8' : '#475569',
+                borderColor: isDark ? '#2e3a54' : '#cbd5e1',
+                borderWidth: 1,
+                padding: 10,
+                displayColors: false,
+                callbacks: {
+                  title: function(items) {
+                    const idx = items[0].dataIndex;
+                    let title = `Bucket #${idx + 1}: ${labels[idx]}`;
+                    if (idx === crashBucketIndex) {
+                      title += ' 💥 CRASH TRIGGER OCCURRED';
+                    }
+                    return title;
+                  },
+                  label: function(item) {
+                    return `Errors: ${formatNumber(item.raw)}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: tickColor, font: { size: 10, family: 'var(--font-mono)' } }
+              },
+              y: {
+                beginAtZero: true,
+                grid: { color: gridColor },
+                ticks: { color: tickColor, font: { size: 10, family: 'var(--font-mono)' } }
+              }
+            }
+          }
+        });
+      }
+
+      // 4. Top Cluster Distribution Bar Chart
+      function initClusterBarChart() {
+        const canvas = document.getElementById('clusterBarChartCanvas');
+        if (!canvas || !window.Chart) return;
+
+        // Sort clusters by count descending
+        const sortedClusters = [...clusters].sort((a, b) => b.count - a.count).slice(0, 8);
+        const labels = sortedClusters.map(c => c.id);
+        const data = sortedClusters.map(c => c.count);
+        const bgColors = sortedClusters.map(c => {
+          if (c.level === 'FATAL') return '#f43f5e';
+          if (c.level === 'ERROR') return '#f97316';
+          if (c.level === 'WARN')  return '#eab308';
+          return '#3b82f6';
+        });
+
+        const isDark = currentTheme === 'dark';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+        const tickColor = isDark ? '#94a3b8' : '#64748b';
+
+        clusterChart = new Chart(canvas, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Occurrences',
+              data: data,
+              backgroundColor: bgColors,
+              borderRadius: 6,
+              borderSkipped: false
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: isDark ? '#111622' : '#ffffff',
+                titleColor: isDark ? '#f1f5f9' : '#0f172a',
+                bodyColor: isDark ? '#94a3b8' : '#475569',
+                borderColor: isDark ? '#2e3a54' : '#cbd5e1',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  title: function(items) {
+                    const idx = items[0].dataIndex;
+                    const c = sortedClusters[idx];
+                    return `[${c.level}] Cluster ${c.id} (${formatNumber(c.count)}x)`;
+                  },
+                  label: function(item) {
+                    const c = sortedClusters[item.dataIndex];
+                    return c.template;
+                  }
+                }
+              }
+            },
+            onClick: function(e, elements) {
+              if (elements && elements.length > 0) {
+                const idx = elements[0].index;
+                const c = sortedClusters[idx];
+                const card = document.getElementById(`cluster-card-${c.id}`);
+                if (card) {
+                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  card.classList.add('open');
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: tickColor, font: { size: 10, family: 'var(--font-mono)' } }
+              },
+              y: {
+                grid: { display: false },
+                ticks: { color: tickColor, font: { size: 11, weight: 'bold', family: 'var(--font-mono)' } }
+              }
+            }
+          }
+        });
+      }
+
+      function updateChartsTheme() {
+        const isDark = currentTheme === 'dark';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+        const tickColor = isDark ? '#94a3b8' : '#64748b';
+
+        [timelineChart, clusterChart].forEach(chart => {
+          if (!chart) return;
+          if (chart.options.scales.x) {
+            chart.options.scales.x.grid.color = gridColor;
+            chart.options.scales.x.ticks.color = tickColor;
+          }
+          if (chart.options.scales.y) {
+            chart.options.scales.y.grid.color = gridColor;
+            chart.options.scales.y.ticks.color = tickColor;
+          }
+          chart.update();
+        });
+      }
+
+      // 5. Render First-Occurrence Cards
+      const cardsContainer = document.getElementById('clusterCardsContainer');
+      const clusterCountBadge = document.getElementById('clusterCountBadge');
+      let currentFilter = 'ALL';
+      let searchQuery = '';
+
+      function renderClusterCards() {
+        cardsContainer.innerHTML = '';
+        const filtered = clusters.filter(c => {
+          if (currentFilter !== 'ALL' && c.level !== currentFilter) return false;
+          if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            const matchId = c.id.toLowerCase().includes(query);
+            const matchTpl = (c.template || '').toLowerCase().includes(query);
+            const matchSample = (c.sample || '').toLowerCase().includes(query);
+            const matchSvc = (c.services || []).some(s => s.toLowerCase().includes(query));
+            if (!matchId && !matchTpl && !matchSample && !matchSvc) return false;
+          }
+          return true;
+        });
+
+        clusterCountBadge.textContent = `${filtered.length} of ${clusters.length} clusters`;
+
+        if (filtered.length === 0) {
+          cardsContainer.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: var(--bg-surface); border-radius: var(--radius-md);">
+              No error clusters match the current filter criteria.
+            </div>
+          `;
+          return;
+        }
+
+        filtered.forEach(c => {
+          const card = document.createElement('div');
+          card.id = `cluster-card-${c.id}`;
+          let borderClass = 'border-warn';
+          let levelPillClass = 'pill-warn';
+          if (c.level === 'FATAL') { borderClass = 'border-fatal'; levelPillClass = 'pill-fatal'; }
+          else if (c.level === 'ERROR') { borderClass = 'border-error'; levelPillClass = 'pill-error'; }
+
+          card.className = `cluster-card ${borderClass}`;
+
+          const servicesHtml = (c.services || []).map(s => `<span class="chip">⚙ ${s}</span>`).join(' ');
+
+          const firstSeenTs = c.first_seen ? formatIso(c.first_seen.ts) : '--';
+          const firstSeenLine = c.first_seen && c.first_seen.line_no ? `Line ${formatNumber(c.first_seen.line_no)}` : '--';
+          const lastSeenTs = c.last_seen ? formatIso(c.last_seen.ts) : '--';
+          const lastSeenLine = c.last_seen && c.last_seen.line_no ? `Line ${formatNumber(c.last_seen.line_no)}` : '--';
+
+          const stackFrames = (c.stack_top || []);
+          const stackHtml = stackFrames.length > 0 
+            ? stackFrames.map(f => `<div class="stack-trace-frame">  at ${f}</div>`).join('') 
+            : `<span style="color: var(--text-subtle);">(No stack frames captured for this cluster)</span>`;
+
+          card.innerHTML = `
+            <div class="cluster-card-header" onclick="this.parentElement.classList.toggle('open')">
+              <div class="cluster-header-top">
+                <div class="cluster-id-wrap">
+                  <span class="cluster-id-badge">ID: ${c.id}</span>
+                  <span class="pill ${levelPillClass}">${c.level}</span>
+                  <span class="pill pill-neutral">${formatNumber(c.count)} occurrences</span>
+                  ${servicesHtml}
+                </div>
+                <div class="cluster-meta-chips">
+                  <span class="chip" title="First Occurrence">⭐ First Seen: ${firstSeenTs} (${firstSeenLine})</span>
+                  <span class="chip" title="Last Occurrence">⏱ Last Seen: ${lastSeenTs} (${lastSeenLine})</span>
+                  <span class="accordion-indicator">▼</span>
+                </div>
+              </div>
+              <div class="template-box">
+                ${highlightTemplate(c.template)}
+              </div>
+            </div>
+
+            <div class="cluster-card-body">
+              <div class="detail-block">
+                <div class="detail-block-header">
+                  <span class="detail-title">Raw First Sample</span>
+                  <button class="copy-btn" onclick="navigator.clipboard.writeText('${c.sample.replace(/'/g, "\\'")}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>
+                </div>
+                <div class="code-box">${c.sample ? c.sample.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '--'}</div>
+              </div>
+
+              <div class="detail-block">
+                <div class="detail-block-header">
+                  <span class="detail-title">Top Stack Frames (${stackFrames.length})</span>
+                  ${stackFrames.length > 0 ? `<button class="copy-btn" onclick="navigator.clipboard.writeText('${stackFrames.join('\\n').replace(/'/g, "\\'")}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 1500)">Copy</button>` : ''}
+                </div>
+                <div class="code-box">${stackHtml}</div>
+              </div>
+            </div>
+          `;
+
+          cardsContainer.appendChild(card);
+        });
+      }
+
+      // Search & Severity event listeners
+      document.getElementById('clusterSearchInput').addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        renderClusterCards();
+      });
+
+      document.querySelectorAll('#severityFilters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#severityFilters .filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.getAttribute('data-filter');
+          renderClusterCards();
+        });
+      });
+
+      // 6. Render Crash Sequence Timeline
+      const timelineTree = document.getElementById('timelineTreeContainer');
+      const crashIntro = document.getElementById('crashTriggerTitle');
+      const crashSubtext = document.getElementById('crashTriggerSubtext');
+
+      function renderCrashSequence() {
+        timelineTree.innerHTML = '';
+        if (crashes.length === 0) {
+          crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
+          crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
+          return;
+        }
+
+        const crash = crashes[0];
+        const trigger = crash.trigger || {};
+        crashIntro.innerHTML = `<span>💥 Fatal Crash Trigger: "${trigger.message || 'Fatal Error'}"</span>`;
+        crashSubtext.textContent = `Triggered at ${formatIso(trigger.ts)} (Line ${formatNumber(trigger.line_no)})`;
+
+        const sequence = crash.sequence || [];
+        const baseTime = sequence.length > 0 && sequence[0].ts ? new Date(sequence[0].ts).getTime() : 0;
+
+        sequence.forEach((evt, idx) => {
+          const item = document.createElement('div');
+          let itemClass = 'timeline-item';
+          let nodeIcon = '⚡';
+          if (evt.is_trigger) {
+            itemClass += ' is-trigger';
+            nodeIcon = '💥';
+          } else if (evt.is_first_occurrence) {
+            itemClass += ' is-first';
+            nodeIcon = '⭐';
+          } else if (evt.message && evt.message.includes('repeated')) {
+            nodeIcon = '🔁';
+          }
+
+          item.className = itemClass;
+
+          // Time delta relative to start of sequence
+          let deltaStr = '+00:00';
+          if (evt.ts && baseTime > 0) {
+            const curTime = new Date(evt.ts).getTime();
+            const diffSeconds = Math.max(0, Math.floor((curTime - baseTime) / 1000));
+            const mins = String(Math.floor(diffSeconds / 60)).padStart(2, '0');
+            const secs = String(diffSeconds % 60).padStart(2, '0');
+            deltaStr = `+${mins}:${secs}`;
+          }
+
+          let levelPill = 'pill-neutral';
+          if (evt.level === 'FATAL') levelPill = 'pill-fatal';
+          else if (evt.level === 'ERROR') levelPill = 'pill-error';
+          else if (evt.level === 'WARN') levelPill = 'pill-warn';
+
+          let badges = `<span class="pill ${levelPill}">${evt.level}</span>`;
+          if (evt.is_trigger) {
+            badges += ` <span class="pill pill-fatal pill-pulse">CRASH TRIGGER</span>`;
+          }
+          if (evt.is_first_occurrence) {
+            badges += ` <span class="pill pill-warn">FIRST OCCURRENCE</span>`;
+          }
+
+          let clusterLink = '';
+          if (evt.cluster_id) {
+            clusterLink = `<a href="#cluster-card-${evt.cluster_id}" class="cluster-jump-link" onclick="const c = document.getElementById('cluster-card-${evt.cluster_id}'); if (c) { c.scrollIntoView({ behavior: 'smooth', block: 'center' }); c.classList.add('open'); }">Pattern #${evt.cluster_id} ➔</a>`;
+          }
+
+          item.innerHTML = `
+            <div class="timeline-node">${nodeIcon}</div>
+            <div class="timeline-content-card">
+              <div class="timeline-item-meta">
+                <div class="timeline-time-info">
+                  <span class="timeline-delta">${deltaStr}</span>
+                  <span>${formatIso(evt.ts)}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  ${badges}
+                  ${clusterLink}
+                </div>
+              </div>
+              <div class="timeline-message">
+                ${evt.message ? evt.message.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '--'}
+              </div>
+            </div>
+          `;
+
+          timelineTree.appendChild(item);
+        });
+      }
+
+      // Initialize Everything
+      initTimelineChart();
+      initClusterBarChart();
+      renderClusterCards();
+      renderCrashSequence();
+
+    })();
+  </script>
+</body>
+</html>
