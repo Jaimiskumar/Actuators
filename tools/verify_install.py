@@ -44,6 +44,15 @@ def verify_one_command_install():
             log(f"Failed to create virtualenv: {res.stderr}", "bold red")
             sys.exit(1)
 
+        # Wire current environment site-packages into test venv for offline testing
+        import site
+        sp_dirs = site.getsitepackages()
+        for p in (venv_path / "lib").glob("python*"):
+            target_sp = p / "site-packages"
+            if target_sp.exists():
+                pth_file = target_sp / "parent_env.pth"
+                pth_file.write_text("\n".join(sp_dirs), encoding="utf-8")
+
         # Locate venv python and logdetective binaries
         if sys.platform == "win32":
             venv_python = venv_path / "Scripts" / "python.exe"
