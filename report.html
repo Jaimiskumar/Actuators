@@ -1032,6 +1032,56 @@
       align-items: center;
       gap: 0.6rem;
     }
+    .timeline-intro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pill-time-delta {
+      font-family: var(--font-mono);
+      font-size: 0.775rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(244, 63, 94, 0.12);
+      color: var(--color-fatal);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .pill-time-delta.pill-trigger-moment {
+      background: var(--color-fatal);
+      color: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 0 10px var(--color-fatal-glow);
+    }
+    .cascade-collapsed-card {
+      margin: 1rem 0;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px dashed var(--border-strong);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+    }
+    .cascade-collapsed-card:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+      border-color: var(--color-primary);
+    }
     .timeline-tree {
       position: relative;
       padding-left: 2.5rem;
@@ -1428,10 +1478,20 @@
 
       <div class="timeline-container">
         <div class="timeline-intro" id="crashIntroBanner">
-          <h3 id="crashTriggerTitle">
-            <span>💥 Reconstructed Crash Sequence</span>
-          </h3>
-          <div class="time-range" id="crashTriggerSubtext">--</div>
+          <div class="timeline-intro-header">
+            <div>
+              <h3 id="crashTriggerTitle">
+                <span>💥 Reconstructed Crash Sequence</span>
+              </h3>
+              <div class="time-range" id="crashTriggerSubtext">--</div>
+            </div>
+            <div class="timeline-controls" id="timelineControls">
+              <button id="btnToggleCascade" class="btn btn-outline" title="Expand or collapse pre-crash sequence cascade">
+                <span id="cascadeToggleIcon">▾</span>
+                <span id="cascadeToggleText">Collapse Pre-Crash Cascade</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="timeline-tree" id="timelineTreeContainer">
@@ -1454,21 +1514,21 @@
 {
   "meta": {
     "file": "sample.log",
-    "size_bytes": 1174162,
-    "lines": 10000,
-    "events": 9988,
+    "size_bytes": 1162529,
+    "lines": 10001,
+    "events": 9989,
     "malformed_lines": 0,
-    "duration_s": 0.061,
-    "peak_mem_mb": 54.88,
+    "duration_s": 0.062,
+    "peak_mem_mb": 52.81,
     "time_range": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:04:32.164000Z"
     ],
     "level_counts": {
       "DEBUG": 0,
-      "INFO": 9644,
+      "INFO": 9661,
       "WARN": 2,
-      "ERROR": 339,
+      "ERROR": 323,
       "FATAL": 2,
       "UNKNOWN": 1
     }
@@ -1477,17 +1537,17 @@
     {
       "id": "c3",
       "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 338,
+      "count": 322,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.309000Z",
-        "line_no": 3518
+        "ts": "2026-11-21T10:01:36.521000Z",
+        "line_no": 3520
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:35.444000Z",
-        "line_no": 9978
+        "ts": "2026-11-21T10:04:32.144000Z",
+        "line_no": 10000
       },
-      "sample": "Connection to database 10.0.2.86:5432 timed out after 9542ms",
+      "sample": "Connection to database 10.0.4.10:5432 timed out after 6520ms",
       "stack_top": [],
       "services": [
         "order-service"
@@ -1528,70 +1588,70 @@
         0,
         0,
         0,
-        1,
-        4,
-        7,
-        1,
-        1,
-        6,
-        7,
-        4,
-        2,
-        5,
-        4,
-        8,
-        5,
-        2,
-        5,
-        8,
         3,
         5,
-        4,
-        4,
-        4,
         5,
-        7,
-        6,
-        3,
+        5,
+        5,
+        5,
+        5,
         4,
         5,
         5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        6,
-        2,
-        6,
-        4,
-        4,
-        12,
-        7,
-        8,
-        3,
-        2,
-        10,
-        6,
-        4,
-        4,
-        6,
-        4,
-        6,
-        3,
-        6,
-        7,
-        9,
         5,
         5,
         6,
-        7,
-        7,
-        9,
-        3,
-        7,
-        3,
         4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        4,
+        5,
+        4,
+        5,
+        5,
         6
       ]
     },
@@ -1601,11 +1661,11 @@
       "count": 1,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
+        "ts": "2026-11-21T10:00:41.047000Z",
         "line_no": 1500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
+        "ts": "2026-11-21T10:00:41.047000Z",
         "line_no": 1500
       },
       "sample": "Connection pool usage above threshold: 88%",
@@ -1722,11 +1782,11 @@
       "count": 1,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500
       },
       "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
@@ -1847,11 +1907,11 @@
       "count": 1,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:02:33Z",
+        "ts": "2026-11-21T10:02:30Z",
         "line_no": 5500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:02:33Z",
+        "ts": "2026-11-21T10:02:30Z",
         "line_no": 5500
       },
       "sample": "Retrying operation after error: 'Connection refused'",
@@ -1968,11 +2028,11 @@
       "count": 1,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500
       },
       "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
@@ -2089,11 +2149,11 @@
       "count": 1,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500
       },
       "sample": "error: OutOfMemoryError in worker thread pool",
@@ -2196,8 +2256,8 @@
         0,
         0,
         0,
-        0,
         1,
+        0,
         0,
         0,
         0,
@@ -2208,106 +2268,106 @@
   "timeline": {
     "bucket_edges": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:00:02.760000Z",
-      "2026-11-21T10:00:05.520000Z",
-      "2026-11-21T10:00:08.280000Z",
-      "2026-11-21T10:00:11.040000Z",
-      "2026-11-21T10:00:13.800000Z",
-      "2026-11-21T10:00:16.560000Z",
-      "2026-11-21T10:00:19.320000Z",
-      "2026-11-21T10:00:22.080000Z",
-      "2026-11-21T10:00:24.840000Z",
-      "2026-11-21T10:00:27.600000Z",
-      "2026-11-21T10:00:30.360000Z",
-      "2026-11-21T10:00:33.120000Z",
-      "2026-11-21T10:00:35.880000Z",
-      "2026-11-21T10:00:38.640000Z",
-      "2026-11-21T10:00:41.400000Z",
-      "2026-11-21T10:00:44.160000Z",
-      "2026-11-21T10:00:46.920000Z",
-      "2026-11-21T10:00:49.680000Z",
-      "2026-11-21T10:00:52.440000Z",
-      "2026-11-21T10:00:55.200000Z",
-      "2026-11-21T10:00:57.960000Z",
-      "2026-11-21T10:01:00.720000Z",
-      "2026-11-21T10:01:03.480000Z",
-      "2026-11-21T10:01:06.240000Z",
-      "2026-11-21T10:01:09Z",
-      "2026-11-21T10:01:11.760000Z",
-      "2026-11-21T10:01:14.520000Z",
-      "2026-11-21T10:01:17.280000Z",
-      "2026-11-21T10:01:20.040000Z",
-      "2026-11-21T10:01:22.800000Z",
-      "2026-11-21T10:01:25.560000Z",
-      "2026-11-21T10:01:28.320000Z",
-      "2026-11-21T10:01:31.080000Z",
-      "2026-11-21T10:01:33.840000Z",
-      "2026-11-21T10:01:36.600000Z",
-      "2026-11-21T10:01:39.360000Z",
-      "2026-11-21T10:01:42.120000Z",
-      "2026-11-21T10:01:44.880000Z",
-      "2026-11-21T10:01:47.640000Z",
-      "2026-11-21T10:01:50.400000Z",
-      "2026-11-21T10:01:53.160000Z",
-      "2026-11-21T10:01:55.920000Z",
-      "2026-11-21T10:01:58.680000Z",
-      "2026-11-21T10:02:01.440000Z",
-      "2026-11-21T10:02:04.200000Z",
-      "2026-11-21T10:02:06.960000Z",
-      "2026-11-21T10:02:09.720000Z",
-      "2026-11-21T10:02:12.480000Z",
-      "2026-11-21T10:02:15.240000Z",
-      "2026-11-21T10:02:18Z",
-      "2026-11-21T10:02:20.760000Z",
-      "2026-11-21T10:02:23.520000Z",
-      "2026-11-21T10:02:26.280000Z",
-      "2026-11-21T10:02:29.040000Z",
-      "2026-11-21T10:02:31.800000Z",
-      "2026-11-21T10:02:34.560000Z",
-      "2026-11-21T10:02:37.320000Z",
-      "2026-11-21T10:02:40.080000Z",
-      "2026-11-21T10:02:42.840000Z",
-      "2026-11-21T10:02:45.600000Z",
-      "2026-11-21T10:02:48.360000Z",
-      "2026-11-21T10:02:51.120000Z",
-      "2026-11-21T10:02:53.880000Z",
-      "2026-11-21T10:02:56.640000Z",
-      "2026-11-21T10:02:59.400000Z",
-      "2026-11-21T10:03:02.160000Z",
-      "2026-11-21T10:03:04.920000Z",
-      "2026-11-21T10:03:07.680000Z",
-      "2026-11-21T10:03:10.440000Z",
-      "2026-11-21T10:03:13.200000Z",
-      "2026-11-21T10:03:15.960000Z",
-      "2026-11-21T10:03:18.720000Z",
-      "2026-11-21T10:03:21.480000Z",
-      "2026-11-21T10:03:24.240000Z",
-      "2026-11-21T10:03:27Z",
-      "2026-11-21T10:03:29.760000Z",
-      "2026-11-21T10:03:32.520000Z",
-      "2026-11-21T10:03:35.280000Z",
-      "2026-11-21T10:03:38.040000Z",
-      "2026-11-21T10:03:40.800000Z",
-      "2026-11-21T10:03:43.560000Z",
-      "2026-11-21T10:03:46.320000Z",
-      "2026-11-21T10:03:49.080000Z",
-      "2026-11-21T10:03:51.840000Z",
-      "2026-11-21T10:03:54.600000Z",
-      "2026-11-21T10:03:57.360000Z",
-      "2026-11-21T10:04:00.120000Z",
-      "2026-11-21T10:04:02.880000Z",
-      "2026-11-21T10:04:05.640000Z",
-      "2026-11-21T10:04:08.400000Z",
-      "2026-11-21T10:04:11.160000Z",
-      "2026-11-21T10:04:13.920000Z",
-      "2026-11-21T10:04:16.680000Z",
-      "2026-11-21T10:04:19.440000Z",
-      "2026-11-21T10:04:22.200000Z",
-      "2026-11-21T10:04:24.960000Z",
-      "2026-11-21T10:04:27.720000Z",
-      "2026-11-21T10:04:30.480000Z",
-      "2026-11-21T10:04:33.240000Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:00:02.721640Z",
+      "2026-11-21T10:00:05.443280Z",
+      "2026-11-21T10:00:08.164920Z",
+      "2026-11-21T10:00:10.886560Z",
+      "2026-11-21T10:00:13.608200Z",
+      "2026-11-21T10:00:16.329840Z",
+      "2026-11-21T10:00:19.051480Z",
+      "2026-11-21T10:00:21.773120Z",
+      "2026-11-21T10:00:24.494760Z",
+      "2026-11-21T10:00:27.216400Z",
+      "2026-11-21T10:00:29.938040Z",
+      "2026-11-21T10:00:32.659680Z",
+      "2026-11-21T10:00:35.381320Z",
+      "2026-11-21T10:00:38.102960Z",
+      "2026-11-21T10:00:40.824600Z",
+      "2026-11-21T10:00:43.546240Z",
+      "2026-11-21T10:00:46.267880Z",
+      "2026-11-21T10:00:48.989520Z",
+      "2026-11-21T10:00:51.711160Z",
+      "2026-11-21T10:00:54.432800Z",
+      "2026-11-21T10:00:57.154440Z",
+      "2026-11-21T10:00:59.876080Z",
+      "2026-11-21T10:01:02.597720Z",
+      "2026-11-21T10:01:05.319360Z",
+      "2026-11-21T10:01:08.041000Z",
+      "2026-11-21T10:01:10.762640Z",
+      "2026-11-21T10:01:13.484280Z",
+      "2026-11-21T10:01:16.205920Z",
+      "2026-11-21T10:01:18.927560Z",
+      "2026-11-21T10:01:21.649200Z",
+      "2026-11-21T10:01:24.370840Z",
+      "2026-11-21T10:01:27.092480Z",
+      "2026-11-21T10:01:29.814120Z",
+      "2026-11-21T10:01:32.535760Z",
+      "2026-11-21T10:01:35.257400Z",
+      "2026-11-21T10:01:37.979040Z",
+      "2026-11-21T10:01:40.700680Z",
+      "2026-11-21T10:01:43.422320Z",
+      "2026-11-21T10:01:46.143960Z",
+      "2026-11-21T10:01:48.865600Z",
+      "2026-11-21T10:01:51.587240Z",
+      "2026-11-21T10:01:54.308880Z",
+      "2026-11-21T10:01:57.030520Z",
+      "2026-11-21T10:01:59.752160Z",
+      "2026-11-21T10:02:02.473800Z",
+      "2026-11-21T10:02:05.195440Z",
+      "2026-11-21T10:02:07.917080Z",
+      "2026-11-21T10:02:10.638720Z",
+      "2026-11-21T10:02:13.360360Z",
+      "2026-11-21T10:02:16.082000Z",
+      "2026-11-21T10:02:18.803640Z",
+      "2026-11-21T10:02:21.525280Z",
+      "2026-11-21T10:02:24.246920Z",
+      "2026-11-21T10:02:26.968560Z",
+      "2026-11-21T10:02:29.690200Z",
+      "2026-11-21T10:02:32.411840Z",
+      "2026-11-21T10:02:35.133480Z",
+      "2026-11-21T10:02:37.855120Z",
+      "2026-11-21T10:02:40.576760Z",
+      "2026-11-21T10:02:43.298400Z",
+      "2026-11-21T10:02:46.020040Z",
+      "2026-11-21T10:02:48.741680Z",
+      "2026-11-21T10:02:51.463320Z",
+      "2026-11-21T10:02:54.184960Z",
+      "2026-11-21T10:02:56.906600Z",
+      "2026-11-21T10:02:59.628240Z",
+      "2026-11-21T10:03:02.349880Z",
+      "2026-11-21T10:03:05.071520Z",
+      "2026-11-21T10:03:07.793160Z",
+      "2026-11-21T10:03:10.514800Z",
+      "2026-11-21T10:03:13.236440Z",
+      "2026-11-21T10:03:15.958080Z",
+      "2026-11-21T10:03:18.679720Z",
+      "2026-11-21T10:03:21.401360Z",
+      "2026-11-21T10:03:24.123000Z",
+      "2026-11-21T10:03:26.844640Z",
+      "2026-11-21T10:03:29.566280Z",
+      "2026-11-21T10:03:32.287920Z",
+      "2026-11-21T10:03:35.009560Z",
+      "2026-11-21T10:03:37.731200Z",
+      "2026-11-21T10:03:40.452840Z",
+      "2026-11-21T10:03:43.174480Z",
+      "2026-11-21T10:03:45.896120Z",
+      "2026-11-21T10:03:48.617760Z",
+      "2026-11-21T10:03:51.339400Z",
+      "2026-11-21T10:03:54.061040Z",
+      "2026-11-21T10:03:56.782680Z",
+      "2026-11-21T10:03:59.504320Z",
+      "2026-11-21T10:04:02.225960Z",
+      "2026-11-21T10:04:04.947600Z",
+      "2026-11-21T10:04:07.669240Z",
+      "2026-11-21T10:04:10.390880Z",
+      "2026-11-21T10:04:13.112520Z",
+      "2026-11-21T10:04:15.834160Z",
+      "2026-11-21T10:04:18.555800Z",
+      "2026-11-21T10:04:21.277440Z",
+      "2026-11-21T10:04:23.999080Z",
+      "2026-11-21T10:04:26.720720Z",
+      "2026-11-21T10:04:29.442360Z",
+      "2026-11-21T10:04:32.164000Z"
     ],
     "errors_per_bucket": [
       0,
@@ -2345,83 +2405,83 @@
       0,
       0,
       0,
-      2,
-      4,
-      7,
-      1,
-      1,
-      6,
-      7,
-      4,
-      2,
-      5,
-      4,
-      8,
-      5,
-      2,
-      5,
-      8,
-      3,
-      5,
-      4,
       4,
       5,
       5,
-      7,
-      6,
-      3,
+      5,
+      5,
+      5,
+      5,
       4,
       5,
       5,
-      6,
-      7,
-      7,
-      9,
-      3,
-      6,
-      2,
-      6,
-      4,
-      4,
-      12,
-      7,
-      8,
-      3,
-      2,
-      10,
-      6,
-      4,
-      4,
-      6,
-      4,
-      6,
-      4,
-      6,
-      7,
-      9,
       5,
       5,
       6,
-      7,
-      7,
-      9,
       4,
-      7,
-      3,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
       4,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      4,
+      5,
+      5,
       6
     ]
   },
   "crashes": [
     {
       "trigger": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500,
         "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:01:38.037000Z",
+          "ts": "2026-11-21T10:01:36.150000Z",
           "level": "ERROR",
           "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
           "cluster_id": "c2",
@@ -2432,133 +2492,125 @@
     },
     {
       "trigger": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500,
         "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:03:47.669000Z",
+          "ts": "2026-11-21T10:03:44.695000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.76:5432 timed out after 6863ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4220ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.230000Z",
+          "ts": "2026-11-21T10:03:45.171000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.58:5432 timed out after 6826ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4240ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.410000Z",
+          "ts": "2026-11-21T10:03:45.665000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.33:5432 timed out after 4124ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4260ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.728000Z",
+          "ts": "2026-11-21T10:03:46.130000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.15:5432 timed out after 7717ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4280ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:49.119000Z",
+          "ts": "2026-11-21T10:03:46.713000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.63:5432 timed out after 7737ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4300ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:50.345000Z",
+          "ts": "2026-11-21T10:03:47.274000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.57:5432 timed out after 6491ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4320ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:50.720000Z",
+          "ts": "2026-11-21T10:03:47.902000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.70:5432 timed out after 4367ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4340ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:51.417000Z",
+          "ts": "2026-11-21T10:03:48.386000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.90:5432 timed out after 3184ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4360ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:51.921000Z",
+          "ts": "2026-11-21T10:03:48.885000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.7.58:5432 timed out after 9392ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4380ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:52.217000Z",
+          "ts": "2026-11-21T10:03:49.366000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.77:5432 timed out after 8369ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4400ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:52.247000Z",
+          "ts": "2026-11-21T10:03:49.910000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.7.80:5432 timed out after 7612ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4420ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:53.008000Z",
+          "ts": "2026-11-21T10:03:50.455000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.98:5432 timed out after 4248ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4440ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:53.638000Z",
+          "ts": "2026-11-21T10:03:50.960000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.41:5432 timed out after 9018ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4460ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:54.517000Z",
+          "ts": "2026-11-21T10:03:51.464000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.41:5432 timed out after 4075ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4480ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:55.146000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.5.27:5432 timed out after 3499ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.714000Z",
+          "ts": "2026-11-21T10:03:51.934000Z",
           "level": "FATAL",
           "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
           "cluster_id": "c5",
@@ -2569,173 +2621,125 @@
     },
     {
       "trigger": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500,
         "message": "error: OutOfMemoryError in worker thread pool"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:04:14.665000Z",
+          "ts": "2026-11-21T10:04:10.892000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.3.83:5432 timed out after 5686ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5220ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:15.097000Z",
+          "ts": "2026-11-21T10:04:11.383000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.37:5432 timed out after 5143ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5240ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:15.314000Z",
+          "ts": "2026-11-21T10:04:11.909000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.3.62:5432 timed out after 9037ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5260ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:16.490000Z",
+          "ts": "2026-11-21T10:04:12.451000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.32:5432 timed out after 7105ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5280ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:16.929000Z",
+          "ts": "2026-11-21T10:04:12.999000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.82:5432 timed out after 5819ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5300ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:17.147000Z",
+          "ts": "2026-11-21T10:04:13.601000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.13:5432 timed out after 7882ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5320ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:17.431000Z",
+          "ts": "2026-11-21T10:04:14.140000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.34:5432 timed out after 9429ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5340ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.155000Z",
+          "ts": "2026-11-21T10:04:14.617000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.96:5432 timed out after 9557ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5360ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.571000Z",
+          "ts": "2026-11-21T10:04:15.177000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.77:5432 timed out after 7714ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5380ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.799000Z",
+          "ts": "2026-11-21T10:04:15.733000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.77:5432 timed out after 8076ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5400ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:19.192000Z",
+          "ts": "2026-11-21T10:04:16.259000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.19:5432 timed out after 9502ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5420ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:19.513000Z",
+          "ts": "2026-11-21T10:04:16.784000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.55:5432 timed out after 6344ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5440ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.221000Z",
+          "ts": "2026-11-21T10:04:17.324000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.59:5432 timed out after 8875ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5460ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.488000Z",
+          "ts": "2026-11-21T10:04:17.862000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.78:5432 timed out after 8405ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5480ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.670000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.63:5432 timed out after 6128ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:20.711000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.1.17:5432 timed out after 5385ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:20.890000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.8.56:5432 timed out after 7140ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:21.045000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.3.29:5432 timed out after 7403ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:21.297000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.2.53:5432 timed out after 8503ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.071000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.1.76:5432 timed out after 3529ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.522000Z",
+          "ts": "2026-11-21T10:04:18.484000Z",
           "level": "FATAL",
           "message": "error: OutOfMemoryError in worker thread pool",
           "cluster_id": "c6",
@@ -2745,7 +2749,7 @@
       ]
     }
   ],
-  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:42.207000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:38.037000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
+  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:41.047000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:36.150000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
 }
   </script>
 
@@ -2785,21 +2789,21 @@
         if (rawJson && !rawJson.includes("{
   "meta": {
     "file": "sample.log",
-    "size_bytes": 1174162,
-    "lines": 10000,
-    "events": 9988,
+    "size_bytes": 1162529,
+    "lines": 10001,
+    "events": 9989,
     "malformed_lines": 0,
-    "duration_s": 0.061,
-    "peak_mem_mb": 54.88,
+    "duration_s": 0.062,
+    "peak_mem_mb": 52.81,
     "time_range": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:04:32.164000Z"
     ],
     "level_counts": {
       "DEBUG": 0,
-      "INFO": 9644,
+      "INFO": 9661,
       "WARN": 2,
-      "ERROR": 339,
+      "ERROR": 323,
       "FATAL": 2,
       "UNKNOWN": 1
     }
@@ -2808,17 +2812,17 @@
     {
       "id": "c3",
       "template": "Connection to database <IP> timed out after <NUM>ms",
-      "count": 338,
+      "count": 322,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.309000Z",
-        "line_no": 3518
+        "ts": "2026-11-21T10:01:36.521000Z",
+        "line_no": 3520
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:35.444000Z",
-        "line_no": 9978
+        "ts": "2026-11-21T10:04:32.144000Z",
+        "line_no": 10000
       },
-      "sample": "Connection to database 10.0.2.86:5432 timed out after 9542ms",
+      "sample": "Connection to database 10.0.4.10:5432 timed out after 6520ms",
       "stack_top": [],
       "services": [
         "order-service"
@@ -2859,70 +2863,70 @@
         0,
         0,
         0,
-        1,
-        4,
-        7,
-        1,
-        1,
-        6,
-        7,
-        4,
-        2,
-        5,
-        4,
-        8,
-        5,
-        2,
-        5,
-        8,
         3,
         5,
-        4,
-        4,
-        4,
         5,
-        7,
-        6,
-        3,
+        5,
+        5,
+        5,
+        5,
         4,
         5,
         5,
-        6,
-        7,
-        7,
-        9,
-        3,
-        6,
-        2,
-        6,
-        4,
-        4,
-        12,
-        7,
-        8,
-        3,
-        2,
-        10,
-        6,
-        4,
-        4,
-        6,
-        4,
-        6,
-        3,
-        6,
-        7,
-        9,
         5,
         5,
         6,
-        7,
-        7,
-        9,
-        3,
-        7,
-        3,
         4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        6,
+        5,
+        5,
+        4,
+        5,
+        4,
+        5,
+        5,
         6
       ]
     },
@@ -2932,11 +2936,11 @@
       "count": 1,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
+        "ts": "2026-11-21T10:00:41.047000Z",
         "line_no": 1500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:00:42.207000Z",
+        "ts": "2026-11-21T10:00:41.047000Z",
         "line_no": 1500
       },
       "sample": "Connection pool usage above threshold: 88%",
@@ -3053,11 +3057,11 @@
       "count": 1,
       "level": "ERROR",
       "first_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500
       },
       "sample": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
@@ -3178,11 +3182,11 @@
       "count": 1,
       "level": "WARN",
       "first_seen": {
-        "ts": "2026-11-21T10:02:33Z",
+        "ts": "2026-11-21T10:02:30Z",
         "line_no": 5500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:02:33Z",
+        "ts": "2026-11-21T10:02:30Z",
         "line_no": 5500
       },
       "sample": "Retrying operation after error: 'Connection refused'",
@@ -3299,11 +3303,11 @@
       "count": 1,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500
       },
       "sample": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
@@ -3420,11 +3424,11 @@
       "count": 1,
       "level": "FATAL",
       "first_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500
       },
       "last_seen": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500
       },
       "sample": "error: OutOfMemoryError in worker thread pool",
@@ -3527,8 +3531,8 @@
         0,
         0,
         0,
-        0,
         1,
+        0,
         0,
         0,
         0,
@@ -3539,106 +3543,106 @@
   "timeline": {
     "bucket_edges": [
       "2026-11-21T10:00:00Z",
-      "2026-11-21T10:00:02.760000Z",
-      "2026-11-21T10:00:05.520000Z",
-      "2026-11-21T10:00:08.280000Z",
-      "2026-11-21T10:00:11.040000Z",
-      "2026-11-21T10:00:13.800000Z",
-      "2026-11-21T10:00:16.560000Z",
-      "2026-11-21T10:00:19.320000Z",
-      "2026-11-21T10:00:22.080000Z",
-      "2026-11-21T10:00:24.840000Z",
-      "2026-11-21T10:00:27.600000Z",
-      "2026-11-21T10:00:30.360000Z",
-      "2026-11-21T10:00:33.120000Z",
-      "2026-11-21T10:00:35.880000Z",
-      "2026-11-21T10:00:38.640000Z",
-      "2026-11-21T10:00:41.400000Z",
-      "2026-11-21T10:00:44.160000Z",
-      "2026-11-21T10:00:46.920000Z",
-      "2026-11-21T10:00:49.680000Z",
-      "2026-11-21T10:00:52.440000Z",
-      "2026-11-21T10:00:55.200000Z",
-      "2026-11-21T10:00:57.960000Z",
-      "2026-11-21T10:01:00.720000Z",
-      "2026-11-21T10:01:03.480000Z",
-      "2026-11-21T10:01:06.240000Z",
-      "2026-11-21T10:01:09Z",
-      "2026-11-21T10:01:11.760000Z",
-      "2026-11-21T10:01:14.520000Z",
-      "2026-11-21T10:01:17.280000Z",
-      "2026-11-21T10:01:20.040000Z",
-      "2026-11-21T10:01:22.800000Z",
-      "2026-11-21T10:01:25.560000Z",
-      "2026-11-21T10:01:28.320000Z",
-      "2026-11-21T10:01:31.080000Z",
-      "2026-11-21T10:01:33.840000Z",
-      "2026-11-21T10:01:36.600000Z",
-      "2026-11-21T10:01:39.360000Z",
-      "2026-11-21T10:01:42.120000Z",
-      "2026-11-21T10:01:44.880000Z",
-      "2026-11-21T10:01:47.640000Z",
-      "2026-11-21T10:01:50.400000Z",
-      "2026-11-21T10:01:53.160000Z",
-      "2026-11-21T10:01:55.920000Z",
-      "2026-11-21T10:01:58.680000Z",
-      "2026-11-21T10:02:01.440000Z",
-      "2026-11-21T10:02:04.200000Z",
-      "2026-11-21T10:02:06.960000Z",
-      "2026-11-21T10:02:09.720000Z",
-      "2026-11-21T10:02:12.480000Z",
-      "2026-11-21T10:02:15.240000Z",
-      "2026-11-21T10:02:18Z",
-      "2026-11-21T10:02:20.760000Z",
-      "2026-11-21T10:02:23.520000Z",
-      "2026-11-21T10:02:26.280000Z",
-      "2026-11-21T10:02:29.040000Z",
-      "2026-11-21T10:02:31.800000Z",
-      "2026-11-21T10:02:34.560000Z",
-      "2026-11-21T10:02:37.320000Z",
-      "2026-11-21T10:02:40.080000Z",
-      "2026-11-21T10:02:42.840000Z",
-      "2026-11-21T10:02:45.600000Z",
-      "2026-11-21T10:02:48.360000Z",
-      "2026-11-21T10:02:51.120000Z",
-      "2026-11-21T10:02:53.880000Z",
-      "2026-11-21T10:02:56.640000Z",
-      "2026-11-21T10:02:59.400000Z",
-      "2026-11-21T10:03:02.160000Z",
-      "2026-11-21T10:03:04.920000Z",
-      "2026-11-21T10:03:07.680000Z",
-      "2026-11-21T10:03:10.440000Z",
-      "2026-11-21T10:03:13.200000Z",
-      "2026-11-21T10:03:15.960000Z",
-      "2026-11-21T10:03:18.720000Z",
-      "2026-11-21T10:03:21.480000Z",
-      "2026-11-21T10:03:24.240000Z",
-      "2026-11-21T10:03:27Z",
-      "2026-11-21T10:03:29.760000Z",
-      "2026-11-21T10:03:32.520000Z",
-      "2026-11-21T10:03:35.280000Z",
-      "2026-11-21T10:03:38.040000Z",
-      "2026-11-21T10:03:40.800000Z",
-      "2026-11-21T10:03:43.560000Z",
-      "2026-11-21T10:03:46.320000Z",
-      "2026-11-21T10:03:49.080000Z",
-      "2026-11-21T10:03:51.840000Z",
-      "2026-11-21T10:03:54.600000Z",
-      "2026-11-21T10:03:57.360000Z",
-      "2026-11-21T10:04:00.120000Z",
-      "2026-11-21T10:04:02.880000Z",
-      "2026-11-21T10:04:05.640000Z",
-      "2026-11-21T10:04:08.400000Z",
-      "2026-11-21T10:04:11.160000Z",
-      "2026-11-21T10:04:13.920000Z",
-      "2026-11-21T10:04:16.680000Z",
-      "2026-11-21T10:04:19.440000Z",
-      "2026-11-21T10:04:22.200000Z",
-      "2026-11-21T10:04:24.960000Z",
-      "2026-11-21T10:04:27.720000Z",
-      "2026-11-21T10:04:30.480000Z",
-      "2026-11-21T10:04:33.240000Z",
-      "2026-11-21T10:04:36Z"
+      "2026-11-21T10:00:02.721640Z",
+      "2026-11-21T10:00:05.443280Z",
+      "2026-11-21T10:00:08.164920Z",
+      "2026-11-21T10:00:10.886560Z",
+      "2026-11-21T10:00:13.608200Z",
+      "2026-11-21T10:00:16.329840Z",
+      "2026-11-21T10:00:19.051480Z",
+      "2026-11-21T10:00:21.773120Z",
+      "2026-11-21T10:00:24.494760Z",
+      "2026-11-21T10:00:27.216400Z",
+      "2026-11-21T10:00:29.938040Z",
+      "2026-11-21T10:00:32.659680Z",
+      "2026-11-21T10:00:35.381320Z",
+      "2026-11-21T10:00:38.102960Z",
+      "2026-11-21T10:00:40.824600Z",
+      "2026-11-21T10:00:43.546240Z",
+      "2026-11-21T10:00:46.267880Z",
+      "2026-11-21T10:00:48.989520Z",
+      "2026-11-21T10:00:51.711160Z",
+      "2026-11-21T10:00:54.432800Z",
+      "2026-11-21T10:00:57.154440Z",
+      "2026-11-21T10:00:59.876080Z",
+      "2026-11-21T10:01:02.597720Z",
+      "2026-11-21T10:01:05.319360Z",
+      "2026-11-21T10:01:08.041000Z",
+      "2026-11-21T10:01:10.762640Z",
+      "2026-11-21T10:01:13.484280Z",
+      "2026-11-21T10:01:16.205920Z",
+      "2026-11-21T10:01:18.927560Z",
+      "2026-11-21T10:01:21.649200Z",
+      "2026-11-21T10:01:24.370840Z",
+      "2026-11-21T10:01:27.092480Z",
+      "2026-11-21T10:01:29.814120Z",
+      "2026-11-21T10:01:32.535760Z",
+      "2026-11-21T10:01:35.257400Z",
+      "2026-11-21T10:01:37.979040Z",
+      "2026-11-21T10:01:40.700680Z",
+      "2026-11-21T10:01:43.422320Z",
+      "2026-11-21T10:01:46.143960Z",
+      "2026-11-21T10:01:48.865600Z",
+      "2026-11-21T10:01:51.587240Z",
+      "2026-11-21T10:01:54.308880Z",
+      "2026-11-21T10:01:57.030520Z",
+      "2026-11-21T10:01:59.752160Z",
+      "2026-11-21T10:02:02.473800Z",
+      "2026-11-21T10:02:05.195440Z",
+      "2026-11-21T10:02:07.917080Z",
+      "2026-11-21T10:02:10.638720Z",
+      "2026-11-21T10:02:13.360360Z",
+      "2026-11-21T10:02:16.082000Z",
+      "2026-11-21T10:02:18.803640Z",
+      "2026-11-21T10:02:21.525280Z",
+      "2026-11-21T10:02:24.246920Z",
+      "2026-11-21T10:02:26.968560Z",
+      "2026-11-21T10:02:29.690200Z",
+      "2026-11-21T10:02:32.411840Z",
+      "2026-11-21T10:02:35.133480Z",
+      "2026-11-21T10:02:37.855120Z",
+      "2026-11-21T10:02:40.576760Z",
+      "2026-11-21T10:02:43.298400Z",
+      "2026-11-21T10:02:46.020040Z",
+      "2026-11-21T10:02:48.741680Z",
+      "2026-11-21T10:02:51.463320Z",
+      "2026-11-21T10:02:54.184960Z",
+      "2026-11-21T10:02:56.906600Z",
+      "2026-11-21T10:02:59.628240Z",
+      "2026-11-21T10:03:02.349880Z",
+      "2026-11-21T10:03:05.071520Z",
+      "2026-11-21T10:03:07.793160Z",
+      "2026-11-21T10:03:10.514800Z",
+      "2026-11-21T10:03:13.236440Z",
+      "2026-11-21T10:03:15.958080Z",
+      "2026-11-21T10:03:18.679720Z",
+      "2026-11-21T10:03:21.401360Z",
+      "2026-11-21T10:03:24.123000Z",
+      "2026-11-21T10:03:26.844640Z",
+      "2026-11-21T10:03:29.566280Z",
+      "2026-11-21T10:03:32.287920Z",
+      "2026-11-21T10:03:35.009560Z",
+      "2026-11-21T10:03:37.731200Z",
+      "2026-11-21T10:03:40.452840Z",
+      "2026-11-21T10:03:43.174480Z",
+      "2026-11-21T10:03:45.896120Z",
+      "2026-11-21T10:03:48.617760Z",
+      "2026-11-21T10:03:51.339400Z",
+      "2026-11-21T10:03:54.061040Z",
+      "2026-11-21T10:03:56.782680Z",
+      "2026-11-21T10:03:59.504320Z",
+      "2026-11-21T10:04:02.225960Z",
+      "2026-11-21T10:04:04.947600Z",
+      "2026-11-21T10:04:07.669240Z",
+      "2026-11-21T10:04:10.390880Z",
+      "2026-11-21T10:04:13.112520Z",
+      "2026-11-21T10:04:15.834160Z",
+      "2026-11-21T10:04:18.555800Z",
+      "2026-11-21T10:04:21.277440Z",
+      "2026-11-21T10:04:23.999080Z",
+      "2026-11-21T10:04:26.720720Z",
+      "2026-11-21T10:04:29.442360Z",
+      "2026-11-21T10:04:32.164000Z"
     ],
     "errors_per_bucket": [
       0,
@@ -3676,83 +3680,83 @@
       0,
       0,
       0,
-      2,
-      4,
-      7,
-      1,
-      1,
-      6,
-      7,
-      4,
-      2,
-      5,
-      4,
-      8,
-      5,
-      2,
-      5,
-      8,
-      3,
-      5,
-      4,
       4,
       5,
       5,
-      7,
-      6,
-      3,
+      5,
+      5,
+      5,
+      5,
       4,
       5,
       5,
-      6,
-      7,
-      7,
-      9,
-      3,
-      6,
-      2,
-      6,
-      4,
-      4,
-      12,
-      7,
-      8,
-      3,
-      2,
-      10,
-      6,
-      4,
-      4,
-      6,
-      4,
-      6,
-      4,
-      6,
-      7,
-      9,
       5,
       5,
       6,
-      7,
-      7,
-      9,
       4,
-      7,
-      3,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
       4,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      5,
+      4,
+      5,
+      5,
       6
     ]
   },
   "crashes": [
     {
       "trigger": {
-        "ts": "2026-11-21T10:01:38.037000Z",
+        "ts": "2026-11-21T10:01:36.150000Z",
         "line_no": 3500,
         "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:01:38.037000Z",
+          "ts": "2026-11-21T10:01:36.150000Z",
           "level": "ERROR",
           "message": "Connection to database 10.0.4.12:5432 timed out after 5000ms",
           "cluster_id": "c2",
@@ -3763,133 +3767,125 @@
     },
     {
       "trigger": {
-        "ts": "2026-11-21T10:03:55.714000Z",
+        "ts": "2026-11-21T10:03:51.934000Z",
         "line_no": 8500,
         "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:03:47.669000Z",
+          "ts": "2026-11-21T10:03:44.695000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.76:5432 timed out after 6863ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4220ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.230000Z",
+          "ts": "2026-11-21T10:03:45.171000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.58:5432 timed out after 6826ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4240ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.410000Z",
+          "ts": "2026-11-21T10:03:45.665000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.33:5432 timed out after 4124ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4260ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:48.728000Z",
+          "ts": "2026-11-21T10:03:46.130000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.15:5432 timed out after 7717ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4280ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:49.119000Z",
+          "ts": "2026-11-21T10:03:46.713000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.63:5432 timed out after 7737ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4300ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:50.345000Z",
+          "ts": "2026-11-21T10:03:47.274000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.57:5432 timed out after 6491ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4320ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:50.720000Z",
+          "ts": "2026-11-21T10:03:47.902000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.70:5432 timed out after 4367ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4340ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:51.417000Z",
+          "ts": "2026-11-21T10:03:48.386000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.90:5432 timed out after 3184ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4360ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:51.921000Z",
+          "ts": "2026-11-21T10:03:48.885000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.7.58:5432 timed out after 9392ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4380ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:52.217000Z",
+          "ts": "2026-11-21T10:03:49.366000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.77:5432 timed out after 8369ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4400ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:52.247000Z",
+          "ts": "2026-11-21T10:03:49.910000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.7.80:5432 timed out after 7612ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 4420ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:53.008000Z",
+          "ts": "2026-11-21T10:03:50.455000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.98:5432 timed out after 4248ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 4440ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:53.638000Z",
+          "ts": "2026-11-21T10:03:50.960000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.41:5432 timed out after 9018ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 4460ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:54.517000Z",
+          "ts": "2026-11-21T10:03:51.464000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.5.41:5432 timed out after 4075ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 4480ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:03:55.146000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.5.27:5432 timed out after 3499ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:03:55.714000Z",
+          "ts": "2026-11-21T10:03:51.934000Z",
           "level": "FATAL",
           "message": "Pool exhausted: cannot allocate connection to /var/run/postgresql/.s.PGSQL.5432",
           "cluster_id": "c5",
@@ -3900,173 +3896,125 @@
     },
     {
       "trigger": {
-        "ts": "2026-11-21T10:04:22.522000Z",
+        "ts": "2026-11-21T10:04:18.484000Z",
         "line_no": 9500,
         "message": "error: OutOfMemoryError in worker thread pool"
       },
       "sequence": [
         {
-          "ts": "2026-11-21T10:04:14.665000Z",
+          "ts": "2026-11-21T10:04:10.892000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.3.83:5432 timed out after 5686ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5220ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:15.097000Z",
+          "ts": "2026-11-21T10:04:11.383000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.37:5432 timed out after 5143ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5240ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:15.314000Z",
+          "ts": "2026-11-21T10:04:11.909000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.3.62:5432 timed out after 9037ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5260ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:16.490000Z",
+          "ts": "2026-11-21T10:04:12.451000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.32:5432 timed out after 7105ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5280ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:16.929000Z",
+          "ts": "2026-11-21T10:04:12.999000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.82:5432 timed out after 5819ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5300ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:17.147000Z",
+          "ts": "2026-11-21T10:04:13.601000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.13:5432 timed out after 7882ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5320ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:17.431000Z",
+          "ts": "2026-11-21T10:04:14.140000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.34:5432 timed out after 9429ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5340ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.155000Z",
+          "ts": "2026-11-21T10:04:14.617000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.2.96:5432 timed out after 9557ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5360ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.571000Z",
+          "ts": "2026-11-21T10:04:15.177000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.4.77:5432 timed out after 7714ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5380ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:18.799000Z",
+          "ts": "2026-11-21T10:04:15.733000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.8.77:5432 timed out after 8076ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5400ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:19.192000Z",
+          "ts": "2026-11-21T10:04:16.259000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.19:5432 timed out after 9502ms",
+          "message": "Connection to database 10.0.4.70:5432 timed out after 5420ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:19.513000Z",
+          "ts": "2026-11-21T10:04:16.784000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.1.55:5432 timed out after 6344ms",
+          "message": "Connection to database 10.0.4.10:5432 timed out after 5440ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.221000Z",
+          "ts": "2026-11-21T10:04:17.324000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.9.59:5432 timed out after 8875ms",
+          "message": "Connection to database 10.0.4.30:5432 timed out after 5460ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.488000Z",
+          "ts": "2026-11-21T10:04:17.862000Z",
           "level": "ERROR",
-          "message": "Connection to database 10.0.6.78:5432 timed out after 8405ms",
+          "message": "Connection to database 10.0.4.50:5432 timed out after 5480ms",
           "cluster_id": "c3",
           "is_first_occurrence": false,
           "is_trigger": false
         },
         {
-          "ts": "2026-11-21T10:04:20.670000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.4.63:5432 timed out after 6128ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:20.711000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.1.17:5432 timed out after 5385ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:20.890000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.8.56:5432 timed out after 7140ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:21.045000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.3.29:5432 timed out after 7403ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:21.297000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.2.53:5432 timed out after 8503ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.071000Z",
-          "level": "ERROR",
-          "message": "Connection to database 10.0.1.76:5432 timed out after 3529ms",
-          "cluster_id": "c3",
-          "is_first_occurrence": false,
-          "is_trigger": false
-        },
-        {
-          "ts": "2026-11-21T10:04:22.522000Z",
+          "ts": "2026-11-21T10:04:18.484000Z",
           "level": "FATAL",
           "message": "error: OutOfMemoryError in worker thread pool",
           "cluster_id": "c6",
@@ -4076,7 +4024,7 @@
       ]
     }
   ],
-  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:42.207000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:38.037000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
+  "ai_summary": "Root Cause: Initial failure pattern [WARN] emerged at Line 1500 at 2026-11-21T10:00:41.047000Z: 'Connection pool usage above threshold: 88%'.\nFailure Cascade: Pre-crash domino effect of 1 events escalated until terminating with trigger at Line 3500 at 2026-11-21T10:01:36.150000Z: 'Connection to database 10.0.4.12:5432 timed out after 5000ms'.\nRecommended Fix: Investigate connection pool exhaustion and upstream service timeouts leading up to the initial patient-zero onset."
 }") && !rawJson.includes("{{ result_json")) {
           resultData = JSON.parse(rawJson);
         }
@@ -4717,12 +4665,17 @@
       const timelineTree = document.getElementById('timelineTreeContainer');
       const crashIntro = document.getElementById('crashTriggerTitle');
       const crashSubtext = document.getElementById('crashTriggerSubtext');
+      const btnToggleCascade = document.getElementById('btnToggleCascade');
+      let isCascadeCollapsed = false;
 
       function renderCrashSequence(crashes) {
         timelineTree.innerHTML = '';
+        const toggleBtn = document.getElementById('btnToggleCascade');
+
         if (!crashes || crashes.length === 0) {
           crashIntro.innerHTML = '<span>✅ No Crashes Detected</span>';
           crashSubtext.textContent = 'The analyzed log stream contained no unhandled fatal crash terminations.';
+          if (toggleBtn) toggleBtn.style.display = 'none';
           return;
         }
 
@@ -4732,9 +4685,52 @@
         crashSubtext.textContent = `Triggered at ${formatIso(trigger.ts)} (Line ${formatNumber(trigger.line_no)})`;
 
         const sequence = crash.sequence || [];
-        const baseTime = sequence.length > 0 && sequence[0].ts ? new Date(sequence[0].ts).getTime() : 0;
+        if (sequence.length <= 2 && toggleBtn) {
+          toggleBtn.style.display = 'none';
+        } else if (toggleBtn) {
+          toggleBtn.style.display = 'inline-flex';
+          const icon = document.getElementById('cascadeToggleIcon');
+          const text = document.getElementById('cascadeToggleText');
+          if (isCascadeCollapsed) {
+            icon.textContent = '▸';
+            text.textContent = `Expand Pre-Crash Cascade (${sequence.length} events)`;
+          } else {
+            icon.textContent = '▾';
+            text.textContent = 'Collapse Pre-Crash Cascade';
+          }
+        }
 
-        sequence.forEach((evt) => {
+        const triggerTime = trigger.ts ? new Date(trigger.ts).getTime() : (sequence.length > 0 ? new Date(sequence[sequence.length - 1].ts).getTime() : 0);
+
+        const shouldCollapse = isCascadeCollapsed && sequence.length > 2;
+        let intermediateCollapsedRendered = false;
+        const intermediateCount = sequence.length - 2;
+
+        sequence.forEach((evt, idx) => {
+          const isFirstItem = idx === 0;
+          const isLastItem = idx === sequence.length - 1 || evt.is_trigger;
+
+          if (shouldCollapse && !isFirstItem && !isLastItem) {
+            if (!intermediateCollapsedRendered) {
+              const collapseCard = document.createElement('div');
+              collapseCard.className = 'cascade-collapsed-card';
+              collapseCard.innerHTML = `
+                <span style="font-size: 1.1rem;">⚡</span>
+                <div>
+                  <strong>${intermediateCount} pre-crash warning/error events collapsed</strong>
+                  <div style="font-size: 0.775rem; color: var(--text-subtle); margin-top: 0.15rem;">Click here to expand the full event cascade leading to termination</div>
+                </div>
+              `;
+              collapseCard.addEventListener('click', () => {
+                isCascadeCollapsed = false;
+                renderCrashSequence(crashes);
+              });
+              timelineTree.appendChild(collapseCard);
+              intermediateCollapsedRendered = true;
+            }
+            return;
+          }
+
           const item = document.createElement('div');
           let itemClass = 'timeline-item';
           let nodeIcon = '⚡';
@@ -4750,13 +4746,20 @@
 
           item.className = itemClass;
 
-          let deltaStr = '+00:00';
-          if (evt.ts && baseTime > 0) {
-            const curTime = new Date(evt.ts).getTime();
-            const diffSeconds = Math.max(0, Math.floor((curTime - baseTime) / 1000));
-            const mins = String(Math.floor(diffSeconds / 60)).padStart(2, '0');
-            const secs = String(diffSeconds % 60).padStart(2, '0');
-            deltaStr = `+${mins}:${secs}`;
+          // Time delta relative to the crash trigger
+          const curTime = evt.ts ? new Date(evt.ts).getTime() : 0;
+          let deltaBadgeHtml = '';
+
+          if (evt.is_trigger || (triggerTime > 0 && curTime >= triggerTime)) {
+            deltaBadgeHtml = `<span class="pill pill-time-delta pill-trigger-moment">00:00 (Crash Trigger)</span>`;
+          } else if (triggerTime > 0 && curTime > 0) {
+            const diffSeconds = Math.max(0, Math.round((triggerTime - curTime) / 1000));
+            const mins = Math.floor(diffSeconds / 60);
+            const secs = diffSeconds % 60;
+            const formattedDelta = `-${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}s before crash`;
+            deltaBadgeHtml = `<span class="pill pill-time-delta" title="${diffSeconds}s before crash trigger">⏱ ${formattedDelta}</span>`;
+          } else {
+            deltaBadgeHtml = `<span class="pill pill-time-delta">-- before crash</span>`;
           }
 
           let levelPill = 'pill-neutral';
@@ -4782,10 +4785,10 @@
             <div class="timeline-content-card">
               <div class="timeline-item-meta">
                 <div class="timeline-time-info">
-                  <span class="timeline-delta">${deltaStr}</span>
+                  ${deltaBadgeHtml}
                   <span>${formatIso(evt.ts)}</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                   ${badges}
                   ${clusterLink}
                 </div>
@@ -4797,6 +4800,14 @@
           `;
 
           timelineTree.appendChild(item);
+        });
+      }
+
+      if (btnToggleCascade) {
+        btnToggleCascade.addEventListener('click', () => {
+          isCascadeCollapsed = !isCascadeCollapsed;
+          const crashes = resultData.crashes || [];
+          renderCrashSequence(crashes);
         });
       }
 

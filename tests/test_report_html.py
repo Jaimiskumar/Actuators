@@ -52,17 +52,23 @@ def test_generate_html_report_from_mock_dict(tmp_path: Path):
     assert "clusterBarChartCanvas" in html
     assert "Top Patterns by Count" in html
 
-    # Verify first-occurrence cards
+    # Verify first-occurrence cards with search & filter controls
     assert "First-Occurrence Failure Patterns" in html
+    assert "clusterSearchInput" in html
+    assert "severityFilters" in html
     assert "c1" in html
     assert "Connection to database" in html
     assert "org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl" in html
 
-    # Verify crash sequence timeline with trigger
+    # Verify crash sequence timeline with trigger and polished controls
     assert "Crash Sequence Reconstruction" in html
     assert "CRASH TRIGGER" in html
     assert "OutOfMemoryError in worker thread pool" in html
     assert "repeated x45 times" in html
+    assert "pill-time-delta" in html
+    assert "before crash" in html
+    assert "btnToggleCascade" in html
+    assert "Collapse Pre-Crash Cascade" in html
 
 
 def test_generate_html_report_from_result_dataclass(tmp_path: Path):
