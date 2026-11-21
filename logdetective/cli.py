@@ -2,11 +2,16 @@
 
 import json
 import sys
+import webbrowser
 from pathlib import Path
 from typing import Optional
 
 import typer
 from rich.console import Console
+
+from logdetective.engine import Engine
+from logdetective.report_html import generate_html_report
+from logdetective.report_terminal import render_terminal_report
 
 app = typer.Typer(
     name="logdetective",
@@ -26,12 +31,12 @@ def analyze(
     html: Optional[Path] = typer.Option(
         None,
         "--html",
-        help="Output HTML report path",
+        help="Output HTML report path (e.g. report.html)",
     ),
     open_browser: bool = typer.Option(
         False,
         "--open",
-        help="Open HTML report automatically in browser",
+        help="Open HTML report automatically in default browser",
     ),
     json_output: bool = typer.Option(
         False,
@@ -51,9 +56,31 @@ def analyze(
 ):
     """Analyze a log file, cluster errors, and reconstruct crash timeline."""
     try:
-        # Phase 1 scaffold: placeholder indicating engine invocation
-        console.print(f"[bold cyan]Log Detective[/bold cyan] analyzing [yellow]{file}[/yellow]...")
-        console.print("[dim]Phase 1 Skeleton active. Engine pipeline is scheduled in Phase 2/3.[/dim]")
+        engine = Engine()
+        result = engine.analyze(file)
+
+        if json_output:
+            typer.echo(json.dumps(result.to_dict(), indent=2))
+            return
+
+        # Render rich terminal summary
+        render_terminal_report(result, console)
+
+        # Generate HTML report if requested or if --open is specified
+        target_html = html
+        if open_browser and not target_html:
+            target_html = Path("report.html")
+
+        if target_html:
+            html_content = generate_html_report(result.to_dict())
+            target_html.parent.mkdir(parents=True, exist_ok=True)
+            target_html.write_text(html_content, encoding="utf-8")
+            console.print(f"\n[bold green]✓ HTML report generated:[/bold green] [cyan]{target_html.resolve()}[/cyan]")
+
+            if open_browser:
+                console.print("[dim]Opening report in browser...[/dim]")
+                webbrowser.open(f"file://{target_html.resolve()}")
+
     except Exception as exc:
         if debug:
             raise
@@ -68,11 +95,15 @@ def serve(
 ):
     """Launch local web dashboard."""
     console.print(f"[bold green]Starting Log Detective local dashboard at http://{host}:{port}[/bold green]")
-    console.print("[dim]Dashboard backend will be mounted in Phase 5.[/dim]")
+    try:
+        import uvicorn
+        from logdetective.server import app as fastapi_app
+        uvicorn.run(fastapi_app, host=host, port=port)
+    except ImportError:
+        console.print("[yellow]FastAPI/Uvicorn not installed. Run `pip install '.[dashboard]'` to enable the dashboard.[/yellow]")
 
 
 def main():
-    # If invoked directly with a file as first argument, default to analyze
     if len(sys.argv) > 1 and not sys.argv[1].startswith("-") and sys.argv[1] not in ("analyze", "serve"):
         sys.argv.insert(1, "analyze")
     app()

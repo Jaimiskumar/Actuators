@@ -114,10 +114,16 @@ def parse_timestamp(ts_raw: Any) -> Optional[datetime]:
     if not s:
         return None
 
+    # Helper to ensure naive UTC datetime for seamless comparisons
+    def _finalize_dt(dt: Optional[datetime]) -> Optional[datetime]:
+        if dt and dt.tzinfo is not None:
+            return dt.replace(tzinfo=None)
+        return dt
+
     # Try ISO 8601 (Python 3.11+ handles Z and offsets cleanly)
     iso_clean = s.replace("Z", "+00:00")
     try:
-        return datetime.fromisoformat(iso_clean)
+        return _finalize_dt(datetime.fromisoformat(iso_clean))
     except ValueError:
         pass
 
@@ -125,7 +131,7 @@ def parse_timestamp(ts_raw: Any) -> Optional[datetime]:
     if len(s) >= 19:
         try:
             s_std = s[:23].replace(",", ".")
-            return datetime.fromisoformat(s_std)
+            return _finalize_dt(datetime.fromisoformat(s_std))
         except ValueError:
             pass
 
@@ -133,20 +139,20 @@ def parse_timestamp(ts_raw: Any) -> Optional[datetime]:
     try:
         now_year = datetime.now().year
         dt = datetime.strptime(f"{now_year} {s[:15]}", "%Y %b %d %H:%M:%S")
-        return dt
+        return _finalize_dt(dt)
     except ValueError:
         pass
 
     # Try Apache: Sun Dec 04 04:47:44 2005
     try:
         clean_apache = re.sub(r"\.\d+", "", s)
-        return datetime.strptime(clean_apache[:24].strip(), "%a %b %d %H:%M:%S %Y")
+        return _finalize_dt(datetime.strptime(clean_apache[:24].strip(), "%a %b %d %H:%M:%S %Y"))
     except ValueError:
         pass
 
     # Try HDFS/Hadoop: 081109 203615
     try:
-        return datetime.strptime(s[:13], "%y%m%d %H%M%S")
+        return _finalize_dt(datetime.strptime(s[:13], "%y%m%d %H%M%S"))
     except ValueError:
         pass
 
